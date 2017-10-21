@@ -19,11 +19,13 @@
 
   function windowResizer () {
     /**
-     * resize window asap
+     * override window resizer
      */
-    setInterval(() => {
+    function zoomSetter () {
       document.getElementById(window.Game.gameContainer.id).style.zoom = window.innerWidth / 320
-    }, 0)
+    }
+    setTimeout(() => zoomSetter, 100)
+    window.onresize = () => zoomSetter
   }
 
   function windowResizeInject () {
