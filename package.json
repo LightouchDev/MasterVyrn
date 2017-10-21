@@ -23,7 +23,7 @@
   },
   "build": {
     "productName": "MasterVyrn",
-    "appId": "org.lightouchdev.MasterVyrn",
+    "appId": "org.lightouchDev.MasterVyrn",
     "directories": {
       "output": "build"
     },
