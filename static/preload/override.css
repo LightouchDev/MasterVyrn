@@ -1,0 +1,25 @@
+/* chrome app scrollbar settings */
+body::-webkit-scrollbar, body.jssdk > div:first-child > div:last-child::-webkit-scrollbar {
+  width: 3px;
+  background: #ccc;
+  opacity: .3;
+}
+body::-webkit-scrollbar-button, body.jssdk > div:first-child > div:last-child::-webkit-scrollbar-button {
+  display: none
+}
+body::-webkit-scrollbar-piece, body.jssdk > div:first-child > div:last-child::-webkit-scrollbar-piece {
+  background:#eee
+}
+body::-webkit-scrollbar-thumb, body.jssdk > div:first-child > div:last-child::-webkit-scrollbar-thumb {
+  background:#666
+}
+
+/* hide mobg sidebar */
+body.jssdk > div:first-child > div:first-child {
+  display: none;
+}
+
+/* hide right side submenu */
+.jssdk #submenu {
+  display: none;
+}
