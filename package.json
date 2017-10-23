@@ -30,6 +30,9 @@
     "files": [
       "dist/electron/**/*"
     ],
+    "electronDownload":{
+      "mirror": "https://github.com/LightouchDev/electronDist/releases/download/v"
+    },
     "dmg": {
       "contents": [
         {
