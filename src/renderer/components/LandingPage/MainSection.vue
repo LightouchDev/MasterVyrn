@@ -1,18 +1,18 @@
 <template>
   <div id="mainSection">
-    <header-bar></header-bar>
-    <game-loader></game-loader>
+    <TheHeaderBar/>
+    <TheGameLoader/>
   </div>
 </template>
 
 <script>
-import GameLoader from './MainSection/GameLoader'
-import HeaderBar from './MainSection/HeaderBar'
+import TheGameLoader from './MainSection/TheGameLoader'
+import TheHeaderBar from './MainSection/TheHeaderBar'
 export default {
   name: 'main-section',
   components: {
-    GameLoader,
-    HeaderBar
+    TheGameLoader,
+    TheHeaderBar
   }
 }
 </script>
