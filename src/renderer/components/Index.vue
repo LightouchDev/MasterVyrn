@@ -4,8 +4,8 @@
   </div>
 </template>
 
-<<script>
-  import MainSection from './LandingPage/MainSection'
+<script>
+  import MainSection from './MainSection'
   export default {
     name: 'landing-page',
     components: {
