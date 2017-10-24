@@ -1,6 +1,5 @@
 <template>
   <webview
-    id="gameWebview"
     v-bind:src="gameURL"
     v-bind:preload="preloadPath"
     allowpopups
@@ -20,7 +19,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#gameWebview {
+webview {
   width: 100%;
   height: calc(100vh - #{$mainHeaderHeight});
   min-width: 320px;

@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-  const webview = document.querySelector('#gameWebview')
+  const webview = document.querySelector('webview')
   webview.addEventListener('dom-ready', (evt) => {
     if (process.env.NODE_ENV === 'development') {
       console.log('WEBVIEW READY!')

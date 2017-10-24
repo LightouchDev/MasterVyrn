@@ -1,11 +1,7 @@
 <template>
-  <div id="headerBar">
-    <div class="tr">
-      <div class="td" id="section">
-        <img v-bind:src="favicon">
-      </div>
-      <div class="td" id="currentPath">{{currentPath}}</div>
-    </div>
+  <div id="parent">
+    <img id="icon" :src="favicon">
+    <div id="url">{{currentPath}}</div>
   </div>
 </template>
 
@@ -30,28 +26,22 @@ export default {
 }
 </script>
 
-<style lang="scss">
-#headerBar {
-  display: table;
+<style lang="scss" scoped>
+#parent {
   color: #f2eee2;
-  position: relative;
-  width: 100%;
   height: $mainHeaderHeight;
   background-color: #150f0f;
   font-family: $headerFont;
-  .td {
+  display: flex;
+  align-items: center;
+  > * {
+    padding: 0 $mainHeaderHeight - 32px;
+  }
+  #icon {
     vertical-align: middle;
-    &#section {
-      width: 40px;
-      img {
-        display: block;
-        margin: auto;
-      }
-    }
-    &#currentPath {
-      padding: 0 10px;
-      letter-spacing: 1px;
-    }
+  }
+  #url {
+    overflow-x: hidden;
   }
 }
 </style>
