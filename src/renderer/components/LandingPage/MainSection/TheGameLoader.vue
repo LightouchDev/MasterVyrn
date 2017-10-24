@@ -1,7 +1,7 @@
 <template>
   <webview
-    v-bind:src="gameURL"
-    v-bind:preload="preloadPath"
+    :src="gameURL"
+    :preload="preloadScript"
     allowpopups
   >
   </webview>
@@ -16,8 +16,8 @@ export default {
     gameURL () {
       return this.$store.state.Webview.gameURL
     },
-    preloadPath () {
-      return this.$store.state.Webview.preloadPath
+    preloadScript () {
+      return this.$store.state.Webview.preloadScript
     }
   }
 }

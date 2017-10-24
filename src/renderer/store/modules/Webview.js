@@ -1,7 +1,7 @@
 const state = {
   gameURL: 'http://game.granbluefantasy.jp/',
   url: '',
-  preloadPath: 'file://' + require('path').join(__static, 'preload/preload.js')
+  preloadScript: 'file://' + require('path').join(__static, 'preload/preload.js')
 }
 
 const mutations = {
