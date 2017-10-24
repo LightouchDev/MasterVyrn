@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import webviewInit from './webviewInit'
-webviewInit()
+import addWebviewEvent from './addWebviewEvent'
+addWebviewEvent()
 
 export default {
   computed: {

@@ -1,4 +1,4 @@
-function webviewInit () {
+function addWebviewEvent () {
   window.addEventListener('DOMContentLoaded', () => {
     const webview = document.querySelector('webview')
     webview.addEventListener('dom-ready', (evt) => {
@@ -18,4 +18,4 @@ function webviewInit () {
   })
 }
 
-export default webviewInit
+export default addWebviewEvent
