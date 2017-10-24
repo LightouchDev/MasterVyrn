@@ -7,14 +7,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-      header: window.dataProxy.header
-    }
-  },
   computed: {
     url () {
-      return new URL(this.header.url)
+      if (this.$store.state.Webview.url) {
+        return new window.URL(this.$store.state.Webview.url)
+      }
+      return new window.URL(this.$store.state.Webview.gameURL)
     },
     currentPath () {
       return this.url.pathname + this.url.hash

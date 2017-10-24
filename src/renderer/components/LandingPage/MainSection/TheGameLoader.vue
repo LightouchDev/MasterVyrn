@@ -7,12 +7,17 @@
   </webview>
 </template>
 
-<<script>
+<script>
+import webviewInit from './webviewInit'
+webviewInit()
+
 export default {
-  data () {
-    return {
-      gameURL: 'http://game.granbluefantasy.jp/',
-      preloadPath: 'file://' + require('path').join(__static, 'preload/preload.js')
+  computed: {
+    gameURL () {
+      return this.$store.state.Webview.gameURL
+    },
+    preloadPath () {
+      return this.$store.state.Webview.preloadPath
     }
   }
 }
