@@ -1,6 +1,7 @@
 'use strict'
 
 ;(() => {
+  devtronDeps()
   var oldconsolelog = window.console.log
   var oldconsoleerr = window.console.error
   var oldconsolewarn = window.console.warn
@@ -11,6 +12,15 @@
     windowResizer()
     // windowResizeInject()
   })
+
+  /**
+   * Devtron deps injector
+   */
+  function devtronDeps () {
+    if (process.env.NODE_ENV === 'development') {
+      window.__devtron = {require: require, process: process}
+    }
+  }
 
   /**
    * Inject addEventListener to clear mute event
