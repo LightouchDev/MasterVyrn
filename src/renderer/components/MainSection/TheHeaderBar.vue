@@ -1,7 +1,7 @@
 <template>
   <div id="parent">
     <img id="icon" :src="favicon">
-    <div id="url">{{currentPath}}</div>
+    <div id="url"><span>{{currentPath}}</span></div>
   </div>
 </template>
 
@@ -25,21 +25,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$paddingWidth: $mainHeaderHeight - 32px;
+
 #parent {
   color: #f2eee2;
   height: $mainHeaderHeight;
   background-color: #150f0f;
-  font-family: $headerFont;
   display: flex;
   align-items: center;
   > * {
-    padding: 0 $mainHeaderHeight - 32px;
+    padding: 0 $paddingWidth;
   }
   #icon {
     vertical-align: middle;
   }
   #url {
     overflow-x: hidden;
+    width: 100%;
+    height: $mainHeaderHeight - 2*$paddingWidth;
+    border-style: solid;
+    border-width: thin;
+    border-radius: 4px;
+    margin-right: $paddingWidth;
+    span {
+      vertical-align: middle;
+    }
   }
 }
 </style>
