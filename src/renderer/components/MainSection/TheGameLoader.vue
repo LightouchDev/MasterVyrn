@@ -2,6 +2,7 @@
   <webview
     :src="gameURL"
     :preload="preloadScript"
+    :partition="partition"
     allowpopups
   >
   </webview>
@@ -18,6 +19,9 @@ export default {
     },
     preloadScript () {
       return this.$store.state.Webview.preloadScript
+    },
+    partition () {
+      return this.$store.state.Webview.partition
     }
   }
 }

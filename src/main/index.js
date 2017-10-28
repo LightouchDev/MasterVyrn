@@ -1,6 +1,7 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, session, BrowserWindow } from 'electron'
+import proxy from './proxy'
 
 /**
  * Set `__static` path to static files in production
@@ -10,6 +11,28 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
+/**
+ * Internal proxy section
+ */
+const internalProxy = proxy()
+
+internalProxy.start()
+internalProxy.on('ready', () => {
+  console.log('proxy started, now HOME reset to', process.env.HOME)
+  app.on('ready', () => {
+    /**
+     * Session setup
+     */
+    session
+      .fromPartition('persist:main', {cache: true})
+      .setProxy({proxyRules: '127.0.0.1:8001'}, () => {})
+    createWindow()
+  })
+})
+
+/**
+ * Window section
+ */
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
@@ -22,12 +45,9 @@ const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) 
     mainWindow.focus()
   }
 })
-
 if (isSecondInstance) {
   app.quit()
 }
-
-app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
   app.quit()
@@ -40,9 +60,6 @@ app.on('activate', () => {
 })
 
 function createWindow () {
-  /**
-   * Initial window options
-   */
   mainWindow = new BrowserWindow({
     height: 860,
     width: 480,
