@@ -22,10 +22,12 @@ internalProxy.on('ready', () => {
   app.on('ready', () => {
     /**
      * Session setup
+     * FIXME: no hardcoded session setup
      */
     session
       .fromPartition('persist:main', {cache: true})
       .setProxy({proxyRules: '127.0.0.1:8001'}, () => {})
+
     createWindow()
   })
 })

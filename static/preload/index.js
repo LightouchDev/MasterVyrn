@@ -71,14 +71,9 @@
    * override window resizer
    */
   function windowResizer () {
-    let zoomSetter = () => {
-      document.getElementById(window.Game.gameContainer.id).style.zoom = window.innerWidth / 320
+    window.onresize = () => {
+      document.getElementById(window.Game.gameContainer.id).style.zoom = window.displayInitialize()
     }
-    let fastResizer = setInterval(zoomSetter, 0)
-    setTimeout(() => {
-      clearInterval(fastResizer)
-    }, 1000)
-    window.onresize = zoomSetter
   }
 
   /**
