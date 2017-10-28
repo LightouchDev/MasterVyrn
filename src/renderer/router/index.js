@@ -5,17 +5,10 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    /* FIXME
-    {
-      path: '/land',
-      name: 'landing-page',
-      component: require('@/components/LandingPage').default
-    },
-    */
     {
       path: '/',
-      name: 'index',
-      component: require('@/components/Index').default
+      name: 'default-application',
+      component: require('@/components/DefaultApplication').default
     },
     {
       path: '*',

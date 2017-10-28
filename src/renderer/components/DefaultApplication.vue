@@ -5,9 +5,9 @@
 </template>
 
 <script>
-  import MainSection from './MainSection'
+  import MainSection from './DefaultApplication/MainSection'
   export default {
-    name: 'landing-page',
+    name: 'default-application',
     components: {
       MainSection
     }
