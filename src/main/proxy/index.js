@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-let proxy = customOptions => {
+const proxyInit = customOptions => {
   if (customOptions) {
     Object.assign(options, customOptions)
   }
@@ -48,4 +48,4 @@ let proxy = customOptions => {
   return proxyServer
 }
 
-export default proxy
+export default proxyInit

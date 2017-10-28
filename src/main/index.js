@@ -1,7 +1,7 @@
 'use strict'
 
 import { app, session, BrowserWindow } from 'electron'
-import proxy from './proxy'
+import proxyInit from './proxy'
 
 /**
  * Set `__static` path to static files in production
@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'development') {
 /**
  * Internal proxy section
  */
-const internalProxy = proxy()
+const internalProxy = proxyInit()
 
 internalProxy.start()
 internalProxy.on('ready', () => {
