@@ -9,7 +9,6 @@
   eventInjector()
   window.addEventListener('DOMContentLoaded', () => {
     consoleRecover()
-    cssOverride()
     windowResizer()
     // windowResizeInject()
   })
@@ -55,16 +54,6 @@
       window.console.error = oldconsoleerr
       window.console.warn = oldconsolewarn
     }
-  }
-
-  /**
-   * Inject css rule to head
-   */
-  function cssOverride () {
-    let cssContent = require('fs').readFileSync(require('path').join(__dirname, 'override.css'), 'utf8')
-    let cssOverride = document.createElement('style')
-    cssOverride.appendChild(document.createTextNode(cssContent))
-    document.head.appendChild(cssOverride)
   }
 
   /**

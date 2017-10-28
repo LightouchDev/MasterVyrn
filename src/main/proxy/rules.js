@@ -16,6 +16,10 @@ export default {
             element.text = element.text.replace(/^[ \t]+deviceRatio.*\n/gm, '')
           }
         }
+        let cssContent = require('fs').readFileSync(require('path').join(__dirname, 'resources/override.css'), 'utf8')
+        let cssOverride = document.createElement('style')
+        cssOverride.appendChild(document.createTextNode(cssContent))
+        document.head.appendChild(cssOverride)
         Object.assign(newResponse, {body: document.documentElement.innerHTML})
         return {response: newResponse}
       }
