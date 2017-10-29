@@ -1,6 +1,6 @@
 <template>
   <div id="parent">
-    <img id="icon" :src="favicon">
+    <div id="icon"><img :src="favicon"></div>
     <div id="url"><span>{{currentPath}}</span></div>
   </div>
 </template>
@@ -28,28 +28,35 @@ export default {
 $paddingWidth: $mainHeaderHeight - 32px;
 
 #parent {
-  color: #f2eee2;
+  color: rgba($standardWhite, 0.75);
   height: $mainHeaderHeight;
   background-color: #150f0f;
   display: flex;
   align-items: center;
+  pointer-events: none;
   > * {
     padding: 0 $paddingWidth;
   }
   #icon {
-    vertical-align: middle;
+    img {
+      vertical-align: middle;
+    }
   }
   #url {
     overflow-x: hidden;
     width: 100%;
     height: $mainHeaderHeight - 2*$paddingWidth;
-    border-style: solid;
-    border-width: thin;
-    border-radius: 4px;
     margin-right: $paddingWidth;
     span {
       vertical-align: middle;
     }
+  }
+  #url, #icon img {
+    border-style: solid;
+    border-width: thin;
+    border-radius: 3px;
+    border-color: rgba($standardWhite, 0.75);
+
   }
 }
 </style>
