@@ -2,21 +2,32 @@
   'use strict'
 
   let startTime = new Date().getTime()
+  let isDev = process.env.NODE_ENV === 'development'
+  let console = {
+    log: window.console.log,
+    warn: window.console.warn,
+    error: window.console.error
+  }
   devtronDeps()
   DOMWatcher()
-  var oldconsolelog = window.console.log
-  var oldconsoleerr = window.console.error
-  var oldconsolewarn = window.console.warn
   eventInjector()
+
   oneshotListener(window, 'DOMContentLoaded', () => {
-    oldconsolelog(new Date().getTime() - startTime, 'DOM parsed')
-    consoleRecover()
-    windowResizer()
-    // windowResizeInject()
+    // reload page when resize window
+    window.onresize = () => { document.location.reload() }
   })
-  oneshotListener(window, 'load', () => {
-    oldconsolelog(new Date().getTime() - startTime, 'DOM ready')
-  })
+
+  if (isDev) {
+    oneshotListener(window, 'DOMContentLoaded', () => {
+      console.log(new Date().getTime() - startTime, 'DOM parsed')
+      // recover console function
+      Object.assign(window.console, console)
+    })
+
+    oneshotListener(window, 'load', () => {
+      console.log(new Date().getTime() - startTime, 'DOM ready')
+    })
+  }
 
   /**
    * Oneshot event listener
@@ -24,7 +35,6 @@
    * @param   {string}    event       - event
    * @param   {function}  callback    - callback
    * @param   {boolean}   useCapture  - useCapture
-   * @returns {null}                  - execution result
    */
   function oneshotListener (node, event, callback, useCapture) {
     node.addEventListener(event, function handler (e) {
@@ -37,7 +47,7 @@
    * Devtron deps injector
    */
   function devtronDeps () {
-    if (process.env.NODE_ENV === 'development') {
+    if (isDev) {
       window.__devtron = {require: require, process: process}
     }
   }
@@ -91,7 +101,7 @@
       let blockReg = /mute/
       if (!whiteReg.test(funcString)) {
         if (blockReg.test(funcString)) {
-          if (process.env.NODE_ENV === 'development') {
+          if (isDev) {
             if (!this.eventListenerBlockedList) this.eventListenerBlockedList = {}
             if (!this.eventListenerBlockedList[event]) this.eventListenerBlockedList[event] = []
             this.eventListenerBlockedList[event].push(callback)
@@ -100,26 +110,6 @@
         }
       }
       _addEventListener(event, callback, options)
-    }
-  }
-
-  /**
-   * Take back the console.log
-   */
-  function consoleRecover () {
-    if (process.env.NODE_ENV === 'development') {
-      window.console.log = oldconsolelog
-      window.console.error = oldconsoleerr
-      window.console.warn = oldconsolewarn
-    }
-  }
-
-  /**
-   * override window resizer
-   */
-  function windowResizer () {
-    window.onresize = () => {
-      document.location.reload()
     }
   }
 
