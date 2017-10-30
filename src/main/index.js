@@ -12,6 +12,12 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 /**
+ * App switch
+ */
+// Avoid throttling of window
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
+
+/**
  * Internal proxy section
  */
 const internalProxy = proxyInit()
