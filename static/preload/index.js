@@ -8,15 +8,25 @@
   var oldconsoleerr = window.console.error
   var oldconsolewarn = window.console.warn
   eventInjector()
-  window.addEventListener('DOMContentLoaded', () => {
+  oneshotListener(window, 'DOMContentLoaded', () => {
     oldconsolelog(new Date().getTime() - startTime, 'DOM parsed')
     consoleRecover()
     windowResizer()
     // windowResizeInject()
   })
-  window.addEventListener('load', () => {
+  oneshotListener(window, 'load', () => {
     oldconsolelog(new Date().getTime() - startTime, 'DOM ready')
   })
+
+  /**
+   * Oneshot event listener
+   */
+  function oneshotListener (node, event, callback) {
+    node.addEventListener(event, function handler (e) {
+      this.removeEventListener(e.type, handler)
+      return callback(e)
+    })
+  }
 
   /**
    * Devtron deps injector
