@@ -24,7 +24,6 @@ const internalProxy = proxyInit()
 
 internalProxy.start()
 internalProxy.on('ready', () => {
-  console.log('proxy started, now HOME reset to', process.env.HOME)
   app.on('ready', () => {
     /**
      * Session setup

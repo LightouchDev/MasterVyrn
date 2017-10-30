@@ -6,7 +6,6 @@ let originHome = Object.assign({}, {HOME: process.env.HOME})
 // enforce set HOME path to application userData path
 process.env.HOME = require('electron').app.getPath('userData')
 
-console.log('proxy initializing, now HOME set to', process.env.HOME)
 const AnyProxy = require('anyproxy')
 
 // Generate certs
@@ -43,7 +42,6 @@ const proxyInit = customOptions => {
     Object.assign(options, customOptions)
   }
   let proxyServer = new AnyProxy.ProxyServer(options)
-  console.log(options)
   Object.assign(process.env, originHome)
   return proxyServer
 }
