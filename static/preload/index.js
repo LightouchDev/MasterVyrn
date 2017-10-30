@@ -76,24 +76,25 @@
 
   /**
    * Inject addEventListener to clear mute event
+   * FIXME: standardize this
    */
   function eventInjector () {
     let _addEventListener = window.addEventListener
-    window.addEventListener = function (a, b, c) {
-      let func = b.toString()
-      let blockReg = /mute/
+    window.addEventListener = function (event, callback, ...options) {
+      let funcString = callback.toString()
       let whiteReg = /unmute/
-      if (process.env.NODE_ENV === 'development') {
-        if (!whiteReg.test(func)) {
-          if (blockReg.test(b.toString())) {
+      let blockReg = /mute/
+      if (!whiteReg.test(funcString)) {
+        if (blockReg.test(funcString)) {
+          if (process.env.NODE_ENV === 'development') {
             if (!this.eventListenerBlockedList) this.eventListenerBlockedList = {}
-            if (!this.eventListenerBlockedList[a]) this.eventListenerBlockedList[a] = []
-            this.eventListenerBlockedList[a].push(b)
-            return
+            if (!this.eventListenerBlockedList[event]) this.eventListenerBlockedList[event] = []
+            this.eventListenerBlockedList[event].push(callback)
           }
+          return // do not register event listener if match
         }
       }
-      _addEventListener(a, b, c)
+      _addEventListener(event, callback, options)
     }
   }
 
