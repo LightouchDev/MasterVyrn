@@ -1,7 +1,6 @@
-// FIXME
-'use strict'
+(() => {
+  'use strict'
 
-;(() => {
   let startTime = new Date().getTime()
   devtronDeps()
   DOMWatcher()
