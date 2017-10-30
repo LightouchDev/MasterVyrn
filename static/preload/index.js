@@ -20,12 +20,17 @@
 
   /**
    * Oneshot event listener
+   * @param   {object}    node        - html node
+   * @param   {string}    event       - event
+   * @param   {function}  callback    - callback
+   * @param   {boolean}   useCapture  - useCapture
+   * @returns {null}                  - execution result
    */
-  function oneshotListener (node, event, callback) {
+  function oneshotListener (node, event, callback, useCapture) {
     node.addEventListener(event, function handler (e) {
       this.removeEventListener(e.type, handler)
       return callback(e)
-    })
+    }, useCapture)
   }
 
   /**
