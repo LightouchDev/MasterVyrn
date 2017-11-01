@@ -1,7 +1,7 @@
 'use strict'
 
-import ResizeObserver from 'resize-observer-polyfill'
 import eventNav from './eventNavigation'
+import eventResize from './eventResize'
 import ipcHandler from './ipcHandler'
 
 let WebviewInit = function () {
@@ -24,27 +24,15 @@ WebviewInit.prototype.init = function () {
   }
 }
 
-WebviewInit.prototype.eventResize = function () {
-  this.webview.addEventListener('dom-ready', () => {
-    let onetimeFalse = false
-    const ro = new ResizeObserver(entry => {
-      if (onetimeFalse) {
-        entry[0].target.reload()
-      }
-      onetimeFalse = true
-    })
-    ro.observe(this.webview)
-  })
-}
-
 WebviewInit.prototype.eventNav = eventNav
+WebviewInit.prototype.eventResize = eventResize
 WebviewInit.prototype.ipcHandler = ipcHandler
 
 export default () => {
   // waiting window loaded to prevent getting the empty element.
   window.addEventListener('DOMContentLoaded', () => {
     // actually, we just need to trigger constructor,
-    // and return is for avoid standardjs warning.
+    // and this return is for avoiding standardjs warning.
     return new WebviewInit()
   })
 }
