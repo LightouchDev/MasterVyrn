@@ -1,6 +1,8 @@
 (() => {
   'use strict'
 
+  const {ipcRenderer} = require('electron')
+
   let startTime = new Date().getTime()
   let isDev = process.env.NODE_ENV === 'development'
   let console = {
@@ -8,23 +10,33 @@
     warn: window.console.warn,
     error: window.console.error
   }
-  devtronDeps()
   DOMWatcher()
   eventInjector()
 
   oneshotListener(window, 'DOMContentLoaded', () => {
-    // reload page when resize window
-    window.onresize = () => { document.location.reload() }
+    // reload page when resize window, FIXME: use electron api instead
+    // window.onresize = () => { document.location.reload() }
+    ipcRenderer.sendToHost('setZoom', window.deviceRatio)
+  })
+
+  // FIXME: use electron buildin executeJavaScript function instead
+  oneshotListener(window, 'load', () => {
+    windowControllExporter()
   })
 
   if (isDev) {
     oneshotListener(window, 'DOMContentLoaded', () => {
+      // log dom parsed time
       console.log(new Date().getTime() - startTime, 'DOM parsed')
       // recover console function
       Object.assign(window.console, console)
+      window.addEventListener('mousedown', event => {
+        console.log(event)
+      })
     })
 
     oneshotListener(window, 'load', () => {
+      // log dom loaded time
       console.log(new Date().getTime() - startTime, 'DOM ready')
     })
   }
@@ -44,15 +56,6 @@
   }
 
   /**
-   * Devtron deps injector
-   */
-  function devtronDeps () {
-    if (isDev) {
-      window.__devtron = {require: require, process: process}
-    }
-  }
-
-  /**
    * Watch and patch DOMs
    */
   function DOMWatcher () {
@@ -63,6 +66,7 @@
       if (document.head) {
         console.warn(new Date().getTime() - startTime, 'head detected!')
         headWatcher.observe(document.head, config)
+        // FIXME: try electron build in insertCSS function
         let cssOverride = document.createElement('style')
         cssOverride.appendChild(document.createTextNode(cssContent))
         document.head.appendChild(cssOverride)
@@ -113,18 +117,38 @@
     }
   }
 
+  // dump getClientRects() value due to it can't be send in ipc message
+  const getClientRects = (element) => {
+    let {top, left, width, height} = element.getClientRects()[0]
+    let rect = {top, left, width, height}
+    for (let rule in rect) {
+      rect[rule] += 'px'
+    }
+    return rect
+  }
+
+  /**
+   * Send current window info
+   */
+  function windowShadowCopy () {
+
+  }
+
   /**
    * Make size button can change window size
    * FIXME: NOT IMPLEMENT
    */
-  function windowControllInject () {
+  function windowControllExporter () {
     let resizeBtn = document.getElementsByClassName('btn-pc-footer-setting')
-    for (let index in resizeBtn) {
-      if (resizeBtn.hasOwnProperty(index)) {
-        resizeBtn[index].addEventListener('click', (evt) => {
-          window.alert('Zoom:' + (evt.target.dataset.size * 0.5 + 1) * 320)
-        })
+    for (let btn of resizeBtn) {
+      let msg = {
+        id: btn.dataset.size,
+        data: btn.dataset,
+        preset: 'resizer',
+        style: getClientRects(btn)
       }
+      console.log(msg)
+      ipcRenderer.sendToHost('createNode', msg)
     }
   }
 })()

@@ -113,6 +113,7 @@
     "node-loader": "^0.6.0",
     "node-sass": "^4.5.3",
     "require-dir": "^0.3.0",
+    "resize-observer-polyfill": "^1.4.2",
     "sass-loader": "^6.0.6",
     "spectron": "^3.7.1",
     "style-loader": "^0.18.2",

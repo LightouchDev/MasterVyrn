@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, session, BrowserWindow } from 'electron'
+import { app, ipcMain, session, BrowserWindow } from 'electron'
 import proxyInit from './proxy'
 
 /**
@@ -79,6 +79,18 @@ function createWindow () {
     mainWindow = null
   })
 }
+/**
+ * ipc message Handler
+ */
+ipcMain.on('messageProxy', (event, args) => {
+  event.sender.send(args.channel, args.args)
+})
+ipcMain.on('resizeWindow', (event, args) => {
+  let m = args < 3 ? (1 + args * 0.5) : 2
+  let x = parseInt(320 * m)
+  let y = mainWindow.getSize()[1]
+  mainWindow.setSize(x, y)
+})
 
 /**
  * Auto Updater

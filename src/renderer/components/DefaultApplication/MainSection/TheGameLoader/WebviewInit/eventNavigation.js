@@ -1,6 +1,6 @@
 'use strict'
 
-function EventNavigation () {
+function eventNavigation () {
   this.webview.addEventListener('did-navigate', (evt) => {
     window.vue.$store.commit('CHANGE_URL', {
       'url': evt.url
@@ -13,4 +13,4 @@ function EventNavigation () {
   })
 }
 
-export default EventNavigation
+export default eventNavigation

@@ -1,37 +1,19 @@
 <template>
-  <webview
-    :src="gameURL"
-    :preload="preloadScript"
-    :partition="partition"
-    allowpopups
-  >
-  </webview>
+  <div>
+    <webview/>
+    <overlay/>
+  </div>
 </template>
 
 <script>
-import WebviewInit from './WebviewInit'
-WebviewInit()
+import Webview from './TheGameLoader/Webview'
+import Overlay from './TheGameLoader/Overlay'
 
 export default {
-  computed: {
-    gameURL () {
-      return this.$store.state.Webview.gameURL
-    },
-    preloadScript () {
-      return this.$store.state.Webview.preloadScript
-    },
-    partition () {
-      return this.$store.state.Webview.partition
-    }
+  name: 'the-game-loader',
+  components: {
+    Webview,
+    Overlay
   }
 }
 </script>
-
-<style lang="scss" scoped>
-webview {
-  width: 100%;
-  height: calc(100vh - #{$mainHeaderHeight});
-  min-width: 320px;
-  max-width: 640px;
-}
-</style>
