@@ -2,11 +2,13 @@
 
 import eventNav from './eventNavigation'
 import eventResize from './eventResize'
+import eventOneshot from './eventOneshot'
 import ipcHandler from './ipcHandler'
 
 let WebviewInit = function () {
   this.webview = document.querySelector('webview')
   this.init()
+  this.eventOneshot()
   this.eventResize()
   this.eventNav()
   this.ipcHandler()
@@ -24,6 +26,7 @@ WebviewInit.prototype.init = function () {
   }
 }
 
+WebviewInit.prototype.eventOneshot = eventOneshot
 WebviewInit.prototype.eventNav = eventNav
 WebviewInit.prototype.eventResize = eventResize
 WebviewInit.prototype.ipcHandler = ipcHandler

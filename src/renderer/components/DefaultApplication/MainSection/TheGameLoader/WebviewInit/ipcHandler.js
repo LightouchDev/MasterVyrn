@@ -34,10 +34,10 @@ function ipcHandler () {
  */
 
 function channelAction (channel, msg) {
-  if (channel === 'setZoom') {
-    window.vue.$store.commit('SET_ZOOM', msg)
-  } else if (channel === 'createNode') {
+  if (channel === 'createNode') {
     window.vue.$store.commit('CREATE_NODE', msg)
+  } else if (channel === 'hostLog') {
+    console.log(msg)
   }
 }
 
