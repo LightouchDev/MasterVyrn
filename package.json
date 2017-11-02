@@ -24,7 +24,6 @@
   "build": {
     "productName": "MasterVyrn",
     "appId": "org.LightouchDev.MasterVyrn",
-    "artifactName": "${productName}-${version}-${os}.${ext}",
     "directories": {
       "output": "build"
     },
@@ -50,6 +49,7 @@
       ]
     },
     "mac": {
+      "artifactName": "${productName}-${version}-${os}.${ext}",
       "icon": "build/icons/icon.icns",
       "target": "zip"
     },
@@ -57,11 +57,13 @@
       "icon": "build/icons/icon.ico",
       "target": [{
         "target": "portable",
-        "arch": ["x64", "ia32"]
+        "arch": ["x64", "ia32"],
+        "artifactName": "${productName}-${version}-${os}-portable.${ext}"
       },
       {
-        "target": "nsis-web",
-        "arch": ["x64", "ia32"]
+        "target": "nsis",
+        "arch": ["x64", "ia32"],
+        "artifactName": "${productName}-${version}-${os}-installer.${ext}"
       }]
     },
     "linux": {
