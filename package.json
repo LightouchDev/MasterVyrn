@@ -57,7 +57,7 @@
       "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
       "icon": "build/icons/icon.ico",
       "target": [{
-        "target": "zip",
+        "target": "portable",
         "arch": ["x64", "ia32"]
       }]
     },
