@@ -1,7 +1,7 @@
 'use strict'
 
-import { app, ipcMain, session, BrowserWindow } from 'electron'
-import proxyInit from './proxy'
+import { app, ipcMain, BrowserWindow } from 'electron'
+// mport proxyInit from './proxy'
 
 /**
  * Set `__static` path to static files in production
@@ -20,23 +20,20 @@ app.commandLine.appendSwitch('disable-renderer-backgrounding')
 /**
  * Internal proxy section
  */
+/*
 const internalProxy = proxyInit()
 
 internalProxy.start()
 internalProxy.on('ready', () => {
   app.on('ready', () => {
-    /**
-     * Session setup
-     * FIXME: no hardcoded session setup
-     */
     session
       .fromPartition('persist:main', {cache: true})
       .setProxy({proxyRules: '127.0.0.1:8001'}, () => {})
-
     createWindow()
   })
 })
-
+*/
+app.on('ready', createWindow)
 /**
  * Window section
  */
