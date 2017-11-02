@@ -8,7 +8,7 @@ import path from 'path'
 
 function eventOneshot () {
   // inject stylesheet to webview
-  let cssContent = fs.readFileSync(path.join(__dirname, 'override.css'), 'utf8')
+  let cssContent = fs.readFileSync(path.join(__static, 'override.css'), 'utf8')
   this.webview.addEventListener('dom-ready', () => {
     this.webview.insertCSS(cssContent)
   })
@@ -29,7 +29,7 @@ function eventOneshot () {
   })
 
   // get resize button element and sent to Overlay
-  let execResizerExporter = fs.readFileSync(path.join(__dirname, 'execResizerExporter.js'), 'utf8')
+  let execResizerExporter = fs.readFileSync(path.join(__static, 'execResizerExporter.js'), 'utf8')
   this.webview.addEventListener('did-finish-load', () => {
     this.webview.getWebContents().executeJavaScript(execResizerExporter)
       .then(result => {
