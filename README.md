@@ -10,6 +10,8 @@ Unlike official Chrome App share system resource with chrome, MasterVyrn is dedi
 
 The side dashboard would finish when build-in proxy has done in future.
 
+### [Download here](https://github.com/LightouchDev/MasterVyrn/releases)
+
 #### Build Setup
 
 ``` bash
