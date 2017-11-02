@@ -2,7 +2,7 @@
 
 > Someday, Vyrn learned magic and became a very helpful companion.
 
-MasterVyrn is an GBF browser build on top of electron.
+MasterVyrn is an as clean as possible GBF dedicated APP build on top of electron.
 
 Unlike official Chrome App share system resource with chrome, MasterVyrn is dedicated and never throttling when window invisible.
 
