@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, ipcMain, BrowserWindow } from 'electron'
+import { app, ipcMain, BrowserWindow, globalShortcut } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -60,6 +60,7 @@ function createWindow () {
     mainWindow = null
   })
 }
+
 /**
  * ipc message Handler
  */
@@ -71,6 +72,18 @@ ipcMain.on('resizeWindow', (event, args) => {
   let x = parseInt(320 * m)
   let y = mainWindow.getSize()[1]
   mainWindow.setSize(x, y)
+})
+
+/**
+ * Global accelerator
+ */
+app.on('ready', () => {
+  globalShortcut.register('CommandOrControl+Alt+I', () => {
+    mainWindow.webContents.send('webviewDevTools')
+  })
+  globalShortcut.register('CommandOrControl+Alt+O', () => {
+    mainWindow.webContents.openDevTools()
+  })
 })
 
 /**

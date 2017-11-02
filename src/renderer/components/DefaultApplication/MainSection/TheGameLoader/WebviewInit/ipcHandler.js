@@ -9,6 +9,9 @@ function ipcHandler () {
   ipcRenderer.on('webviewClick', (event, args) => {
     this.webview.sendInputEvent(args)
   })
+  ipcRenderer.on('webviewDevTools', () => {
+    this.webview.openDevTools()
+  })
 }
 
 /**
