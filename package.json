@@ -24,7 +24,6 @@
   "build": {
     "productName": "MasterVyrn",
     "appId": "org.LightouchDev.MasterVyrn",
-    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "build"
     },
@@ -50,10 +49,12 @@
       ]
     },
     "mac": {
+      "artifactName": "${productName}-${version}-${os}.${ext}",
       "icon": "build/icons/icon.icns",
       "target": "zip"
     },
     "win": {
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
       "icon": "build/icons/icon.ico",
       "target": [{
         "target": "zip",
@@ -61,6 +62,7 @@
       }]
     },
     "linux": {
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
       "category": "Game",
       "icon": "build/icons",
       "target": [{
