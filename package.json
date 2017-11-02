@@ -57,13 +57,11 @@
       "icon": "build/icons/icon.ico",
       "target": [{
         "target": "portable",
-        "arch": ["x64", "ia32"],
-        "artifactName": "${productName}-${version}-${os}-portable.${ext}"
+        "arch": ["x64", "ia32"]
       },
       {
         "target": "nsis",
-        "arch": ["x64", "ia32"],
-        "artifactName": "${productName}-${version}-${os}-installer.${ext}"
+        "arch": ["x64", "ia32"]
       }]
     },
     "linux": {
