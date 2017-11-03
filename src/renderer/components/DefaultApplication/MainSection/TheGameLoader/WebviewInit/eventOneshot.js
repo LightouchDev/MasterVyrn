@@ -7,12 +7,6 @@ import fs from 'fs'
 import path from 'path'
 
 function eventOneshot () {
-  // inject stylesheet to webview
-  let cssContent = fs.readFileSync(path.join(__static, 'override.css'), 'utf8')
-  this.webview.addEventListener('dom-ready', () => {
-    this.webview.insertCSS(cssContent)
-  })
-
   // get window.deviceRatio from webview
   this.webview.addEventListener('dom-ready', () => {
     this.webview.getWebContents().executeJavaScript(`

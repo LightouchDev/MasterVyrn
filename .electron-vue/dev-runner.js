@@ -38,14 +38,21 @@ function logStats (proc, data) {
   console.log(log)
 }
 
+function minifyStatic () {
+  const staticMinify = require('./staticMinify')
+  return new Promise((resolve, reject) => {
+    staticMinify(resolve, reject, true)
+  })
+}
+
 function startRenderer () {
   return new Promise((resolve, reject) => {
     rendererConfig.entry.renderer = [path.join(__dirname, 'dev-client')].concat(rendererConfig.entry.renderer)
 
     const compiler = webpack(rendererConfig)
-    hotMiddleware = webpackHotMiddleware(compiler, { 
-      log: false, 
-      heartbeat: 2500 
+    hotMiddleware = webpackHotMiddleware(compiler, {
+      log: false,
+      heartbeat: 2500
     })
 
     compiler.plugin('compilation', compilation => {
@@ -166,7 +173,7 @@ function greeting () {
 function init () {
   greeting()
 
-  Promise.all([startRenderer(), startMain()])
+  Promise.all([startRenderer(), startMain(), minifyStatic()])
     .then(() => {
       startElectron()
     })

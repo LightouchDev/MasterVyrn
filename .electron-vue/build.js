@@ -19,6 +19,8 @@ const errorLog = chalk.bgRed.white(' ERROR ') + ' '
 const okayLog = chalk.bgBlue.white(' OKAY ') + ' '
 const isCI = process.env.CI || false
 
+const staticMinify = require('./staticMinify')
+
 if (process.env.BUILD_TARGET === 'clean') clean()
 else if (process.env.BUILD_TARGET === 'web') web()
 else build()
@@ -41,6 +43,8 @@ function build () {
   })
 
   let results = ''
+
+  staticMinify()
 
   m.on('success', () => {
     process.stdout.write('\x1B[2J\x1B[0f')

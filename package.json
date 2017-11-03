@@ -55,23 +55,36 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "target": [{
-        "target": "portable",
-        "arch": ["x64", "ia32"]
-      },
-      {
-        "target": "nsis",
-        "arch": ["x64", "ia32"]
-      }]
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     },
     "linux": {
       "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
       "category": "Game",
       "icon": "build/icons",
-      "target": [{
-        "target": "AppImage",
-        "arch": ["x64", "ia32"]
-      }]
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     }
   },
   "dependencies": {
@@ -96,6 +109,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.1.1",
     "css-loader": "^0.28.4",
+    "cssnano-preset-default": "^4.0.0-rc.2",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "github:LightouchDev/electronDist",
@@ -132,6 +146,7 @@
     "sass-loader": "^6.0.6",
     "spectron": "^3.7.1",
     "style-loader": "^0.18.2",
+    "uglify-es": "^3.1.6",
     "url-loader": "^0.5.9",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^13.0.5",
