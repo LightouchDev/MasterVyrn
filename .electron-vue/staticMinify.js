@@ -14,7 +14,7 @@ const outputPath = path.join(__dirname,'../static')
 const jsFiles = glob.sync(path.join(__dirname,'../src/static/**/*.js'))
 const cssFiles = glob.sync(path.join(__dirname,'../src/static/**/*.css'))
 const fileList = glob.sync(path.join(__dirname,'../src/static/**/*')).reduce((prev, curr, index) => {
-  curr = curr.replace(path.join(__dirname,'../src/static/'), '')
+  curr = 'uglified_' + curr.replace(path.join(__dirname,'../src/static/'), '')
   prev.push(curr)
   return prev
 },[])
@@ -54,7 +54,7 @@ function minify (upResolve = noFunc, upReject = noFunc, dev = false) {
   cssProcess.then(() => {
     jsFiles.forEach((file, index, array) => {
       let js = fs.readFileSync(file, 'utf8')
-      let basename = path.basename(file, '.js')
+      let basename = 'uglified_' + path.basename(file)
       let config = {
         warnings: dev === true,
         compress: {
@@ -68,9 +68,9 @@ function minify (upResolve = noFunc, upReject = noFunc, dev = false) {
       }
       Object.assign(config.compress.global_defs, cssSum)
       let result = UglifyES.minify(js, config)
-      console.log('Generating...', path.basename(file))
-      if (dev) console.warn(result.warnings)
-      fs.writeFileSync(path.join(outputPath, path.basename(file)), result.code)
+      console.log('Generating...', basename)
+      if (dev && result.warnings) console.warn(result.warnings)
+      fs.writeFileSync(path.join(outputPath, basename), result.code)
       if (index === array.length - 1) {
         console.log('Minify finished!')
         upResolve()

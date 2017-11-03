@@ -1,1 +1,0 @@
-(()=>{"use strict";const t=t=>{let{top:e,left:s,width:i,height:r}=t.getClientRects()[0],n={top:e,left:s,width:i,height:r};for(let t in n)n[t]+="px";return n};return new Promise(e=>{let s=document.getElementsByClassName("btn-pc-footer-setting"),i=[];for(let e of s)i.push({id:e.dataset.size,data:e.dataset,preset:"resizer",style:t(e)});e(i)}).then(t=>t)})();
