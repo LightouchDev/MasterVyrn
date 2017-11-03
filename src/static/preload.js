@@ -4,7 +4,8 @@
   'use strict'
 
   if (DEBUG) {
-    var startTime = new Date().getTime()
+    var startTime = window.performance.now()
+    window.console.log(startTime, 'page start!')
     var console = {
       log: window.console.log,
       warn: window.console.warn,
@@ -19,15 +20,19 @@
   if (DEBUG) {
     oneshotListener(window, 'DOMContentLoaded', () => {
       // log dom parsed time
-      console.log(new Date().getTime() - startTime, 'DOM parsed')
+      console.log(now(), 'DOM parsed')
       // recover console function
       Object.assign(window.console, console)
     })
 
     oneshotListener(window, 'load', () => {
       // log dom loaded time
-      console.log(new Date().getTime() - startTime, 'DOM ready')
+      console.log(now(), 'DOM ready')
     })
+  }
+
+  function now () {
+    return (window.performance.now() - startTime).toFixed(2)
   }
 
   /**
@@ -50,9 +55,9 @@
   function DOMWatcher () {
     const config = { childList: true, subtree: true }
     const htmlWatcher = new window.MutationObserver(mutation => {
-      if (DEBUG) console.warn(new Date().getTime() - startTime, 'start looking for head!')
+      if (DEBUG) console.warn(now(), 'start looking for head!')
       if (document.head) {
-        if (DEBUG) console.warn(new Date().getTime() - startTime, 'head detected!')
+        if (DEBUG) console.warn(now(), 'head detected!')
         htmlWatcher.disconnect()
         let cssElement = document.createElement('style')
         cssElement.type = 'text/css'
@@ -61,15 +66,17 @@
         headWatcher.observe(document.head, config)
       }
     })
+    htmlWatcher.observe(document, config)
     const headWatcher = new window.MutationObserver(mutations => {
       let regex = /^[ \t]+deviceRatio.*\n/gm
+      if (DEBUG) console.warn(now(), 'start looking for target!')
       for (let mutation of mutations) {
         if (mutation.addedNodes) {
           for (let element of mutation.addedNodes) {
             if (element.nodeName === 'SCRIPT') {
               if (regex.test(element.text)) {
                 element.text = element.text.replace(regex, '')
-                if (DEBUG) console.warn(new Date().getTime() - startTime, 'target detected!')
+                if (DEBUG) console.warn(now(), 'target detected!')
                 headWatcher.disconnect()
               }
             }
@@ -77,7 +84,6 @@
         }
       }
     })
-    htmlWatcher.observe(document, config)
   }
 
   /**
@@ -86,7 +92,7 @@
    */
   function eventInjector () {
     let _addEventListener = window.addEventListener
-    window.addEventListener = function (event, callback, ...options) {
+    window.addEventListener = function (event, callback) {
       let funcString = callback.toString()
       let whiteReg = /unmute/
       let blockReg = /mute/
@@ -100,7 +106,7 @@
           return // do not register event listener if match
         }
       }
-      _addEventListener(event, callback, options)
+      _addEventListener.apply(this, arguments)
     }
   }
 })()
