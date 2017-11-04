@@ -12,6 +12,7 @@ let WebviewInit = function () {
   this.eventResize()
   this.eventNav()
   this.ipcHandler()
+  global.webview = this.webview
 }
 
 WebviewInit.prototype.init = function () {

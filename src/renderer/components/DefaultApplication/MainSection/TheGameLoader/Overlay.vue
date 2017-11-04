@@ -13,7 +13,6 @@
 </template>
 
 <script>
-
 import {ipcRenderer} from 'electron'
 
 export default {
@@ -40,15 +39,14 @@ export default {
     resizer: function (event, data) {
       let {size} = data[event.target.id]
       let {clientX, clientY} = event
-      ipcRenderer.send('messageProxy', {
-        channel: 'webviewClick',
-        args: {
-          type: event.type === 'mousedown' ? 'mouseDown' : 'mouseUp',
-          x: clientX,
-          // remove the padding of header bar
-          y: clientY - 40
-        }
+
+      global.webview.sendInputEvent({
+        type: event.type === 'mousedown' ? 'mouseDown' : 'mouseUp',
+        x: clientX,
+        // remove the padding of header bar
+        y: clientY - 40
       })
+
       ipcRenderer.send('resizeWindow', size)
     }
   }
