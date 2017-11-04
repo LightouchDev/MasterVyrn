@@ -1,7 +1,6 @@
 'use strict'
 
 const path = require('path')
-
 const fs = require('fs')
 const UglifyES = require("uglify-es")
 const glob = require('glob')
@@ -13,11 +12,6 @@ const processor = postcss([require('cssnano')])
 const outputPath = path.join(__dirname,'../static')
 const jsFiles = glob.sync(path.join(__dirname,'../src/static/**/*.js'))
 const cssFiles = glob.sync(path.join(__dirname,'../src/static/**/*.css'))
-const fileList = glob.sync(path.join(__dirname,'../src/static/**/*')).reduce((prev, curr, index) => {
-  curr = 'uglified_' + curr.replace(path.join(__dirname,'../src/static/'), '')
-  prev.push(curr)
-  return prev
-},[])
 
 let noFunc = () => {}
 let cssSum = {}
@@ -38,7 +32,7 @@ function staticMinify () {
  */
 function cleanUp () {
   return new Promise((resolve, reject) => {
-    del(fileList, {cwd: outputPath}).then(paths => {
+    del(path.join(__dirname,'../static/**/uglified_*'), {cwd: outputPath}).then(paths => {
       console.log('These files would be deleted:\n ', paths.join('\n  '));
       console.log('')
       resolve()
