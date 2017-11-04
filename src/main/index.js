@@ -58,7 +58,8 @@ function createWindow () {
     height: 860,
     width: 480,
     useContentSize: true,
-    fullscreenable: false
+    fullscreenable: false,
+    maximizable: false
   })
 
   mainWindow.loadURL(winURL)
