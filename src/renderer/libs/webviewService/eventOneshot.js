@@ -12,6 +12,12 @@ function eventOneshot () {
 }
 
 /**
+ * ATTENTION:
+ *   These 'static/uglified_*' files is generate from 'src/static'
+ *   by '.electron-vue/staticMinify.js' and has no hot-reload capabilities.
+ */
+
+/**
  * get window.deviceRatio from webview
  */
 function getZoom () {
