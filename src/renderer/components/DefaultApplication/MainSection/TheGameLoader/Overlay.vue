@@ -1,13 +1,13 @@
 <template>
   <div id="overlay">
     <div
-      v-for="cover in covers"
-      :key="cover.key"
-      :id="cover.id"
-      :class="[cover.class ? cover.class : cover.preset]"
-      :data-preset="cover.preset ? cover.preset : cover.class"
-      :style="[cover.style, zoom]"
-      v-on="{ mousedown: eventMap, mouseup: eventMap }"
+      v-for="element in elements"
+      :key="element.key"
+      :id="element.id"
+      :class="[element.class ? element.class : '']"
+      :data-preset="element.preset ? element.preset : ''"
+      :style="[element.style, zoom]"
+      v-on="element.clickable ? { mousedown: eventMap, mouseup: eventMap } : ''"
     ></div>
   </div>
 </template>
@@ -23,15 +23,15 @@ export default {
     }
   },
   computed: {
-    covers () {
-      return this.state.covers
+    elements () {
+      return this.state.elements
     },
     zoom () {
       return {zoom: this.state.zoom}
     }
   },
   methods: {
-    // map event according to dom class
+    // map event according to data-preset
     eventMap: function (event) {
       let thisPreset = event.target.dataset.preset
       const data = this.state.data[thisPreset]

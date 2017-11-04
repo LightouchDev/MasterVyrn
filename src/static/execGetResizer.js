@@ -1,6 +1,6 @@
 (() => {
   'use strict'
-  // dump getClientRects() value due to it can't be send in ipc message
+  // dump getClientRects() value due to it can't be send via ipc message
   const getClientRects = (element) => {
     let {top, left, width, height} = element.getClientRects()[0]
     let rect = {top, left, width, height}
@@ -18,7 +18,8 @@
         id: btn.dataset.size,
         data: btn.dataset,
         preset: 'resizer',
-        style: getClientRects(btn)
+        style: getClientRects(btn),
+        clickable: true
       })
     }
     resolve(msg)
