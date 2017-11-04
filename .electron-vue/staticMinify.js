@@ -22,12 +22,20 @@ const fileList = glob.sync(path.join(__dirname,'../src/static/**/*')).reduce((pr
 let noFunc = () => {}
 let cssSum = {}
 
+/**
+ * Minify js in `src/static` to `static` with "uglified_" prefix.
+ * css would minified (by cssnano) and stored as javascript variable (as same as filename),
+ * uglifyES would replace these variable by actual content.
+ */
 function staticMinify () {
   cleanUp().then(() => {
     minify.apply(this, arguments)
   })
 }
 
+/**
+ * Remove previous generate files
+ */
 function cleanUp () {
   return new Promise((resolve, reject) => {
     del(fileList, {cwd: outputPath}).then(paths => {
@@ -38,6 +46,12 @@ function cleanUp () {
   })
 }
 
+/**
+ * Minify process
+ * @param {callback} upResolve - Parent resolve callback
+ * @param {callback} upReject  - Parent reject callback
+ * @param {boolean}  dev       - Uglify debug info
+ */
 function minify (upResolve = noFunc, upReject = noFunc, dev = false) {
 
   let cssProcess = new Promise((resolve, reject) => {
