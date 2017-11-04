@@ -5,7 +5,7 @@
  *   body: {
  *           id:        (String),  - The id of the node.
  *           data:      (Object),  - It should work with preset.
- *           preset:    (String),  - The preset process thay want to apply.
+ *           preset:    (String),  - The preset process/event.
  *           style: {              - CSS rules.
  *             top:     (Any),
  *             ... etc

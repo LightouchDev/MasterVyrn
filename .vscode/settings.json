@@ -1,5 +1,9 @@
 {
   "standard.options": {
     "globals": ["__static"]
-  }
+  },
+  "cSpell.words": [
+    "oneshot",
+    "resizer"
+  ]
 }

@@ -36,7 +36,7 @@ export default () => {
   // waiting window loaded to prevent getting the empty element.
   window.addEventListener('DOMContentLoaded', () => {
     // actually, we just need to trigger constructor,
-    // and this return is for avoiding standardjs warning.
+    // and this return is for avoiding standardJS warning.
     return new WebviewInit()
   })
 }
