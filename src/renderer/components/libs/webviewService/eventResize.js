@@ -2,6 +2,9 @@
 
 import ResizeObserver from 'resize-observer-polyfill'
 
+/**
+ * Reload webview when webview resized.
+ */
 function eventResize () {
   this.webview.addEventListener('dom-ready', () => {
     let onetimeFalse = false

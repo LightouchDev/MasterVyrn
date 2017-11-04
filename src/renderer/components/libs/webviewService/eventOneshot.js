@@ -1,31 +1,36 @@
-/**
- * Hook webview events native-likely (prevent been detected in webview)
- */
 'use strict'
 
 import fs from 'fs'
 import path from 'path'
 
+/**
+ * Hook webview events native-likely (prevent been detected in webview)
+ */
 function eventOneshot () {
-  // get window.deviceRatio from webview
-  this.webview.addEventListener('dom-ready', () => {
-    this.webview.getWebContents().executeJavaScript(`
-    (() => {
-      return new Promise (resolve => {
-        resolve(window.deviceRatio)
-      }).then(result => {
-        return result
-      })
-    })()
-    `).then(result => {
-      window.vue.$store.commit('SET_ZOOM', result)
-    })
-  })
+  getZoom.apply(this)
+  getResizer.apply(this)
+}
 
-  // get resize button element and sent to Overlay
-  let execResizerExporter = fs.readFileSync(path.join(__static, 'uglified_execResizerExporter.js'), 'utf8')
+/**
+ * get window.deviceRatio from webview
+ */
+function getZoom () {
+  this.webview.addEventListener('dom-ready', () => {
+    let execGetZoom = fs.readFileSync(path.join(__static, 'uglified_execGetZoom.js'), 'utf8')
+    this.webview.getWebContents().executeJavaScript(execGetZoom)
+      .then(result => {
+        window.vue.$store.commit('SET_ZOOM', result)
+      })
+  })
+}
+
+/**
+ * Get resize button element and sent to Overlay
+ */
+function getResizer () {
+  let execGetResizer = fs.readFileSync(path.join(__static, 'uglified_execGetResizer.js'), 'utf8')
   this.webview.addEventListener('did-finish-load', () => {
-    this.webview.getWebContents().executeJavaScript(execResizerExporter)
+    this.webview.getWebContents().executeJavaScript(execGetResizer)
       .then(result => {
         for (let msg of result) {
           window.vue.$store.commit('CREATE_NODE', msg)
@@ -37,11 +42,12 @@ function eventOneshot () {
 /**
  * Event order between webview and host
  *
- *      0 webview DOMContentLoaded
- *     ~8 host    dom-ready
- *  1000+ webview load
- *     ~1 host    did-finish-load
- *     ~1 host    did-stop=loading
+ *  Time | Instance | Event
+ *     0   webview    DOMContentLoaded
+ *    ~8   host       dom-ready
+ * 1000+   webview    load
+ *    ~1   host       did-finish-load
+ *    ~1   host       did-stop=loading
  */
 
 export default eventOneshot
