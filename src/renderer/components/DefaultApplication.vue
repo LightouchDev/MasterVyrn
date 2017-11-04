@@ -6,7 +6,7 @@
 
 <script>
   import MainSection from './DefaultApplication/MainSection'
-  import webviewService from './libs/webviewService'
+  import webviewService from '../libs/webviewService'
 
   webviewService()
 
