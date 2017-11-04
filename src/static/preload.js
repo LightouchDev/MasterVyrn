@@ -57,12 +57,12 @@
     const htmlWatcher = new window.MutationObserver(mutation => {
       if (DEBUG) console.warn(now(), 'start looking for head!')
       if (document.head) {
-        if (DEBUG) console.warn(now(), 'head detected!')
         htmlWatcher.disconnect()
         let cssElement = document.createElement('style')
         cssElement.type = 'text/css'
         cssElement.innerHTML = webviewOverride
         document.head.appendChild(cssElement)
+        if (DEBUG) console.warn(now(), 'head patched!')
         headWatcher.observe(document.head, config)
       }
     })
@@ -76,7 +76,7 @@
             if (element.nodeName === 'SCRIPT') {
               if (regex.test(element.text)) {
                 element.text = element.text.replace(regex, '')
-                if (DEBUG) console.warn(now(), 'target detected!')
+                if (DEBUG) console.warn(now(), 'target patched!')
                 headWatcher.disconnect()
               }
             }
