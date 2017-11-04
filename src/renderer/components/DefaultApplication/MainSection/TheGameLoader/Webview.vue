@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import WebviewInit from './WebviewInit'
-WebviewInit()
 
 export default {
   data () {
