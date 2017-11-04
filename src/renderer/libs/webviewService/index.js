@@ -17,7 +17,7 @@ let WebviewInit = function () {
 
 WebviewInit.prototype.init = function () {
   this.webview.addEventListener('did-navigate', () => {
-    window.vue.$store.commit('CLEAN_ELEMENTS')
+    window.vue.$store.commit('DEFAULT_ELEMENTS')
   })
   if (process.env.NODE_ENV === 'development') {
     this.webview.addEventListener('dom-ready', () => {

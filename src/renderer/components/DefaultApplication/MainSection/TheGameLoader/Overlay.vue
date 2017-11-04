@@ -40,14 +40,14 @@ export default {
       let {size} = data[event.target.id]
       let {clientX, clientY} = event
 
+      if (event.type === 'mouseup') { ipcRenderer.send('resizeWindow', size) }
+
       global.webview.sendInputEvent({
         type: event.type === 'mousedown' ? 'mouseDown' : 'mouseUp',
         x: clientX,
         // remove the padding of header bar
         y: clientY - 40
       })
-
-      ipcRenderer.send('resizeWindow', size)
     }
   }
 }

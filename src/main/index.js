@@ -51,7 +51,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 860,
     width: 480,
-    useContentSize: true
+    useContentSize: true,
+    fullscreenable: false
   })
 
   mainWindow.loadURL(winURL)
@@ -62,13 +63,26 @@ function createWindow () {
 }
 
 /**
+ * mainWindow events
+ */
+app.on('ready', () => {
+  mainWindow.on('resize', event => {
+    let [winWidth, winHeight] = event.sender.getSize()
+    if (winWidth < 320) { event.sender.setSize(320, winHeight) }
+    if (winWidth > 640) { event.sender.setSize(640, winHeight) }
+  })
+})
+
+/**
  * ipc message Handler
  */
-ipcMain.on('resizeWindow', (event, args) => {
-  let m = args < 3 ? (1 + args * 0.5) : 2
-  let x = parseInt(320 * m)
-  let y = mainWindow.getSize()[1]
-  mainWindow.setSize(x, y)
+app.on('ready', () => {
+  ipcMain.on('resizeWindow', (event, args) => {
+    let m = args < 3 ? (1 + args * 0.5) : 2
+    let x = parseInt(320 * m)
+    let y = mainWindow.getSize()[1]
+    mainWindow.setSize(x, y)
+  })
 })
 
 /**

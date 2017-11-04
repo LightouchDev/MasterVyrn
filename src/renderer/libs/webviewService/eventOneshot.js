@@ -25,6 +25,7 @@ import path from 'path'
 function eventOneshot () {
   getZoom.apply(this)
   getResizer.apply(this)
+  cleanOverlay.apply(this)
 }
 
 /**
@@ -37,6 +38,15 @@ function getZoom () {
       .then(result => {
         window.vue.$store.commit('SET_ZOOM', result)
       })
+  })
+}
+
+/**
+ * Clean placeholder of overlay when page loaded
+ */
+function cleanOverlay () {
+  this.webview.addEventListener('did-finish-load', () => {
+    window.vue.$store.commit('CLEAN_ELEMENTS')
   })
 }
 
