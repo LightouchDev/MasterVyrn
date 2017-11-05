@@ -24,7 +24,6 @@
   "build": {
     "productName": "MasterVyrn",
     "appId": "org.LightouchDev.MasterVyrn",
-    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "build"
     },
@@ -74,6 +73,7 @@
       ]
     },
     "linux": {
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
       "category": "Game",
       "icon": "build/icons",
       "target": [
