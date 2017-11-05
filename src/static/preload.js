@@ -13,6 +13,11 @@
     }
   }
 
+  const {ipcRenderer} = require('electron')
+  oneshotListener(window, 'DOMContentLoaded', () => {
+    ipcRenderer.sendToHost('insertCSS')
+  })
+
   DOMWatcher()
   eventInjector()
   window.process = undefined
@@ -62,18 +67,29 @@
     })
     htmlWatcher.observe(document, config)
     const headWatcher = new window.MutationObserver(mutations => {
-      let regex = /(window\.innerWidth)|(^[ \t]+deviceRatio.*\n)/gm
       if (DEBUG) console.warn(now(), 'start looking for target!')
       for (let mutation of mutations) {
         if (mutation.addedNodes) {
           for (let element of mutation.addedNodes) {
             if (element.nodeName === 'SCRIPT') {
-              if (regex.test(element.text)) {
-                element.text = element.text.replace(regex, (match, p1, p2) => {
-                  return match === p1 ? '(' + p1 + ' - 64)' : ''
+              if (/deviceRatio/.test(element.text)) {
+                setTimeout(() => {
+                  if (DEBUG) console.log(now(), 'replace start')
+                  window.displayInitialize = function () {
+                    let deviceRatio = (window.innerWidth - 67) / 320
+                    if (deviceRatio <= 1) {
+                      deviceRatio = 1
+                    } else if (deviceRatio > 2) {
+                      deviceRatio = 2
+                    }
+                    return deviceRatio
+                  }
+                  window.deviceRatio = window.displayInitialize()
+                  window.fitScreenByZoom(window.deviceRatio)
                 })
                 if (DEBUG) console.warn(now(), 'target patched!')
                 headWatcher.disconnect()
+                break
               }
             }
           }

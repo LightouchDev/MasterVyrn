@@ -8,21 +8,10 @@ import path from 'path'
  */
 
 function eventInject () {
-  Promise.all([cssOverride.apply(this), execGetZoom.apply(this), execGetResizer.apply(this)])
+  Promise.all([execGetZoom.apply(this), execGetResizer.apply(this)])
     .then(() => {
       console.log('[INFO] Event injected!')
     })
-}
-
-// Inject CSS overrides
-function cssOverride () {
-  return new Promise((resolve, reject) => {
-    let css = fs.readFileSync(path.join(__static, 'minified_webviewOverride.css'), 'utf8')
-    this.webview.addEventListener('dom-ready', () => {
-      this.webview.insertCSS(css)
-    })
-    resolve()
-  })
 }
 
 function execGetZoom () {

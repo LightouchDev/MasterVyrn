@@ -8,6 +8,7 @@ import ipcHandler from './ipcHandler'
 
 let WebviewInit = function () {
   this.webview = document.querySelector('webview')
+  this.css = require('fs').readFileSync(require('path').join(__static, 'minified_webviewOverride.css'), 'utf8')
   this.init()
   this.eventInject()
   this.eventNav()
