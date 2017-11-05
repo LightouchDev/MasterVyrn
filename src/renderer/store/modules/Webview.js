@@ -1,7 +1,7 @@
 const state = {
   gameURL: 'http://game.granbluefantasy.jp/',
   url: '',
-  preloadScript: 'file://' + require('path').join(__static, 'uglified_preload.js'),
+  preloadScript: 'file://' + require('path').join(__static, 'minified_preload.js'),
   partition: 'persist:main'
 }
 

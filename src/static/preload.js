@@ -1,4 +1,4 @@
-/* global DEBUG, webviewOverride */
+/* global DEBUG */
 
 (() => {
   'use strict'
@@ -19,14 +19,12 @@
 
   if (DEBUG) {
     oneshotListener(window, 'DOMContentLoaded', () => {
-      // log dom parsed time
       console.log(now(), 'DOM parsed')
       // recover console function
       Object.assign(window.console, console)
     })
 
     oneshotListener(window, 'load', () => {
-      // log dom loaded time
       console.log(now(), 'DOM ready')
     })
   }
@@ -58,24 +56,22 @@
       if (DEBUG) console.warn(now(), 'start looking for head!')
       if (document.head) {
         htmlWatcher.disconnect()
-        let cssElement = document.createElement('style')
-        cssElement.type = 'text/css'
-        cssElement.innerHTML = webviewOverride
-        document.head.appendChild(cssElement)
-        if (DEBUG) console.warn(now(), 'head patched!')
+        if (DEBUG) console.warn(now(), 'head detected!')
         headWatcher.observe(document.head, config)
       }
     })
     htmlWatcher.observe(document, config)
     const headWatcher = new window.MutationObserver(mutations => {
-      let regex = /^[ \t]+deviceRatio.*\n/gm
+      let regex = /(window\.innerWidth)|(^[ \t]+deviceRatio.*\n)/gm
       if (DEBUG) console.warn(now(), 'start looking for target!')
       for (let mutation of mutations) {
         if (mutation.addedNodes) {
           for (let element of mutation.addedNodes) {
             if (element.nodeName === 'SCRIPT') {
               if (regex.test(element.text)) {
-                element.text = element.text.replace(regex, '')
+                element.text = element.text.replace(regex, (match, p1, p2) => {
+                  return match === p1 ? '(' + p1 + ' - 64)' : ''
+                })
                 if (DEBUG) console.warn(now(), 'target patched!')
                 headWatcher.disconnect()
               }

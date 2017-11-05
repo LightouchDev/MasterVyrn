@@ -34,8 +34,8 @@ export default {
 webview{
   width: 100%;
   height: calc(100vh - #{$mainHeaderHeight});
-  min-width: 320px;
-  max-width: 640px;
+  min-width: 320px + $sidebarPadding;
+  max-width: 640px + $sidebarPadding;
   z-index: 1;
 }
 </style>

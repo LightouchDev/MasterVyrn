@@ -2,13 +2,14 @@
 
 import { app, ipcMain, BrowserWindow, globalShortcut } from 'electron'
 import os from 'os'
+import path from 'path'
 
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
 /**
@@ -53,10 +54,24 @@ app.on('activate', () => {
   }
 })
 
+/**
+ * Everything in static/global.json didn't be hot-reloaded.
+ * the variables of css object will be automatically imported to scss.
+ */
+const css = (() => {
+  let {css} = JSON.parse(require('fs').readFileSync(path.join(__static, 'global.json'), 'utf8'))
+  for (let rule in css) {
+    if (typeof css[rule] === 'string') {
+      css[rule] = /px$/.test(css[rule]) ? parseInt(css[rule]) : css[rule]
+    }
+  }
+  return css
+})()
+
 function createWindow () {
   mainWindow = new BrowserWindow({
     height: 860,
-    width: 480,
+    width: 480 + css.sidebarPadding,
     useContentSize: true,
     fullscreenable: false,
     maximizable: false
@@ -75,8 +90,8 @@ function createWindow () {
 app.on('ready', () => {
   mainWindow.on('resize', event => {
     let [winWidth, winHeight] = event.sender.getSize()
-    if (winWidth < 320) { event.sender.setSize(320, winHeight) }
-    if (winWidth > 640) { event.sender.setSize(640, winHeight) }
+    if (winWidth - css.sidebarPadding < 320) { event.sender.setSize(320 + css.sidebarPadding, winHeight) }
+    if (winWidth - css.sidebarPadding > 640) { event.sender.setSize(640 + css.sidebarPadding, winHeight) }
   })
 })
 

@@ -3,6 +3,7 @@
     "globals": ["__static"]
   },
   "cSpell.words": [
+    "minified",
     "oneshot",
     "polyfill",
     "resizer",

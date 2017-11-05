@@ -14,15 +14,6 @@
   background:#666
 }
 
-/* hide mobg sidebar */
-.jssdk nav {
-	display: none !important;
-}
-/* remove mobg sidebar margin */
-.jssdk > div > div:last-child {
-  margin-left: 0 !important;
-}
-
 /* hide right side submenu */
 .jssdk #submenu {
   display: none !important;
