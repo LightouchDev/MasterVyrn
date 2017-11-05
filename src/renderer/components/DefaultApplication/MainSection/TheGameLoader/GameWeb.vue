@@ -1,5 +1,6 @@
 <template>
   <webview
+    id="game-web"
     :src="gameURL"
     :preload="preloadScript"
     :partition="partition"
@@ -9,11 +10,10 @@
 </template>
 
 <script>
-
 export default {
   data () {
     return {
-      state: this.$store.state.Webview
+      state: this.$store.state.GameWeb
     }
   },
   computed: {
@@ -30,12 +30,18 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-webview{
-  width: 100%;
+<style lang="scss">
+/* hasHeader Setting */
+.hasHeader #game-web{
   height: calc(100vh - #{$mainHeaderHeight});
+}
+
+#game-web{
+  width: calc(100vw + #{$sidebarPadding});
+  height: 100vh;
   min-width: 320px + $sidebarPadding;
   max-width: 640px + $sidebarPadding;
+  margin-left: -$sidebarPadding;
   z-index: 1;
 }
 </style>

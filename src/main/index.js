@@ -54,24 +54,10 @@ app.on('activate', () => {
   }
 })
 
-/**
- * Everything in static/global.json didn't be hot-reloaded.
- * the variables of css object will be automatically imported to scss.
- */
-const css = (() => {
-  let {css} = JSON.parse(require('fs').readFileSync(path.join(__static, 'global.json'), 'utf8'))
-  for (let rule in css) {
-    if (typeof css[rule] === 'string') {
-      css[rule] = /px$/.test(css[rule]) ? parseInt(css[rule]) : css[rule]
-    }
-  }
-  return css
-})()
-
 function createWindow () {
   mainWindow = new BrowserWindow({
     height: 860,
-    width: 480 + css.sidebarPadding,
+    width: 480,
     useContentSize: true,
     fullscreenable: false,
     maximizable: false
@@ -90,8 +76,8 @@ function createWindow () {
 app.on('ready', () => {
   mainWindow.on('resize', event => {
     let [winWidth, winHeight] = event.sender.getSize()
-    if (winWidth - css.sidebarPadding < 320) { event.sender.setSize(320 + css.sidebarPadding, winHeight) }
-    if (winWidth - css.sidebarPadding > 640) { event.sender.setSize(640 + css.sidebarPadding, winHeight) }
+    if (winWidth < 320) { event.sender.setSize(320, winHeight) }
+    if (winWidth > 640) { event.sender.setSize(640, winHeight) }
   })
 })
 

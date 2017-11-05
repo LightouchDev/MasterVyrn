@@ -1,5 +1,5 @@
 <template>
-  <div id="parent">
+  <div id="the-header-bar">
     <div id="icon"><img :src="favicon"></div>
     <div id="url"><span>{{currentPath}}</span></div>
   </div>
@@ -7,12 +7,14 @@
 
 <script>
 export default {
+  data () {
+    return {
+      state: this.$store.state.GameWeb
+    }
+  },
   computed: {
     url () {
-      if (this.$store.state.Webview.url) {
-        return new window.URL(this.$store.state.Webview.url)
-      }
-      return new window.URL(this.$store.state.Webview.gameURL)
+      return new window.URL(this.state.url ? this.state.url : this.state.gameURL)
     },
     currentPath () {
       return this.url.pathname + this.url.hash
@@ -24,14 +26,20 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $paddingWidth: $mainHeaderHeight - 32px;
 
-#parent {
+/* hasHeader Setting */
+.hasHeader #the-header-bar{
+  display:flex;
+}
+
+#the-header-bar {
   color: rgba($standardWhite, 0.75);
   height: $mainHeaderHeight;
-  background-color: #150f0f;
-  display: flex;
+  padding-left: $sidebarPadding;
+  background-color: $standardBlack;
+  display: none;
   align-items: center;
   pointer-events: none;
   > * {

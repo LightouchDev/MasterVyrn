@@ -1,18 +1,18 @@
 <template>
   <div>
-    <webview/>
+    <game-web/>
     <overlay/>
   </div>
 </template>
 
 <script>
-import Webview from './TheGameLoader/Webview'
+import GameWeb from './TheGameLoader/GameWeb'
 import Overlay from './TheGameLoader/Overlay'
 
 export default {
   name: 'the-game-loader',
   components: {
-    Webview,
+    GameWeb,
     Overlay
   }
 }
