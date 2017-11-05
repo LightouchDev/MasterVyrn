@@ -40,32 +40,36 @@ export default {
       let {size} = data[event.target.id]
       let {clientX, clientY} = event
 
-      if (event.type === 'mouseup') { ipcRenderer.send('resizeWindow', size) }
+      if (event.type === 'mousedown') { ipcRenderer.send('resizeWindow', size) }
 
       global.webview.sendInputEvent({
         type: event.type === 'mousedown' ? 'mouseDown' : 'mouseUp',
-        x: clientX,
-        // remove the padding of header bar
-        y: clientY - 40
+        x: clientX + 64,
+        // FIXME: should add padding for Headerbar
+        y: clientY
       })
     }
   }
 }
 </script>
 
+
 <style lang="scss" scoped>
+.hasHeader {
+  height: calc(100vh - #{$mainHeaderHeight});
+}
+
 div {
   position: absolute;
-  transform-origin: 0 0;
   pointer-events: auto;
 }
 #overlay {
-  width: 100%;
-  height: calc(100vh - #{$mainHeaderHeight});
+  width: calc(100vw + #{$sidebarPadding});
+  height: 100vh;
   bottom: 0;
   z-index: 2;
+  margin-left: -$sidebarPadding;
   pointer-events: none;
-  transform: none;
   overflow: hidden;
 }
 </style>
