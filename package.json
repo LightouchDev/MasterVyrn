@@ -1,6 +1,6 @@
 {
   "name": "mastervyrn",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "Miau Lightouch <miaulightouch@gmail.com>",
   "description": "Dedicated game loader for GBF",
   "license": "MIT",
@@ -24,6 +24,7 @@
   "build": {
     "productName": "MasterVyrn",
     "appId": "org.LightouchDev.MasterVyrn",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "build"
     },
@@ -73,7 +74,6 @@
       ]
     },
     "linux": {
-      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
       "category": "Game",
       "icon": "build/icons",
       "target": [
