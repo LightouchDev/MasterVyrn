@@ -1,4 +1,6 @@
 # MasterVyrn
+[![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
+
 [![Travis Build Status](https://travis-ci.org/LightouchDev/MasterVyrn.svg?branch=master)](https://travis-ci.org/LightouchDev/MasterVyrn) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/0922t0n0tggadlvl?svg=true)](https://ci.appveyor.com/project/miaulightouch/mastervyrn)
 
 > Someday, Vyrn learned magic and became a very helpful companion.
