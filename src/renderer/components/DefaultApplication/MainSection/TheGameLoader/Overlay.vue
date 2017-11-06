@@ -65,10 +65,6 @@ export default {
   margin-left: 0;
 }
 
-div {
-  position: absolute;
-  pointer-events: auto;
-}
 #overlay {
   width: calc(100vw + #{$mbgaPadding});
   height: 100vh;
@@ -77,5 +73,10 @@ div {
   margin-left: -$mbgaPadding;
   pointer-events: none;
   overflow: hidden;
+  position: absolute;
+  > div {
+    position: absolute;
+    pointer-events: auto;
+  }
 }
 </style>

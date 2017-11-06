@@ -15,9 +15,6 @@
 </script>
 
 <style lang="scss">
-#app {
-  overflow: hidden;
-}
 body {
   width: 100%;
   height: 100%;
