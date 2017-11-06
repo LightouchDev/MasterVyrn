@@ -21,7 +21,9 @@ function eventResize () {
   })
 
   this.webview.addEventListener('did-finish-load', () => {
-    if (!notJssdk) ro.observe(this.webview)
+    notJssdk
+      ? ro.disconnect()
+      : ro.observe(this.webview)
   })
 }
 
