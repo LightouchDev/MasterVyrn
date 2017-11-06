@@ -6,8 +6,10 @@
 
 <script>
   import MainSection from './DefaultApplication/MainSection'
+  import backgroundService from '../libs/backgroundService'
   import webviewService from '../libs/webviewService'
 
+  backgroundService()
   webviewService()
 
   export default {
@@ -19,4 +21,7 @@
 </script>
 
 <style>
+body {
+  overflow: hidden;
+}
 </style>

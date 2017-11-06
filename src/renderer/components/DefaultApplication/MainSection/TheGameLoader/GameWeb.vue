@@ -36,12 +36,17 @@ export default {
   height: calc(100vh - #{$mainHeaderHeight});
 }
 
+.notJssdk #game-web {
+  width: 100vw;
+  margin-left: 0;
+}
+
 #game-web{
-  width: calc(100vw + #{$sidebarPadding});
+  width: calc(100vw + #{$mbgaPadding});
   height: 100vh;
-  min-width: 320px + $sidebarPadding;
-  max-width: 640px + $sidebarPadding;
-  margin-left: -$sidebarPadding;
+  min-width: 320px + $webviewPadding;
+  max-width: 640px + $webviewPadding;
+  margin-left: -$mbgaPadding;
   z-index: 1;
 }
 </style>

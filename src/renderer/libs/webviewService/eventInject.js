@@ -8,23 +8,7 @@ import path from 'path'
  */
 
 function eventInject () {
-  Promise.all([execGetZoom.apply(this), execGetResizer.apply(this)])
-    .then(() => {
-      console.log('[INFO] Event injected!')
-    })
-}
-
-function execGetZoom () {
-  return new Promise((resolve, reject) => {
-    let js = fs.readFileSync(path.join(__static, 'minified_execGetZoom.js'), 'utf8')
-    this.webview.addEventListener('dom-ready', () => {
-      this.webview.getWebContents().executeJavaScript(js)
-        .then(result => {
-          window.vue.$store.commit('SET_ZOOM', result)
-        })
-    })
-    resolve()
-  })
+  execGetResizer.apply(this)
 }
 
 function execGetResizer () {

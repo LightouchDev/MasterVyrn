@@ -37,7 +37,7 @@ $paddingWidth: $mainHeaderHeight - 32px;
 #the-header-bar {
   color: rgba($standardWhite, 0.75);
   height: $mainHeaderHeight;
-  padding-left: $sidebarPadding;
+  padding-left: $mbgaPadding;
   background-color: $standardBlack;
   display: none;
   align-items: center;

@@ -54,9 +54,15 @@ export default {
 </script>
 
 
-<style lang="scss" scoped>
-.hasHeader {
+<style lang="scss">
+
+.hasHeader #overlay {
   height: calc(100vh - #{$mainHeaderHeight});
+}
+
+.notJssdk #overlay {
+  width: 100vw;
+  margin-left: 0;
 }
 
 div {
@@ -64,11 +70,11 @@ div {
   pointer-events: auto;
 }
 #overlay {
-  width: calc(100vw + #{$sidebarPadding});
+  width: calc(100vw + #{$mbgaPadding});
   height: 100vh;
   bottom: 0;
   z-index: 2;
-  margin-left: -$sidebarPadding;
+  margin-left: -$mbgaPadding;
   pointer-events: none;
   overflow: hidden;
 }

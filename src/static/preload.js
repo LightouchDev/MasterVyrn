@@ -73,10 +73,16 @@
           for (let element of mutation.addedNodes) {
             if (element.nodeName === 'SCRIPT') {
               if (/deviceRatio/.test(element.text)) {
+                let mbgaPadding = 64
+                let scrollbarPadding = 3
                 setTimeout(() => {
                   if (DEBUG) console.log(now(), 'replace start')
+                  if (document.body.className !== 'jssdk') {
+                    ipcRenderer.sendToHost('notJssdk')
+                    mbgaPadding = 0
+                  }
                   window.displayInitialize = function () {
-                    let deviceRatio = (window.innerWidth - 67) / 320
+                    let deviceRatio = (window.innerWidth - (mbgaPadding + scrollbarPadding)) / 320
                     if (deviceRatio <= 1) {
                       deviceRatio = 1
                     } else if (deviceRatio > 2) {
@@ -86,6 +92,7 @@
                   }
                   window.deviceRatio = window.displayInitialize()
                   window.fitScreenByZoom(window.deviceRatio)
+                  ipcRenderer.sendToHost('setZoom', window.deviceRatio)
                 })
                 if (DEBUG) console.warn(now(), 'target patched!')
                 headWatcher.disconnect()

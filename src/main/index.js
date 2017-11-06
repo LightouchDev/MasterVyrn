@@ -57,7 +57,7 @@ app.on('activate', () => {
 function createWindow () {
   mainWindow = new BrowserWindow({
     height: 860,
-    width: 480,
+    width: 480 + gCSS.scrollbarPadding,
     useContentSize: true,
     fullscreenable: false,
     maximizable: false
@@ -69,6 +69,21 @@ function createWindow () {
     mainWindow = null
   })
 }
+/**
+ * Everything in static/global.json didn't be hot-reloaded.
+ * the variables of css object will be automatically imported to scss
+ * and global both Main/Renderer.
+ */
+let gCSS = (() => {
+  let {css} = JSON.parse(require('fs').readFileSync(path.join(__static, 'globals.json'), 'utf8'))
+  for (let rule in css) {
+    if (typeof css[rule] === 'string') {
+      css[rule] = /px$/.test(css[rule]) ? parseInt(css[rule]) : css[rule]
+    }
+  }
+  global.gCSS = css
+  return css
+})()
 
 /**
  * mainWindow events
@@ -76,8 +91,12 @@ function createWindow () {
 app.on('ready', () => {
   mainWindow.on('resize', event => {
     let [winWidth, winHeight] = event.sender.getSize()
-    if (winWidth < 320) { event.sender.setSize(320, winHeight) }
-    if (winWidth > 640) { event.sender.setSize(640, winHeight) }
+    if (winWidth < 320 + gCSS.scrollbarPadding) {
+      event.sender.setSize(320 + gCSS.scrollbarPadding, winHeight)
+    }
+    if (winWidth > 640 + gCSS.scrollbarPadding) {
+      event.sender.setSize(640 + gCSS.scrollbarPadding, winHeight)
+    }
   })
 })
 
@@ -86,8 +105,8 @@ app.on('ready', () => {
  */
 app.on('ready', () => {
   ipcMain.on('resizeWindow', (event, args) => {
-    let m = args < 3 ? (1 + args * 0.5) : 2
-    let x = parseInt(320 * m)
+    let m = args <= 2 ? (1 + args * 0.5) : 2
+    let x = parseInt(320 * m) + gCSS.scrollbarPadding
     let y = mainWindow.getSize()[1]
     mainWindow.setSize(x, y)
   })

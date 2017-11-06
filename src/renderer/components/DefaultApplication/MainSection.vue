@@ -1,5 +1,8 @@
 <template>
-  <div id="mainSection">
+  <div
+    id="mainSection"
+    :class="cleanClass ? '' : notJssdk ? 'notJssdk' : ''"
+  >
     <TheHeaderBar/>
     <TheGameLoader/>
   </div>
@@ -13,6 +16,14 @@ export default {
   components: {
     TheGameLoader,
     TheHeaderBar
+  },
+  computed: {
+    cleanClass () {
+      return this.$store.state.GameWeb.cleanClass
+    },
+    notJssdk () {
+      return this.$store.state.GameWeb.notJssdk
+    }
   }
 }
 </script>
