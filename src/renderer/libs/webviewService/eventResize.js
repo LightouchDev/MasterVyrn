@@ -4,6 +4,7 @@ import ResizeObserver from 'resize-observer-polyfill'
 
 /**
  * Reload webview when webview resized.
+ * FIXME: ResizeObserver is bugged.
  */
 function eventResize () {
   let notJssdk = false
@@ -20,9 +21,7 @@ function eventResize () {
   })
 
   this.webview.addEventListener('did-finish-load', () => {
-    notJssdk
-      ? setTimeout(() => { ro.observe(this.webview) }, 5000)
-      : ro.observe(this.webview)
+    if (!notJssdk) ro.observe(this.webview)
   })
 }
 
