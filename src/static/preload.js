@@ -14,9 +14,6 @@
   }
 
   const {ipcRenderer} = require('electron')
-  oneshotListener(window, 'DOMContentLoaded', () => {
-    ipcRenderer.sendToHost('insertCSS')
-  })
 
   DOMWatcher()
   eventInjector()
@@ -46,10 +43,37 @@
    * @param   {boolean}   useCapture  - useCapture
    */
   function oneshotListener (node, event, callback, useCapture) {
-    node.addEventListener(event, function handler (e) {
-      this.removeEventListener(e.type, handler)
-      return callback(e)
+    node.addEventListener(event, function handler (event) {
+      this.removeEventListener(event.type, handler)
+      return callback(event)
     }, useCapture)
+  }
+
+  function headPre () {
+    ipcRenderer.sendToHost('insertCSS')
+    if (DEBUG) console.log(now(), 'css patched')
+  }
+
+  function headPost () {
+    let mbgaPadding = 64
+    let scrollbarPadding = 3
+    setTimeout(() => {
+      if (DEBUG) console.log(now(), 'replace start')
+      if (document.body.className !== 'jssdk') { ipcRenderer.sendToHost('notJssdk') }
+      window.displayInitialize = function () {
+        let deviceRatio = (window.innerWidth - (mbgaPadding + scrollbarPadding)) / 320
+        if (deviceRatio <= 1) {
+          deviceRatio = 1
+        } else if (deviceRatio > 2) {
+          deviceRatio = 2
+        }
+        return deviceRatio
+      }
+      window.deviceRatio = window.displayInitialize()
+      window.fitScreenByZoom(window.deviceRatio)
+      ipcRenderer.sendToHost('setZoom', window.deviceRatio)
+    })
+    if (DEBUG) console.warn(now(), 'target patched!')
   }
 
   /**
@@ -57,7 +81,12 @@
    */
   function DOMWatcher () {
     const config = { childList: true, subtree: true }
-    const htmlWatcher = new window.MutationObserver(mutation => {
+    let onetimeSwitch = true
+    const htmlWatcher = new window.MutationObserver(mutations => {
+      if (onetimeSwitch) {
+        headPre()
+        onetimeSwitch = false
+      }
       if (DEBUG) console.warn(now(), 'start looking for head!')
       if (document.head) {
         htmlWatcher.disconnect()
@@ -69,33 +98,14 @@
     const headWatcher = new window.MutationObserver(mutations => {
       if (DEBUG) console.warn(now(), 'start looking for target!')
       for (let mutation of mutations) {
+        if (onetimeSwitch) break
         if (mutation.addedNodes) {
           for (let element of mutation.addedNodes) {
             if (element.nodeName === 'SCRIPT') {
               if (/deviceRatio/.test(element.text)) {
-                let mbgaPadding = 64
-                let scrollbarPadding = 3
-                setTimeout(() => {
-                  if (DEBUG) console.log(now(), 'replace start')
-                  if (document.body.className !== 'jssdk') {
-                    ipcRenderer.sendToHost('notJssdk')
-                    mbgaPadding = 0
-                  }
-                  window.displayInitialize = function () {
-                    let deviceRatio = (window.innerWidth - (mbgaPadding + scrollbarPadding)) / 320
-                    if (deviceRatio <= 1) {
-                      deviceRatio = 1
-                    } else if (deviceRatio > 2) {
-                      deviceRatio = 2
-                    }
-                    return deviceRatio
-                  }
-                  window.deviceRatio = window.displayInitialize()
-                  window.fitScreenByZoom(window.deviceRatio)
-                  ipcRenderer.sendToHost('setZoom', window.deviceRatio)
-                })
-                if (DEBUG) console.warn(now(), 'target patched!')
+                headPost()
                 headWatcher.disconnect()
+                onetimeSwitch = true
                 break
               }
             }
