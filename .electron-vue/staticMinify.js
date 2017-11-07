@@ -82,7 +82,7 @@ const noFunc = () => {}
  * @param {callback} upReject  - Parent reject callback
  * @param {boolean}  dev       - Uglify debug info
  */
-function minify (upResolve = noFunc, upReject = noFunc, dev = false) {
+function minify (dev = false, upResolve = noFunc, upReject = noFunc) {
   Promise.all([cssProcess(), jsProcess(dev)])
     .then(() => {
       console.log('Minify finished!')
@@ -95,7 +95,9 @@ function minify (upResolve = noFunc, upReject = noFunc, dev = false) {
 }
 
 if (require.main === module) {
-  staticMinify()
+  process.argv.slice(2)[0] === '--dev'
+    ? staticMinify(true)
+    : staticMinify()
 } else {
   module.exports = staticMinify
 }

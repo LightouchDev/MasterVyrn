@@ -41,7 +41,7 @@ function logStats (proc, data) {
 function minifyStatic () {
   const staticMinify = require('./staticMinify')
   return new Promise((resolve, reject) => {
-    staticMinify(resolve, reject, true)
+    staticMinify(true, resolve, reject)
   })
 }
 
