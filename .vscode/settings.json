@@ -3,10 +3,15 @@
     "globals": ["__static"]
   },
   "cSpell.words": [
+    "jssdk",
+    "mbga",
     "minified",
+    "mobage",
     "oneshot",
     "polyfill",
     "resizer",
-    "vuex"
+    "scrollbar",
+    "vuex",
+    "vyrn"
   ]
 }
