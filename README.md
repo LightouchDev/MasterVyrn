@@ -1,7 +1,7 @@
 # MasterVyrn
 > Someday, Vyrn learned magic and became a very helpful companion.
 
-[![Travis Build Status](https://travis-ci.org/LightouchDev/MasterVyrn.svg?branch=master)](https://travis-ci.org/LightouchDev/MasterVyrn) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/0922t0n0tggadlvl?svg=true)](https://ci.appveyor.com/project/miaulightouch/mastervyrn) [![GitHub license](https://img.shields.io/github/license/LightouchDev/MasterVyrn.svg)](https://github.com/LightouchDev/MasterVyrn/blob/master/LICENSE)
+[![Travis Build Status](https://travis-ci.org/LightouchDev/MasterVyrn.svg?branch=master)](https://travis-ci.org/LightouchDev/MasterVyrn) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/obav0cwt4ug564mv?svg=true)](https://ci.appveyor.com/project/MiauLightouch/mastervyrn) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LightouchDev/MasterVyrn/blob/master/LICENSE)
 
 [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
 
