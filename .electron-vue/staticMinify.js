@@ -37,40 +37,48 @@ function cleanUp () {
 
 function cssProcess () {
   return new Promise((resolve, reject) => {
-    cssFiles.forEach((file, index, array) => {
-      let css = fs.readFileSync(file, 'utf8')
-      processor.process(css).then(result => {
-        let basename = 'minified_' + path.basename(file)
-        console.log('Generating...', basename)
-        fs.writeFileSync(path.join(outputPath, basename), result.css)
-        if (index === array.length - 1) { resolve() }
+    if (cssFiles[0]) {
+      cssFiles.forEach((file, index, array) => {
+        let css = fs.readFileSync(file, 'utf8')
+        processor.process(css).then(result => {
+          let basename = 'minified_' + path.basename(file)
+          console.log('Generating...', basename)
+          fs.writeFileSync(path.join(outputPath, basename), result.css)
+          if (index === array.length - 1) { resolve() }
+        })
       })
-    })
+    } else {
+      resolve()
+    }
   })
 }
 
 function jsProcess (dev) {
   return new Promise((resolve, reject) => {
-    jsFiles.forEach((file, index, array) => {
-      let js = fs.readFileSync(file, 'utf8')
-      let config = {
-        warnings: dev === true,
-        compress: {
-          ecma: 6,
-          side_effects: false,
-          global_defs: {
-            DEBUG: dev === true
-          }
-        },
-        sourceMap: dev ? {url: 'inline'} : false,
-      }
-      let basename = 'minified_' + path.basename(file)
-      let result = UglifyES.minify(js, config)
-      console.log('Generating...', basename)
-      if (dev && result.warnings) console.warn(result.warnings)
-      fs.writeFileSync(path.join(outputPath, basename), result.code)
-      if (index === array.length - 1) { resolve() }
-    })
+    if (jsFiles[0]) {
+      jsFiles.forEach((file, index, array) => {
+        let js = fs.readFileSync(file, 'utf8')
+        let config = {
+          warnings: dev === true,
+          compress: {
+            ecma: 6,
+            side_effects: false,
+            global_defs: {
+              DEBUG: dev === true
+            }
+          },
+          sourceMap: dev ? {url: 'inline'} : false,
+        }
+        let basename = 'minified_' + path.basename(file)
+        let result = UglifyES.minify(js, config)
+        console.log('Generating...', basename)
+        if (dev && result.warnings) console.warn(result.warnings)
+        fs.writeFileSync(path.join(outputPath, basename), result.code)
+        if (index === array.length - 1) { resolve() }
+      })
+    } else {
+      resolve()
+    }
   })
 }
 
