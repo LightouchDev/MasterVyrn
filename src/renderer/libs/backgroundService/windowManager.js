@@ -6,6 +6,9 @@ function WindowManager () {
   this.zoom = 1.5
   this.submenuOpened = false
   this.setDefault()
+  this.padding = 64
+  this.subButtonWidth = 33
+  this.applyWidth()
   this.zoomHandler()
   this.sessionHandler()
   this.submenuHandler()
