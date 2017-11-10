@@ -28,7 +28,6 @@ WindowManager.prototype.service = function () {
 
     // resize events from resizers
     ipcMain.on('resizeWindow', (event, msg) => {
-      // console.log(msg)
       this.min = msg.min
       this.max = msg.max
       this.width = msg.width

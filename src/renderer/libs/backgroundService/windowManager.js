@@ -35,7 +35,6 @@ WindowManager.prototype.setWebWidth = function (width) {
 }
 
 WindowManager.prototype.setWindowWidth = function (width) {
-  console.log(this, width)
   let max = this.submenuOpened
     ? 2 * this.baseSize
     : this.subButtonWidth + 2 * 320
@@ -68,7 +67,6 @@ WindowManager.prototype.applyWidth = function () {
     let windowWidth = this.submenuOpened
       ? this.baseSize * this.zoom
       : 320 * this.zoom + this.subButtonWidth
-    console.log('window:', windowWidth, this.zoom)
     if (preWindowWidth !== windowWidth) {
       this.setWindowWidth(windowWidth)
       preWindowWidth = windowWidth
@@ -109,7 +107,6 @@ WindowManager.prototype.sessionHandler = function () {
     }
     if (obj.noAutoResize) {
       // automatic process to set full
-      console.log('no autosize')
       global.triggerFull = true
     }
     if (obj.padding) {

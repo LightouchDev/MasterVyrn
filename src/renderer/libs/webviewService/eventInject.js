@@ -18,7 +18,6 @@ function autoResizerEnabler (style) {
     .then(zoom => {
       let x = (noPx(style.left) + noPx(style.width) / 2) * zoom
       let y = (noPx(style.top) + noPx(style.height) / 2) * zoom
-      console.log('mouse position', x, y)
       setTimeout(() => {
         window.webview.sendInputEvent({ type: 'mouseDown', x: x, y: y })
         setTimeout(() => {
