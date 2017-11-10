@@ -11,14 +11,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const css = (() => {
-  const {format} = require('util')
-  const {css} = require('../static/globals.json')
-  let rules = ' '
-  for (let rule in css) { rules += format('$%s: %s; ', rule, css[rule]) }
-  return rules
-})()
-
 /**
  * List of node_modules to include in webpack bundle
  *
@@ -77,7 +69,7 @@ let rendererConfig = {
             extractCSS: process.env.NODE_ENV === 'production',
             loaders: {
               sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1&data=@import "./src/renderer/globals"',
-              scss: 'vue-style-loader!css-loader!sass-loader?data=' +css + '@import "./src/renderer/globals";'
+              scss: 'vue-style-loader!css-loader!sass-loader?data=@import "./src/renderer/globals";'
             }
           }
         }
