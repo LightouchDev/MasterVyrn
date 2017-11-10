@@ -7,10 +7,13 @@ function ConfigHandler (workDir) {
   this.workDir = workDir
   this.defaultConfig = {
     throttling: false,
-    disableHardwareAcceleration: false
+    disableHardwareAcceleration: false,
+    platformPadding: 0
   }
   this.config = {}
-  global.Configs = {set: this.set}
+  global.Configs = {}
+
+  this.set()
 
   return this.init()
 }
@@ -35,15 +38,26 @@ ConfigHandler.prototype.init = function () {
   })
 }
 
-ConfigHandler.prototype.set = function (obj) {
-  if (typeof obj !== 'object') throw new InputException('the input is not an object')
-  Object.assign(this.config, obj)
-  this.save(this.config)
+ConfigHandler.prototype.set = function () {
+  global.Configs.set = obj => {
+    if (typeof obj !== 'object') throw new InputException('the input is not an object')
+    let modified = false
+    console.log('config is:', this.config)
+    if (Object.keys(this.config).length) {
+      for (let index in obj) {
+        modified = obj[index] !== this.config[index]
+        if (modified) break
+      }
+      if (modified) {
+        Object.assign(this.config, obj)
+        this.save(this.config)
+      }
+    }
+  }
 }
 
 ConfigHandler.prototype.save = function (obj) {
-  const {Main, Renderer} = obj
-  fs.writeFileSync(path.join(this.workDir, 'config.json'), JSON.stringify({Main, Renderer}), 'utf8')
+  fs.writeFileSync(path.join(this.workDir, 'config.json'), JSON.stringify(obj), 'utf8')
 }
 
 export default workDir => {
