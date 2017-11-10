@@ -103,10 +103,11 @@ WindowManager.prototype.sessionHandler = function () {
   global.sessionHandler = obj => {
     if (obj.notLogin) {
       this.login = false
+      this.submenuOpened = false
       this.baseSize = obj.baseSize
     }
     if (obj.noAutoResize) {
-      // automatic process to set full
+      // automatic process is in webviewService/eventInject.js
       global.triggerFull = true
     }
     if (obj.padding) {
@@ -123,6 +124,7 @@ WindowManager.prototype.submenuHandler = function () {
     if (this.submenuOpened !== newSubmenuOpened) {
       this.submenuOpened = newSubmenuOpened
       this.resizeContinue = false
+      if (!this.login) { this.submenuOpened = false }
       this.applyWidth()
     }
   }
