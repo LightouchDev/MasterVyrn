@@ -3,6 +3,8 @@
 import { app, ipcMain, BrowserWindow, globalShortcut } from 'electron'
 import os from 'os'
 import path from 'path'
+import configHandler from './libs/configHandler'
+import windowManager from './libs/windowManager'
 
 /**
  * Set `__static` path to static files in production
@@ -11,6 +13,13 @@ import path from 'path'
 if (process.env.NODE_ENV !== 'development') {
   global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
+
+/**
+ * Init service
+ */
+configHandler(app.getPath('userData')).then(() => {
+  windowManager(mainWindow)
+})
 
 /**
  * App switch
@@ -29,6 +38,7 @@ app.on('ready', createWindow)
  * Window section
  */
 let mainWindow
+
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
@@ -56,12 +66,13 @@ app.on('activate', () => {
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    height: 860,
-    width: 480 + gCSS.scrollbarPadding,
+    width: 480 + 33,
+    height: 870,
     useContentSize: true,
     fullscreenable: false,
     maximizable: false
   })
+  global.mainWindow = mainWindow
 
   mainWindow.loadURL(winURL)
 
@@ -69,46 +80,13 @@ function createWindow () {
     mainWindow = null
   })
 }
-/**
- * Everything in static/global.json didn't be hot-reloaded.
- * the variables of css object will be automatically imported to scss
- * and global both Main/Renderer.
- */
-let gCSS = (() => {
-  let {css} = JSON.parse(require('fs').readFileSync(path.join(__static, 'globals.json'), 'utf8'))
-  for (let rule in css) {
-    if (typeof css[rule] === 'string') {
-      css[rule] = /px$/.test(css[rule]) ? parseInt(css[rule]) : css[rule]
-    }
-  }
-  global.gCSS = css
-  return css
-})()
-
-/**
- * mainWindow events
- */
-app.on('ready', () => {
-  mainWindow.on('resize', event => {
-    let [winWidth, winHeight] = event.sender.getSize()
-    if (winWidth < 320 + gCSS.scrollbarPadding) {
-      event.sender.setSize(320 + gCSS.scrollbarPadding, winHeight)
-    }
-    if (winWidth > 640 + gCSS.scrollbarPadding) {
-      event.sender.setSize(640 + gCSS.scrollbarPadding, winHeight)
-    }
-  })
-})
 
 /**
  * ipc message Handler
  */
 app.on('ready', () => {
-  ipcMain.on('resizeWindow', (event, args) => {
-    let m = args <= 2 ? (1 + args * 0.5) : 2
-    let x = parseInt(320 * m) + gCSS.scrollbarPadding
-    let y = mainWindow.getSize()[1]
-    mainWindow.setSize(x, y)
+  ipcMain.on('globalVariable', (event, args) => {
+    Object.assign(global.Configs, args)
   })
 })
 

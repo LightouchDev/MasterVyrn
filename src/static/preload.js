@@ -12,7 +12,6 @@
       error: window.console.error
     }
   }
-
   const {ipcRenderer} = require('electron')
 
   DOMWatcher()
@@ -21,18 +20,18 @@
 
   if (DEBUG) {
     oneshotListener(window, 'DOMContentLoaded', () => {
-      console.log(now(), 'DOM parsed')
+      log('DOM parsed')
       // recover console function
       Object.assign(window.console, console)
     })
 
     oneshotListener(window, 'load', () => {
-      console.log(now(), 'DOM ready')
+      log('DOM ready')
     })
   }
 
-  function now () {
-    return (window.performance.now() - startTime).toFixed(2)
+  function log (msg, type = 'log') {
+    if (DEBUG) console[type]((window.performance.now() - startTime).toFixed(2), msg)
   }
 
   /**
@@ -51,29 +50,40 @@
 
   function headPre () {
     ipcRenderer.sendToHost('insertCSS')
-    if (DEBUG) console.log(now(), 'css patched')
+    log('css patched')
   }
 
-  function headPost () {
-    let mbgaPadding = 64
-    let scrollbarPadding = 3
-    setTimeout(() => {
-      if (DEBUG) console.log(now(), 'replace start')
-      if (document.body.className !== 'jssdk') { ipcRenderer.sendToHost('notJssdk') }
-      window.displayInitialize = function () {
-        let deviceRatio = (window.innerWidth - (mbgaPadding + scrollbarPadding)) / 320
-        if (deviceRatio <= 1) {
-          deviceRatio = 1
-        } else if (deviceRatio > 2) {
-          deviceRatio = 2
-        }
-        return deviceRatio
+  function headPost (content) {
+    let match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);$/m.exec(content)
+    // FIXME use Electron session instead
+    if (/^[ \t]+Game.userId = 0;$/m.test(content)) {
+      ipcRenderer.sendToHost('sessionInfo', {
+        notLogin: true,
+        baseSize: parseInt(/^[ \t]+deviceRatio = window.innerWidth \/ (\d+);$/m.exec(content)[1])
+      })
+    } else if (match) {
+      ipcRenderer.sendToHost('sessionInfo', {
+        padding: parseInt(match[1]),
+        subButtonWidth: parseInt(match[2]),
+        baseSize: parseInt(match[3])
+      })
+    } else {
+      ipcRenderer.sendToHost('sessionInfo', {
+        noAutoResize: true
+      })
+    }
+    log('target passed!', 'warn')
+
+    let submenuWatcher = setInterval(() => {
+      if (document.querySelector('#submenu')) {
+        new window.MutationObserver(mutations => {
+          mutations.forEach(mutation => {
+            ipcRenderer.sendToHost('submenu', /open/.test(mutation.target.className))
+          })
+        }).observe(document.querySelector('#submenu'), {attributes: true})
+        clearInterval(submenuWatcher)
       }
-      window.deviceRatio = window.displayInitialize()
-      window.fitScreenByZoom(window.deviceRatio)
-      ipcRenderer.sendToHost('setZoom', window.deviceRatio)
-    })
-    if (DEBUG) console.warn(now(), 'target patched!')
+    }, 160)
   }
 
   /**
@@ -87,23 +97,25 @@
         headPre()
         onetimeSwitch = false
       }
-      if (DEBUG) console.warn(now(), 'start looking for head!')
+      log('start looking for head!', 'warn')
       if (document.head) {
         htmlWatcher.disconnect()
-        if (DEBUG) console.warn(now(), 'head detected!')
+        log('head detected!', 'warn')
         headWatcher.observe(document.head, config)
       }
     })
     htmlWatcher.observe(document, config)
+
     const headWatcher = new window.MutationObserver(mutations => {
-      if (DEBUG) console.warn(now(), 'start looking for target!')
+      log('start looking for target!', 'warn')
       for (let mutation of mutations) {
         if (onetimeSwitch) break
         if (mutation.addedNodes) {
           for (let element of mutation.addedNodes) {
             if (element.nodeName === 'SCRIPT') {
               if (/deviceRatio/.test(element.text)) {
-                headPost()
+                log('target found!')
+                headPost(element.text)
                 headWatcher.disconnect()
                 onetimeSwitch = true
                 break

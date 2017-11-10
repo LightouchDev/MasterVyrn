@@ -14,13 +14,13 @@ function ipcHandler () {
 /**
  * Process received message from webview
  * @param {string} channel - Message type
- * @param {object} args    - Message body
+ * @param {object} msg    - Message body
  */
 function channelAction (channel, msg) {
-  if (channel === 'setZoom') { window.vue.$store.commit('SET_ZOOM', msg) }
-  if (channel === 'notJssdk') { window.vue.$store.commit('NOT_JSSDK', true) }
-  if (channel === 'insertCSS') { this.webview.insertCSS(this.css) }
-  if (channel === 'hostLog') { console.log(msg) }
+  if (channel === 'insertCSS') { this.webview.insertCSS('::-webkit-scrollbar{display:none}') }
+  if (channel === 'submenu') { global.submenuHandler(msg) }
+  if (channel === 'sessionInfo') { global.sessionHandler(msg) }
+  // if (channel === 'hostLog') { console.log(msg) }
 }
 
 export default ipcHandler

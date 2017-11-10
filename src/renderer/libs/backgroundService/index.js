@@ -1,19 +1,17 @@
 'use strict'
 
+import windowManager from './windowManager'
+
 let BackgroundService = function () {
-  this.globalVals()
+  this.globalVars()
+  windowManager()
 }
 
-BackgroundService.prototype.globalVals = function () {
-  let {css} = JSON.parse(require('fs').readFileSync(require('path').join(__static, 'globals.json'), 'utf8'))
-  for (let rule in css) {
-    if (typeof css[rule] === 'string') {
-      css[rule] = /px$/.test(css[rule]) ? parseInt(css[rule]) : css[rule]
-    }
+BackgroundService.prototype.globalVars = function () {
+  global.setVar = obj => {
+    Object.assign(global, obj)
+    require('electron').ipcRenderer.send('globalVariable', obj)
   }
-  global.gCSS = css
 }
 
-export default () => {
-  return new BackgroundService()
-}
+export default () => { return new BackgroundService() }

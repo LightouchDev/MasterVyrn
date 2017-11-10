@@ -7,14 +7,12 @@
       :class="[element.class ? element.class : '']"
       :data-preset="element.preset ? element.preset : ''"
       :style="[element.style, zoom]"
-      v-on="element.clickable ? { mousedown: eventMap, mouseup: eventMap } : ''"
+      v-on="element.clickable ? { mouseup: eventMap } : ''"
     ></div>
   </div>
 </template>
 
 <script>
-import {ipcRenderer} from 'electron'
-
 export default {
   data () {
     return {
@@ -38,16 +36,11 @@ export default {
     },
     resizer: function (event, data) {
       let {size} = data[event.target.id]
-      let {clientX, clientY} = event
 
-      if (event.type === 'mousedown') { ipcRenderer.send('resizeWindow', size) }
-
-      global.webview.sendInputEvent({
-        type: event.type === 'mousedown' ? 'mouseDown' : 'mouseUp',
-        x: clientX + 64,
-        // FIXME: should add padding for Headerbar
-        y: clientY
-      })
+      if (event.type === 'mouseup') {
+        size = 1 + (size * 0.5)
+        global.setZoom(size)
+      }
     }
   }
 }
@@ -60,17 +53,10 @@ export default {
   height: calc(100vh - #{$mainHeaderHeight});
 }
 
-.notJssdk #overlay {
-  width: 100vw;
-  margin-left: 0;
-}
-
 #overlay {
-  width: calc(100vw + #{$mbgaPadding});
   height: 100vh;
   bottom: 0;
   z-index: 2;
-  margin-left: -$mbgaPadding;
   pointer-events: none;
   overflow: hidden;
   position: absolute;

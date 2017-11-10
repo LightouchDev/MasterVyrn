@@ -3,19 +3,16 @@
 import eventInject from './eventInject'
 import eventNav from './eventNav'
 import eventOverlay from './eventOverlay'
-import eventResize from './eventResize'
 import ipcHandler from './ipcHandler'
 
 let WebviewInit = function () {
   this.webview = document.querySelector('webview')
-  this.css = require('fs').readFileSync(require('path').join(__static, 'minified_webviewOverride.css'), 'utf8')
   this.init()
   this.eventInject()
   this.eventNav()
   this.eventOverlay()
-  this.eventResize()
   this.ipcHandler()
-  global.webview = this.webview
+  window.webview = this.webview
 }
 
 WebviewInit.prototype.init = function () {
@@ -30,14 +27,11 @@ WebviewInit.prototype.init = function () {
 WebviewInit.prototype.eventInject = eventInject
 WebviewInit.prototype.eventNav = eventNav
 WebviewInit.prototype.eventOverlay = eventOverlay
-WebviewInit.prototype.eventResize = eventResize
 WebviewInit.prototype.ipcHandler = ipcHandler
 
 export default () => {
-  // waiting window loaded to prevent getting the empty element.
   window.addEventListener('DOMContentLoaded', () => {
-    // actually, we just need to trigger constructor,
-    // and this return is for avoiding standardJS warning.
+    // avoid standardJS warning.
     return new WebviewInit()
   })
 }
