@@ -4,12 +4,13 @@ import {app, ipcMain} from 'electron'
 import os from 'os'
 
 function WindowManager () {
+  let subButtonWidth = 19
+
   this.service()
   this.width = 320
-  this.subButtonWidth = 33
   this.platformPadding = 0
-  this.min = this.subButtonWidth + this.width
-  this.max = this.subButtonWidth + this.width * 2
+  this.min = (subButtonWidth + this.width)
+  this.max = (subButtonWidth + this.width) * 2
 
   if (os.platform() === 'win32') {
     this.platformPadding = 16
@@ -37,7 +38,6 @@ WindowManager.prototype.service = function () {
       this.min = msg.min + this.platformPadding
       this.max = msg.max + this.platformPadding
       this.width = msg.width + this.platformPadding
-      this.subButtonWidth = msg.subButtonWidth
 
       let y = global.mainWindow.getSize()[1]
       global.mainWindow.setSize(this.width, y)

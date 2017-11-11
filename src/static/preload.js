@@ -3,17 +3,17 @@
 (() => {
   'use strict'
 
+  const {ipcRenderer} = require('electron')
+
   if (DEBUG) {
-    var startTime = window.performance.now()
-    window.console.log(startTime, 'page start!')
     var console = {
       log: window.console.log,
       warn: window.console.warn,
       error: window.console.error
     }
+    var startTime = window.performance.now()
+    console.log(startTime, 'page start!')
   }
-  const {ipcRenderer} = require('electron')
-
   DOMWatcher()
   eventInjector()
   window.process = undefined
@@ -64,7 +64,7 @@
     } else if (match) {
       ipcRenderer.sendToHost('sessionInfo', {
         padding: parseInt(match[1]),
-        subButtonWidth: parseInt(match[2]),
+        unknownPadding: parseInt(match[2]),
         baseSize: parseInt(match[3])
       })
     } else {
@@ -93,14 +93,14 @@
     const config = { childList: true, subtree: true }
     let onetimeSwitch = true
     const htmlWatcher = new window.MutationObserver(mutations => {
+      log('start looking for head!', 'warn')
       if (onetimeSwitch) {
         headPre()
         onetimeSwitch = false
       }
-      log('start looking for head!', 'warn')
       if (document.head) {
-        htmlWatcher.disconnect()
         log('head detected!', 'warn')
+        htmlWatcher.disconnect()
         headWatcher.observe(document.head, config)
       }
     })

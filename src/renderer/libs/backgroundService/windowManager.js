@@ -6,6 +6,9 @@ class WindowManager {
   constructor () {
     this.zoom = 1.5
     this.submenuOpened = false
+    this.delayApply = null
+    this.preWebWidth = 0
+    this.preWindowWidth = 0
     this.setDefault()
     this.applyWidth()
     this.globalMethod()
@@ -34,7 +37,8 @@ class WindowManager {
     this.login = true
     this.padding = 64
     this.baseSize = 660
-    this.subButtonWidth = 33
+    this.unknownPadding = 33
+    this.subButtonWidth = 18
     this.initialized = false
     this.resizeContinue = true
   }
@@ -55,52 +59,39 @@ class WindowManager {
   }
 
   setWindowWidth (width) {
-    let max = this.submenuOpened
-      ? 2 * this.baseSize
-      : this.subButtonWidth + 2 * 320
-    let min = this.submenuOpened
-      ? this.baseSize
-      : this.subButtonWidth + 320
-
+    let min = Math.round(this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1))
     ipcRenderer.send('resizeWindow', {
       min: min,
-      max: max,
-      width: parseInt(width),
-      subButtonWidth: this.subButtonWidth
+      max: min * 2,
+      width: width
     })
   }
 
   applyWidth () {
-    let delayApply = null
-    let preWebWidth = 0
-    let preWindowWidth = 0
-
-    clearTimeout(delayApply)
-    delayApply = setTimeout(() => {
-      let webWidth = this.baseSize * this.zoom + this.subButtonWidth
-      webWidth += this.login ? this.padding : 0
-      if (preWebWidth !== webWidth) {
+    clearTimeout(this.delayApply)
+    this.delayApply = setTimeout(() => {
+      let webWidth = this.baseSize * this.zoom + this.padding + this.unknownPadding
+      if (this.preWebWidth !== webWidth) {
         this.setWebWidth(webWidth)
-        preWebWidth = webWidth
+        this.preWebWidth = webWidth
       }
 
-      let windowWidth = this.submenuOpened
-        ? this.baseSize * this.zoom
-        : 320 * this.zoom + this.subButtonWidth
-      if (preWindowWidth !== windowWidth) {
+      let windowWidth = Math.round(this.zoom * (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1)))
+      if (this.preWindowWidth !== windowWidth) {
         this.setWindowWidth(windowWidth)
-        preWindowWidth = windowWidth
+        this.preWindowWidth = windowWidth
       }
     }, 80)
   }
 
-  calcZoom () {
-    if (this.login) {
-      this.zoom = this.submenuOpened
-        ? window.innerWidth / this.baseSize
-        : (window.innerWidth - this.subButtonWidth) / 320
+  calcZoom (zoom) {
+    if (zoom) {
+      this.zoom = zoom
+    } else if (this.login) {
+      this.zoom = window.innerWidth / (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1))
     } else {
       this.zoom = window.innerWidth / 320
+      console.log('not login', this.zoom)
     }
 
     if (this.zoom > 2) {
@@ -114,9 +105,9 @@ class WindowManager {
 
   globalMethod () {
     let wm = {}
+
     wm.setZoom = zoom => {
-      this.zoom = zoom
-      this.applyWidth()
+      this.calcZoom(zoom)
     }
 
     wm.sessionHandler = obj => {
@@ -125,17 +116,17 @@ class WindowManager {
         this.submenuOpened = false
         this.baseSize = obj.baseSize
         this.padding = 0
+        this.unknownPadding = 0
         this.subButtonWidth = 0
       }
       if (obj.noAutoResize) {
         // automatic process is in webviewService/eventInject.js
         global.triggerFull = true
-        return
       }
       if (obj.padding) {
         this.padding = obj.padding
         this.baseSize = obj.baseSize
-        this.subButtonWidth = obj.subButtonWidth
+        this.unknownPadding = obj.unknownPadding
       }
       this.applyWidth()
     }
