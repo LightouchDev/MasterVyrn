@@ -18,8 +18,8 @@ function ipcHandler () {
  */
 function channelAction (channel, msg) {
   if (channel === 'insertCSS') { this.webview.insertCSS('::-webkit-scrollbar{display:none}') }
-  if (channel === 'submenu') { global.submenuHandler(msg) }
-  if (channel === 'sessionInfo') { global.sessionHandler(msg) }
+  if (channel === 'submenu') { global.wm.submenuHandler(msg) }
+  if (channel === 'sessionInfo') { global.wm.sessionHandler(msg) }
   // if (channel === 'hostLog') { console.log(msg) }
 }
 
