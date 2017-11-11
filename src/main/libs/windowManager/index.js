@@ -62,7 +62,6 @@ WindowManager.prototype.service = function () {
     // apply platform padding and re-apply window size
     ipcMain.on('CalibrationResult', (event, msg) => {
       this.platformPadding = msg
-      console.log('padding: ', this.platformPadding)
       event.sender.send('Re-applyWindowWidth')
     })
   })

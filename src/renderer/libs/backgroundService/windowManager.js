@@ -40,12 +40,10 @@ class WindowManager {
       } else {
         this.resizeContinue = true
       }
-      console.log(event, msg, window.innerWidth, platformPadding)
     })
 
     // re-apply window width
     ipcRenderer.on('Re-applyWindowWidth', () => {
-      console.log('re-applyWindow', this.preWindowWidth)
       this.setWindowWidth(this.preWindowWidth)
     })
   }
@@ -113,7 +111,6 @@ class WindowManager {
       this.zoom = window.innerWidth / (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1))
     } else {
       this.zoom = window.innerWidth / 320
-      console.log('not login', this.zoom)
     }
 
     if (this.zoom > 2) {
