@@ -95,7 +95,9 @@ class WindowManager {
       }
 
       let windowWidth = Math.round(this.zoom * (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1)))
-      if (this.preWindowWidth !== windowWidth) {
+      if (window.screen.availWidth < windowWidth) {
+        this.calcZoom(window.screen.availWidth / (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1)))
+      } else if (this.preWindowWidth !== windowWidth) {
         this.setWindowWidth(windowWidth)
         this.preWindowWidth = windowWidth
       }
