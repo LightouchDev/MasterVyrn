@@ -8,6 +8,7 @@ function WindowManager () {
   this.service()
   this.width = 320
   this.platformPadding = 0
+  this.delayResize = null
   this.min = (subButtonWidth + this.width)
   this.max = (subButtonWidth + this.width) * 2
 }
@@ -19,13 +20,16 @@ WindowManager.prototype.service = function () {
   app.on('ready', () => {
     // prevent resize oversize
     global.mainWindow.on('resize', event => {
-      let [winWidth, winHeight] = event.sender.getSize()
-      if (winWidth < this.min) {
-        event.sender.setSize(this.min, winHeight)
-      }
-      if (winWidth > this.max) {
-        event.sender.setSize(this.max, winHeight)
-      }
+      clearTimeout(this.delayResize)
+      this.delayResize = setTimeout(() => {
+        let [winWidth, winHeight] = event.sender.getSize()
+        if (winWidth < this.min) {
+          event.sender.setSize(this.min, winHeight)
+        }
+        if (winWidth > this.max) {
+          event.sender.setSize(this.max, winHeight)
+        }
+      })
     })
 
     // resize events from resizers
@@ -34,8 +38,24 @@ WindowManager.prototype.service = function () {
       this.max = msg.max + this.platformPadding
       this.width = msg.width + this.platformPadding
 
-      let y = global.mainWindow.getSize()[1]
-      global.mainWindow.setSize(this.width, y)
+      let {x, y, height} = global.mainWindow.getBounds()
+      if (x > msg.availWidth - this.width) {
+        x = msg.availWidth - this.width > 0
+          ? msg.availWidth - this.width
+          : 0
+      }
+      if (y > msg.availHeight - height) {
+        y = msg.availHeight - height > 0
+          ? msg.availHeight - height
+          : 0
+      }
+      if (height > msg.availHeight) { height = msg.availHeight }
+      global.mainWindow.setBounds({
+        x: x,
+        y: y,
+        width: this.width,
+        height: height
+      })
       event.sender.send('CalibrationStart', msg.width)
     })
 

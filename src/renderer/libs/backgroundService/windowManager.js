@@ -81,7 +81,9 @@ class WindowManager {
     ipcRenderer.send('resizeWindow', {
       min: min,
       max: min * 2,
-      width: width
+      width: width,
+      availWidth: window.screen.availWidth,
+      availHeight: window.screen.availHeight
     })
   }
 
