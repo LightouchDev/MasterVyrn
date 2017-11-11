@@ -6,8 +6,6 @@ function WindowManager () {
   this.zoom = 1.5
   this.submenuOpened = false
   this.setDefault()
-  this.padding = 64
-  this.subButtonWidth = 33
   this.applyWidth()
   this.zoomHandler()
   this.sessionHandler()
@@ -18,22 +16,24 @@ function WindowManager () {
 
 WindowManager.prototype.setDefault = function () {
   this.login = true
-  this.padding = 0
+  this.padding = 64
   this.baseSize = 660
-  this.subButtonWidth = 0
+  this.subButtonWidth = 33
   this.initialized = false
   this.resizeContinue = true
 }
 
 WindowManager.prototype.setWebWidth = function (width) {
-  window.webview.style.width = `${width}px`
-  document.querySelector('#overlay').style.width = `${width}px`
+  let webview = window.webview.style
+  let overlay = document.querySelector('#overlay').style
+  webview.width = `${width}px`
+  overlay.width = `${width}px`
   if (this.padding) {
-    window.webview.style.marginLeft = `-${this.padding}px`
-    document.querySelector('#overlay').style.marginLeft = `-${this.padding}px`
+    webview.marginLeft = `-${this.padding}px`
+    overlay.marginLeft = `-${this.padding}px`
   } else {
-    window.webview.style.marginLeft = 0
-    document.querySelector('#overlay').style.width = 0
+    webview.marginLeft = 0
+    overlay.marginLeft = 0
   }
 }
 
@@ -108,6 +108,8 @@ WindowManager.prototype.sessionHandler = function () {
       this.login = false
       this.submenuOpened = false
       this.baseSize = obj.baseSize
+      this.padding = 0
+      this.subButtonWidth = 0
     }
     if (obj.noAutoResize) {
       // automatic process is in webviewService/eventInject.js
