@@ -66,8 +66,8 @@ app.on('activate', () => {
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 480 + 33,
-    height: 870,
+    width: Math.round((320 + 19) * 1.5),
+    height: 768,
     useContentSize: true,
     fullscreenable: false,
     maximizable: false
