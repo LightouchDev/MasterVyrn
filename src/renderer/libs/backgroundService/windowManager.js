@@ -31,6 +31,23 @@ class WindowManager {
         this.setDefault()
       })
     })
+
+    // platform-specific calibration
+    ipcRenderer.on('CalibrationStart', (event, msg) => {
+      let platformPadding = msg - window.innerWidth
+      if (platformPadding) {
+        event.sender.send('CalibrationResult', platformPadding)
+      } else {
+        this.resizeContinue = true
+      }
+      console.log(event, msg, window.innerWidth, platformPadding)
+    })
+
+    // re-apply window width
+    ipcRenderer.on('Re-applyWindowWidth', () => {
+      console.log('re-applyWindow', this.preWindowWidth)
+      this.setWindowWidth(this.preWindowWidth)
+    })
   }
 
   setDefault () {
@@ -60,6 +77,7 @@ class WindowManager {
 
   setWindowWidth (width) {
     let min = Math.round(this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1))
+    this.resizeContinue = false
     ipcRenderer.send('resizeWindow', {
       min: min,
       max: min * 2,

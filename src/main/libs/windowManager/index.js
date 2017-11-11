@@ -1,7 +1,6 @@
 'use strict'
 
 import {app, ipcMain} from 'electron'
-import os from 'os'
 
 function WindowManager () {
   let subButtonWidth = 19
@@ -11,10 +10,6 @@ function WindowManager () {
   this.platformPadding = 0
   this.min = (subButtonWidth + this.width)
   this.max = (subButtonWidth + this.width) * 2
-
-  if (os.platform() === 'win32') {
-    this.platformPadding = 16
-  }
 }
 
 /**
@@ -41,6 +36,14 @@ WindowManager.prototype.service = function () {
 
       let y = global.mainWindow.getSize()[1]
       global.mainWindow.setSize(this.width, y)
+      event.sender.send('CalibrationStart', msg.width)
+    })
+
+    // apply platform padding and re-apply window size
+    ipcMain.on('CalibrationResult', (event, msg) => {
+      this.platformPadding = msg
+      console.log('padding: ', this.platformPadding)
+      event.sender.send('Re-applyWindowWidth')
     })
   })
 }
