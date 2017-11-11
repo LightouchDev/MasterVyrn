@@ -9,6 +9,7 @@ class WindowManager {
     this.delayApply = null
     this.preWebWidth = 0
     this.preWindowWidth = 0
+    this.calibrationFinished = false
     this.setDefault()
     this.applyWidth()
     this.globalMethod()
@@ -30,6 +31,17 @@ class WindowManager {
       window.webview.addEventListener('did-navigate', () => {
         this.setDefault()
       })
+    })
+
+    // window size calibration
+    ipcRenderer.on('CalibrationStart', () => {
+      let shift = this.preWindowWidth - window.innerWidth
+      if (shift) {
+        ipcRenderer.sendSync('CalibrationResult', shift)
+        this.setWindowWidth(this.preWindowWidth)
+      } else {
+        this.calibrationFinished = true
+      }
     })
   }
 
@@ -60,6 +72,7 @@ class WindowManager {
 
   setWindowWidth (width) {
     let min = Math.round(this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1))
+    this.resizeContinue = this.calibrationFinished
     ipcRenderer.send('resizeWindow', {
       min: min,
       max: min * 2,
