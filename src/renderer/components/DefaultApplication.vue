@@ -6,10 +6,10 @@
 
 <script>
   import MainSection from './DefaultApplication/MainSection'
-  import backgroundService from '../libs/backgroundService'
+  import windowManager from '../libs/windowManager'
   import webviewService from '../libs/webviewService'
 
-  backgroundService()
+  windowManager()
   webviewService()
 
   export default {
