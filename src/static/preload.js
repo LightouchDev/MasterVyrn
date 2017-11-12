@@ -62,6 +62,7 @@
 
   function headPost (content) {
     let match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);$/m.exec(content)
+    let isMbga = /^[ \t]+isMbga.*\n[ \t]+return (.*);$/m.exec(content)[1] === 'true'
     // FIXME use Electron session instead
     if (/^[ \t]+Game.userId = 0;$/m.test(content)) {
       ipcRenderer.sendToHost('sessionInfo', {
@@ -70,13 +71,15 @@
       })
     } else if (match) {
       ipcRenderer.sendToHost('sessionInfo', {
+        isMbga: isMbga,
         padding: Math.round(match[1]),
         unknownPadding: Math.round(match[2]),
         baseSize: Math.round(match[3])
       })
     } else {
       ipcRenderer.sendToHost('sessionInfo', {
-        noAutoResize: true
+        noAutoResize: true,
+        baseSize: Math.round(/^[ \t]+deviceRatio = window.innerWidth \/ (\d+);$/m.exec(content)[1])
       })
     }
     log('target passed!', 'warn')

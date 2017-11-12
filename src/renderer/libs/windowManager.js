@@ -7,7 +7,6 @@ class WindowManager {
     this.zoom = 1.5
     this.submenuOpened = false
     this.delayApply = null
-    this.preWebWidth = 0
     this.preWindowWidth = 0
     this.setDefault()
     this.applyWidth()
@@ -50,6 +49,7 @@ class WindowManager {
 
   setDefault () {
     this.login = true
+    this.Mbga = false
     this.padding = 64
     this.baseSize = 660
     this.unknownPadding = 33
@@ -59,12 +59,18 @@ class WindowManager {
   }
 
   setWebWidth (width) {
+    console.log(this)
     let webview = window.webview.style
     let overlay = document.querySelector('#overlay').style
 
-    webview.width = `${width}px`
-    overlay.width = `${width}px`
-    if (this.padding) {
+    if (/game.granbluefantasy.jp/.test(window.webview.getURL())) {
+      webview.width = `${width}px`
+      overlay.width = `${width}px`
+    } else {
+      webview.width = `${window.innerWidth}px`
+      overlay.width = `${window.innerWidth}px`
+    }
+    if (this.isMbga) {
       webview.marginLeft = `-${this.padding}px`
       overlay.marginLeft = `-${this.padding}px`
     } else {
@@ -89,15 +95,12 @@ class WindowManager {
     clearTimeout(this.delayApply)
     this.delayApply = setTimeout(() => {
       let webWidth = this.baseSize * this.zoom + this.padding + this.unknownPadding
-      if (this.preWebWidth !== webWidth) {
-        this.setWebWidth(webWidth)
-        this.preWebWidth = webWidth
-      }
+      this.setWebWidth(webWidth)
 
       let windowWidth = Math.round(this.zoom * (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1)))
       if (window.screen.availWidth < windowWidth) {
         this.calcZoom(window.screen.availWidth / (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1)))
-      } else if (this.preWindowWidth !== windowWidth) {
+      } else {
         this.setWindowWidth(windowWidth)
         this.preWindowWidth = windowWidth
       }
@@ -130,22 +133,27 @@ class WindowManager {
     }
 
     wm.sessionHandler = obj => {
+      this.baseSize = obj.baseSize
+      this.padding = 0
+      this.unknownPadding = 0
+      this.subButtonWidth = 0
+      this.submenuOpened = false
+
       if (obj.notLogin) {
         this.login = false
-        this.submenuOpened = false
-        this.baseSize = obj.baseSize
-        this.padding = 0
-        this.unknownPadding = 0
-        this.subButtonWidth = 0
+        console.log('notlogin')
       }
       if (obj.noAutoResize) {
         // automatic process is in webviewService/eventInject.js
         global.triggerFull = true
+        console.log('no autosize')
       }
       if (obj.padding) {
+        this.isMbga = obj.isMbga
         this.padding = obj.padding
-        this.baseSize = obj.baseSize
         this.unknownPadding = obj.unknownPadding
+        this.subButtonWidth = 18
+        console.log('logined')
       }
       this.applyWidth()
     }
