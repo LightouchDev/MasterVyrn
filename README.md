@@ -13,7 +13,7 @@ MasterVyrn is a clean dedicated GBF loader build on top of electron.
 
 * **Clean**: MasterVyrn doesn't modify any game content. (only inject css into webview to hide scrollbar.)
 * **Quick**: It's dedicated and no game throttling. (fight won't stop at current turn when you minimize program.)
-* **Safe**: There's no different with regular Chrome/Chromium, any Electron exports were removed.
+* **Safe**: There's no different with regular Chrome/Chromium. (**WARNING**: not all Electron exports were removed.) #10
 
 ## Problem
 
