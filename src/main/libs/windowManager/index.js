@@ -2,22 +2,16 @@
 
 import {app, ipcMain} from 'electron'
 
-function WindowManager () {
-  let subButtonWidth = 19
+class WindowManager {
+  constructor () {
+    let subButtonWidth = 19
 
-  this.service()
-  this.width = 320
-  this.platformPadding = 0
-  this.delayResize = null
-  this.min = (subButtonWidth + this.width)
-  this.max = (subButtonWidth + this.width) * 2
-}
+    this.width = 320
+    this.platformPadding = 0
+    this.delayResize = null
+    this.min = (subButtonWidth + this.width)
+    this.max = (subButtonWidth + this.width) * 2
 
-/**
- * Window resize events
- */
-WindowManager.prototype.service = function () {
-  app.on('ready', () => {
     // prevent resize oversize
     global.mainWindow.on('resize', event => {
       clearTimeout(this.delayResize)
@@ -64,7 +58,11 @@ WindowManager.prototype.service = function () {
       this.platformPadding = msg
       event.sender.send('Re-applyWindowWidth')
     })
-  })
+  }
 }
 
-export default () => { return new WindowManager() }
+export default () => {
+  app.on('ready', () => {
+    return new WindowManager()
+  })
+}
