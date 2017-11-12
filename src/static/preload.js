@@ -64,25 +64,27 @@
     let match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);$/m.exec(content)
     let isMbga = /^[ \t]+isMbga.*\n[ \t]+return (.*);$/m.exec(content)[1] === 'true'
     let baseSize = /^[ \t]+deviceRatio = window.innerWidth \/ (\d+);$/m.exec(content)
+    let response = {url: window.location.href}
     // FIXME use Electron session instead
     if (/^[ \t]+Game.userId = 0;$/m.test(content)) {
-      ipcRenderer.sendToHost('sessionInfo', {
+      Object.assign(response, {
         notLogin: true,
         baseSize: Math.round(baseSize[1])
       })
     } else if (match) {
-      ipcRenderer.sendToHost('sessionInfo', {
+      Object.assign(response, {
         isMbga: isMbga,
         padding: Math.round(match[1]),
         unknownPadding: Math.round(match[2]),
         baseSize: Math.round(match[3])
       })
     } else {
-      ipcRenderer.sendToHost('sessionInfo', {
+      Object.assign(response, {
         noAutoResize: true,
         baseSize: baseSize ? Math.round(baseSize[1]) : baseSize
       })
     }
+    ipcRenderer.sendToHost('sessionInfo', response)
     log('target passed!', 'warn')
 
     let submenuWatcher = setInterval(() => {

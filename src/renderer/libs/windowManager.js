@@ -5,6 +5,7 @@ import {ipcRenderer} from 'electron'
 class WindowManager {
   constructor () {
     this.zoom = 1.5
+    this.url = 'game.granbluefantasy.jp'
     this.submenuOpened = false
     this.delayApply = null
     this.preWindowWidth = 0
@@ -62,7 +63,7 @@ class WindowManager {
     let webview = window.webview.style
     let overlay = document.querySelector('#overlay').style
 
-    if (/game.granbluefantasy.jp/.test(window.vue.$store.state.GameWeb.url.origin)) {
+    if (/game.granbluefantasy.jp/.test(this.url)) {
       webview.width = `${width}px`
       overlay.width = `${width}px`
     } else {
@@ -133,6 +134,7 @@ class WindowManager {
 
     wm.sessionHandler = obj => {
       this.baseSize = obj.baseSize || this.baseSize
+      this.url = obj.url
 
       if (obj.notLogin) {
         this.login = false
