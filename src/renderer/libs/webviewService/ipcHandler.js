@@ -7,7 +7,7 @@ function ipcHandler () {
     channelAction.call(this, event.channel, event.args[0])
   })
   ipcRenderer.on('webviewDevTools', () => {
-    this.webview.openDevTools()
+    this.webview.openDevTools({mode: 'detach'})
   })
 }
 

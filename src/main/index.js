@@ -98,7 +98,7 @@ app.on('ready', () => {
     mainWindow.webContents.send('webviewDevTools')
   })
   globalShortcut.register('CommandOrControl+Alt+O', () => {
-    mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools({mode: 'detach'})
   })
 })
 

@@ -19,7 +19,7 @@ WebviewInit.prototype.init = function () {
   if (process.env.NODE_ENV === 'development') {
     this.webview.addEventListener('dom-ready', () => {
       console.log('WEBVIEW READY!')
-      this.webview.openDevTools()
+      this.webview.openDevTools({mode: 'detach'})
     })
   }
 }
