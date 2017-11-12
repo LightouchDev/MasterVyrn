@@ -18,6 +18,13 @@
   eventInjector()
   window.process = undefined
 
+  // prevent alert popup when resize cause frequency reload
+  let _alert = window.alert
+  window.alert = () => {}
+  oneshotListener(window, 'DOMContentLoaded', () => {
+    window.alert = _alert
+  })
+
   if (DEBUG) {
     oneshotListener(window, 'DOMContentLoaded', () => {
       log('DOM parsed')
