@@ -142,6 +142,7 @@
    * Inject addEventListener to clear mute event
    * FIXME: standardize this
    */
+  /*
   function eventInjector () {
     let _addEventListener = window.addEventListener
     window.addEventListener = function (event, callback) {
@@ -161,4 +162,5 @@
       _addEventListener.apply(this, arguments)
     }
   }
+  */
 })()
