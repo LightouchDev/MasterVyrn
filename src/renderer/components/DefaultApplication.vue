@@ -6,11 +6,11 @@
 
 <script>
   import MainSection from './DefaultApplication/MainSection'
-  import WindowManager from '../libs/WindowManager'
-  import WebviewService from '../libs/WebviewService'
+  import windowManager from '../libs/windowManager'
+  import webviewService from '../libs/webviewService'
 
-  WindowManager()
-  WebviewService()
+  windowManager()
+  webviewService()
 
   export default {
     name: 'default-application',
