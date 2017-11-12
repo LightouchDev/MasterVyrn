@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'development') {
 /**
  * Init service
  */
-configHandler(app.getPath('userData')).then(() => {
+configHandler().then(() => {
   windowManager(mainWindow)
 })
 

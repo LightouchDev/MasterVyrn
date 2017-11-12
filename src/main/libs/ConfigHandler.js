@@ -1,5 +1,6 @@
 'use strict'
 
+import {app} from 'electron'
 import fs from 'fs'
 import path from 'path'
 
@@ -9,13 +10,14 @@ function InputException (message) {
 }
 
 class ConfigHandler {
-  constructor (workDir) {
-    this.workDir = workDir
+  constructor () {
+    this.workDir = app.getPath('userData')
     this.defaultConfig = {
       throttling: false,
       disableHardwareAcceleration: false,
       platformPadding: 0
     }
+
     this.config = {}
     global.Configs = {}
 
@@ -40,7 +42,7 @@ class ConfigHandler {
 
   set () {
     global.Configs.set = obj => {
-      if (typeof obj !== 'object') throw new InputException('the input is not an object')
+      if (typeof obj !== 'object') throw new InputException('input is not object')
       let modified = false
       console.log('config is:', this.config)
       if (Object.keys(this.config).length) {
@@ -61,6 +63,6 @@ class ConfigHandler {
   }
 }
 
-export default workDir => {
-  return new ConfigHandler(workDir)
+export default () => {
+  return new ConfigHandler()
 }
