@@ -62,7 +62,7 @@ class WindowManager {
     let webview = window.webview.style
     let overlay = document.querySelector('#overlay').style
 
-    if (/game.granbluefantasy.jp/.test(window.webview.getURL())) {
+    if (/game.granbluefantasy.jp/.test(window.vue.$store.state.GameWeb.url.origin)) {
       webview.width = `${width}px`
       overlay.width = `${width}px`
     } else {
