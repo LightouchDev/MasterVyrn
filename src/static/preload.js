@@ -59,13 +59,13 @@
     if (/^[ \t]+Game.userId = 0;$/m.test(content)) {
       ipcRenderer.sendToHost('sessionInfo', {
         notLogin: true,
-        baseSize: parseInt(/^[ \t]+deviceRatio = window.innerWidth \/ (\d+);$/m.exec(content)[1])
+        baseSize: Math.round(/^[ \t]+deviceRatio = window.innerWidth \/ (\d+);$/m.exec(content)[1])
       })
     } else if (match) {
       ipcRenderer.sendToHost('sessionInfo', {
-        padding: parseInt(match[1]),
-        unknownPadding: parseInt(match[2]),
-        baseSize: parseInt(match[3])
+        padding: Math.round(match[1]),
+        unknownPadding: Math.round(match[2]),
+        baseSize: Math.round(match[3])
       })
     } else {
       ipcRenderer.sendToHost('sessionInfo', {

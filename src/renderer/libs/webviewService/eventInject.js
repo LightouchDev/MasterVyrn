@@ -28,7 +28,7 @@ function autoResizerEnabler (style) {
 }
 
 function noPx (value) {
-  return parseInt(value.replace(/px$/, ''))
+  return Math.round(value.replace(/px$/, ''))
 }
 
 function execGetResizer () {
