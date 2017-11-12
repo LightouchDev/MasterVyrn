@@ -7,7 +7,7 @@ class WindowManager {
     let subButtonWidth = 19
 
     this.width = 320
-    this.platformPadding = global.Configs.platformPadding
+    this.platformPadding = global.Configs.platformPadding || 0
     this.delayResize = null
     this.min = (subButtonWidth + this.width)
     this.max = (subButtonWidth + this.width) * 2
@@ -55,8 +55,8 @@ class WindowManager {
 
     // apply platform padding and re-apply window size
     ipcMain.on('CalibrationResult', (event, msg) => {
-      this.platformPadding = msg
-      global.Configs.set({platformPadding: msg})
+      this.platformPadding = this.platformPadding + msg
+      global.Configs.set({platformPadding: this.platformPadding})
       event.sender.send('Re-applyWindowWidth')
     })
   }
