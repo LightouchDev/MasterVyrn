@@ -11,7 +11,8 @@ function InputException (message) {
 
 class ConfigHandler {
   constructor () {
-    this.workDir = app.getPath('userData')
+    this.workDir = app.getPath('documents')
+    this.configFilename = 'MasterVyrn.json'
     this.defaultConfig = {
       throttling: false,
       disableHardwareAcceleration: false,
@@ -21,48 +22,100 @@ class ConfigHandler {
     this.config = {}
     global.Configs = {}
 
-    this.set()
+    this.globalMethod()
     return this.init()
   }
 
+  /**
+   * Config initialize process
+   * FIXME: it's totally ugly.
+   */
   init () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       try {
-        fs.accessSync(path.join(this.workDir, 'config.json'))
+        fs.accessSync(path.join(this.workDir, this.configFilename))
+        resolve()
       } catch (error) {
         console.warn(`[WARN] ConfigHandler can't find config, create one.`)
-        this.save(this.defaultConfig)
+        this.save(this.defaultConfig).then(() => { resolve() })
       }
+    }).then(() => {
       this.config = Object.assign({}, this.defaultConfig)
-      Object.assign(this.config, JSON.parse(fs.readFileSync(path.join(this.workDir, 'config.json'), 'utf8')))
-      Object.assign(global.Configs, this.config)
+      let savedConfig = JSON.parse(fs.readFileSync(path.join(this.workDir, this.configFilename), 'utf8'))
+
+      this.filterConfigs(savedConfig)
+        .then(result => {
+          Object.assign(this.config, result)
+          Object.assign(global.Configs, this.config)
+          return this.configApply()
+        })
+    })
+  }
+
+  /**
+   * Apply configs
+   */
+  configApply () {
+    return new Promise((resolve, reject) => {
+      if (this.config.disableHardwareAcceleration) { app.disableHardwareAcceleration() }
+      if (this.config.throttling) { app.commandLine.appendSwitch('disable-renderer-backgrounding') }
       resolve()
     })
   }
 
-  set () {
-    global.Configs.set = obj => {
-      if (typeof obj !== 'object') throw new InputException('input is not object')
-      let modified = false
-      console.log('config is:', this.config)
-      if (Object.keys(this.config).length) {
-        for (let index in obj) {
-          modified = obj[index] !== this.config[index]
-          if (modified) break
+  /**
+   * filter all unexpected config out,
+   * resolve all diff configs
+   */
+  filterConfigs (newConfig, oldConfig = this.config) {
+    return new Promise((resolve) => {
+      let filteredConfig = {}
+      let configNumber = Object.keys(newConfig).length
+
+      for (let index in newConfig) {
+        configNumber--
+        if (oldConfig[index] !== undefined) {
+          if (oldConfig[index] !== newConfig[index]) {
+            Object.assign(filteredConfig, {[index]: newConfig[index]})
+          }
         }
-        if (modified) {
-          Object.assign(this.config, obj)
-          this.save(this.config)
+        if (!configNumber) {
+          resolve(filteredConfig)
+          console.log('resolve with', filteredConfig)
         }
       }
+    })
+  }
+
+  /**
+   * Register global method to set config
+   */
+  globalMethod () {
+    global.Configs.set = obj => {
+      if (typeof obj !== 'object') throw new InputException('input is not object')
+      console.log(`config is: ${this.config}\nnew config: ${obj}`)
+
+      this.filterConfigs(obj).then(result => {
+        if (JSON.stringify(result) !== '{}') {
+          Object.assign(this.config, result)
+          Object.assign(global.Configs, this.config)
+          this.save(this.config)
+        }
+      })
     }
   }
 
+  /**
+   * Convert object to JSON and save to file system
+   * @param {object} obj - config object
+   */
   save (obj) {
-    fs.writeFileSync(path.join(this.workDir, 'config.json'), JSON.stringify(obj), 'utf8')
+    return new Promise((resolve) => {
+      console.log('save config:', obj)
+      fs.writeFileSync(path.join(this.workDir, this.configFilename), JSON.stringify(obj), 'utf8')
+      resolve()
+    })
   }
 }
 
-export default () => {
-  return new ConfigHandler()
-}
+export default () => { return new ConfigHandler() }

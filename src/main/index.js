@@ -1,7 +1,6 @@
 'use strict'
 
 import { app, ipcMain, BrowserWindow, globalShortcut } from 'electron'
-import os from 'os'
 import path from 'path'
 import configHandler from './libs/configHandler'
 import windowManager from './libs/windowManager'
@@ -18,21 +17,10 @@ if (process.env.NODE_ENV !== 'development') {
  * Init service
  */
 configHandler().then(() => {
-  windowManager(mainWindow)
+  app.isReady()
+    ? createWindow()
+    : app.on('ready', createWindow)
 })
-
-/**
- * App switch
- */
-// Avoid throttling of window
-app.commandLine.appendSwitch('disable-renderer-backgrounding')
-
-// Disable hardware acceleration in Win10 for OBS window capture
-// FIXME: it should ship with option, not hard-coded.
-if (os.platform() === 'win32' && os.release().split('.')[0] === '10') {
-  app.disableHardwareAcceleration()
-}
-app.on('ready', createWindow)
 
 /**
  * Window section
@@ -79,6 +67,7 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+  windowManager()
 }
 
 /**
@@ -86,7 +75,7 @@ function createWindow () {
  */
 app.on('ready', () => {
   ipcMain.on('globalVariable', (event, args) => {
-    Object.assign(global.Configs, args)
+    global.Configs.set(args)
   })
 })
 
