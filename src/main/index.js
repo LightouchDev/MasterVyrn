@@ -2,8 +2,8 @@
 
 import { app, ipcMain, BrowserWindow, globalShortcut } from 'electron'
 import path from 'path'
-import configHandler from './libs/configHandler'
-import windowManager from './libs/windowManager'
+import ConfigHandler from './libs/ConfigHandler'
+import WindowManager from './libs/WindowManager'
 
 /**
  * Set `__static` path to static files in production
@@ -16,7 +16,7 @@ if (process.env.NODE_ENV !== 'development') {
 /**
  * Init service
  */
-configHandler().then(() => {
+ConfigHandler().then(() => {
   app.isReady()
     ? createWindow()
     : app.on('ready', createWindow)
@@ -67,7 +67,7 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-  windowManager()
+  WindowManager()
 }
 
 /**

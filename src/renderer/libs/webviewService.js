@@ -11,7 +11,7 @@ function readStatic (filename) {
   return fs.readFileSync(path.join(__static, filename), 'utf8')
 }
 
-class WebviewInit {
+class WebviewService {
   constructor () {
     this.webview = document.querySelector('webview')
     this.init()
@@ -128,6 +128,6 @@ class WebviewInit {
 
 export default () => {
   window.addEventListener('DOMContentLoaded', () => {
-    return new WebviewInit()
+    return new WebviewService()
   })
 }
