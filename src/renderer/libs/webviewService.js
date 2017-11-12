@@ -26,7 +26,6 @@ class WebviewInit {
     // Send URL to vue
     this.webview.addEventListener('did-navigate', (event) => {
       window.vue.$store.commit('CHANGE_URL', event.url)
-      window.vue.$store.commit('CLEAN_CLASS')
     })
     this.webview.addEventListener('did-navigate-in-page', (event) => {
       window.vue.$store.commit('CHANGE_URL', event.url)
@@ -52,7 +51,7 @@ class WebviewInit {
     if (process.env.NODE_ENV === 'development') {
       this.webview.addEventListener('dom-ready', () => {
         console.log('WEBVIEW READY!')
-        this.webview.openDevTools({mode: 'detach'})
+        this.webview.getWebContents().openDevTools({mode: 'detach'})
       })
     }
   }
