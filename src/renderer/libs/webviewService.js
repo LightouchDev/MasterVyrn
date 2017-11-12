@@ -84,7 +84,7 @@ class WebviewInit {
     this.webview.addEventListener('did-finish-load', () => {
       this.webview.getWebContents().executeJavaScript(js)
         .then(result => {
-          if (global.triggerFull) this.autoResizerEnabler(result[3].style)
+          if (global.triggerFull && typeof result[3] === 'object') this.autoResizerEnabler(result[3].style)
           for (let msg of result) {
             window.vue.$store.commit('CREATE_NODE', msg)
           }
