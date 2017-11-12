@@ -63,11 +63,12 @@
   function headPost (content) {
     let match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);$/m.exec(content)
     let isMbga = /^[ \t]+isMbga.*\n[ \t]+return (.*);$/m.exec(content)[1] === 'true'
+    let baseSize = /^[ \t]+deviceRatio = window.innerWidth \/ (\d+);$/m.exec(content)
     // FIXME use Electron session instead
     if (/^[ \t]+Game.userId = 0;$/m.test(content)) {
       ipcRenderer.sendToHost('sessionInfo', {
         notLogin: true,
-        baseSize: Math.round(/^[ \t]+deviceRatio = window.innerWidth \/ (\d+);$/m.exec(content)[1])
+        baseSize: Math.round(baseSize[1])
       })
     } else if (match) {
       ipcRenderer.sendToHost('sessionInfo', {
@@ -79,7 +80,7 @@
     } else {
       ipcRenderer.sendToHost('sessionInfo', {
         noAutoResize: true,
-        baseSize: Math.round(/^[ \t]+deviceRatio = window.innerWidth \/ (\d+);$/m.exec(content)[1])
+        baseSize: baseSize ? Math.round(baseSize[1]) : baseSize
       })
     }
     log('target passed!', 'warn')

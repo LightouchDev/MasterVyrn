@@ -50,16 +50,15 @@ class WindowManager {
   setDefault () {
     this.login = true
     this.Mbga = false
-    this.padding = 64
+    this.padding = 0
     this.baseSize = 660
-    this.unknownPadding = 33
-    this.subButtonWidth = 18
+    this.unknownPadding = 0
+    this.subButtonWidth = 0
     this.initialized = false
     this.resizeContinue = true
   }
 
   setWebWidth (width) {
-    console.log(this)
     let webview = window.webview.style
     let overlay = document.querySelector('#overlay').style
 
@@ -133,27 +132,22 @@ class WindowManager {
     }
 
     wm.sessionHandler = obj => {
-      this.baseSize = obj.baseSize
-      this.padding = 0
-      this.unknownPadding = 0
-      this.subButtonWidth = 0
-      this.submenuOpened = false
+      this.baseSize = obj.baseSize || this.baseSize
 
       if (obj.notLogin) {
         this.login = false
-        console.log('notlogin')
+        this.submenuOpened = false
       }
       if (obj.noAutoResize) {
         // automatic process is in webviewService/eventInject.js
         global.triggerFull = true
-        console.log('no autosize')
+        this.submenuOpened = false
       }
       if (obj.padding) {
         this.isMbga = obj.isMbga
         this.padding = obj.padding
         this.unknownPadding = obj.unknownPadding
         this.subButtonWidth = 18
-        console.log('logined')
       }
       this.applyWidth()
     }
