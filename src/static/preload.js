@@ -21,9 +21,9 @@
   // prevent alert popup when resize cause frequency reload
   let _alert = window.alert
   window.alert = () => {}
-  oneshotListener(window, 'DOMContentLoaded', () => {
+  setTimeout(() => {
     window.alert = _alert
-  })
+  }, 5000)
 
   if (DEBUG) {
     oneshotListener(window, 'DOMContentLoaded', () => {
