@@ -15,7 +15,7 @@
     console.log(startTime, 'page start!')
   }
   DOMWatcher()
-  eventInjector()
+  // eventInjector()
   window.process = undefined
 
   // prevent alert popup when resize cause frequency reload
