@@ -1,6 +1,6 @@
 'use strict'
 
-import {app, BrowserWindow, globalShortcut} from 'electron'
+import {app, BrowserWindow} from 'electron'
 import path from 'path'
 import configHandler from './libs/configHandler'
 import windowManager from './libs/windowManager'
@@ -69,18 +69,6 @@ function createWindow () {
   })
   windowManager()
 }
-
-/**
- * Global accelerator
- */
-app.on('ready', () => {
-  globalShortcut.register('CommandOrControl+Alt+I', () => {
-    mainWindow.webContents.send('webviewDevTools')
-  })
-  globalShortcut.register('CommandOrControl+Alt+O', () => {
-    mainWindow.webContents.openDevTools({mode: 'detach'})
-  })
-})
 
 /**
  * Auto Updater
