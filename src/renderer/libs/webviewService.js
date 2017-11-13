@@ -68,14 +68,19 @@ class WebviewService {
    */
   getResizer () {
     let js = readStatic('minified_execGetResizer.js')
+    let queryRequired = true
     this.webview.addEventListener('did-finish-load', () => {
-      this.webview.getWebContents().executeJavaScript(js)
-        .then(result => {
-          if (global.triggerFull && typeof result[3] === 'object') this.autoResizerEnabler(result[3].style)
-          for (let msg of result) {
-            window.vue.$store.commit('CREATE_NODE', msg)
-          }
-        })
+      if (queryRequired) {
+        queryRequired = false
+        this.webview.getWebContents().executeJavaScript(js)
+          .then(result => {
+            if (global.triggerFull && typeof result[3] === 'object') this.autoResizerEnabler(result[3].style)
+            for (let msg of result) {
+              window.vue.$store.commit('CREATE_NODE', msg)
+            }
+            queryRequired = true
+          })
+      }
     })
   }
 
