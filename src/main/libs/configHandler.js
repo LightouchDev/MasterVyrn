@@ -15,7 +15,7 @@ class ConfigHandler {
     this.workDir = app.getPath('documents')
     this.configFilename = 'MasterVyrn.json'
     this.defaultConfig = {
-      throttling: false,
+      noThrottling: false,
       disableHardwareAcceleration: false,
       platformPadding: 0
     }
@@ -60,7 +60,7 @@ class ConfigHandler {
   configApply () {
     return new Promise((resolve, reject) => {
       if (this.config.disableHardwareAcceleration) { app.disableHardwareAcceleration() }
-      if (this.config.throttling) { app.commandLine.appendSwitch('disable-renderer-backgrounding') }
+      if (this.config.noThrottling) { app.commandLine.appendSwitch('disable-renderer-backgrounding') }
       resolve()
     })
   }
