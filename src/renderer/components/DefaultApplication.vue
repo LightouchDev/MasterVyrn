@@ -10,8 +10,10 @@
   import webviewService from '../libs/webviewService'
   import shortcutService from '../libs/shortcutService'
 
-  windowManager()
-  webviewService()
+  window.addEventListener('DOMContentLoaded', () => {
+    global.webviewService = new webviewService()
+  })
+  global.windowManager = new windowManager()
   shortcutService()
 
   export default {

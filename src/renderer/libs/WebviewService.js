@@ -118,8 +118,4 @@ class WebviewService {
  * |    ~1 |  host    | did-stop-loading |
  */
 
-export default () => {
-  window.addEventListener('DOMContentLoaded', () => {
-    return new WebviewService()
-  })
-}
+export default WebviewService

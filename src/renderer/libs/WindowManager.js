@@ -166,6 +166,4 @@ class WindowManager {
   }
 }
 
-export default () => {
-  return new WindowManager()
-}
+export default WindowManager
