@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, ipcMain, BrowserWindow, globalShortcut } from 'electron'
+import {app, BrowserWindow, globalShortcut} from 'electron'
 import path from 'path'
 import configHandler from './libs/configHandler'
 import windowManager from './libs/windowManager'
@@ -69,15 +69,6 @@ function createWindow () {
   })
   windowManager()
 }
-
-/**
- * ipc message Handler
- */
-app.on('ready', () => {
-  ipcMain.on('globalVariable', (event, args) => {
-    global.Configs.set(args)
-  })
-})
 
 /**
  * Global accelerator

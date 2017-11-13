@@ -1,6 +1,6 @@
 'use strict'
 
-import {app} from 'electron'
+import {app, ipcMain} from 'electron'
 import fs from 'fs'
 import path from 'path'
 
@@ -23,6 +23,7 @@ class ConfigHandler {
     global.Configs = {}
 
     this.globalMethod()
+    this.ipcMethod()
     return this.init()
   }
 
@@ -103,6 +104,12 @@ class ConfigHandler {
         }
       })
     }
+  }
+
+  ipcMethod () {
+    ipcMain.on('setMainConfig', (event, args) => {
+      global.Configs.set(args)
+    })
   }
 
   /**
