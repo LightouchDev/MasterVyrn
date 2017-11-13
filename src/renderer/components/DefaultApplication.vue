@@ -6,14 +6,14 @@
 
 <script>
   import MainSection from './DefaultApplication/MainSection'
-  import windowManager from '../libs/windowManager'
-  import webviewService from '../libs/webviewService'
+  import WindowManager from '../libs/windowManager'
+  import WebviewService from '../libs/webviewService'
   import shortcutService from '../libs/shortcutService'
 
   window.addEventListener('DOMContentLoaded', () => {
-    global.webviewService = new webviewService()
+    global.webviewService = new WebviewService()
   })
-  global.windowManager = new windowManager()
+  global.windowManager = new WindowManager()
   shortcutService()
 
   export default {
