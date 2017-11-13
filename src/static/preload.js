@@ -1,4 +1,5 @@
 /* global DEBUG */
+// FIXME: gather page information from preload script, not from webview API.
 
 (() => {
   'use strict'

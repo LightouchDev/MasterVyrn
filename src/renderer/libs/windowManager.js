@@ -2,6 +2,7 @@
 
 import {ipcRenderer} from 'electron'
 
+// FIXME: re-design process flow for non-mbga login and tutorial support.
 class WindowManager {
   constructor () {
     this.zoom = 1.5
