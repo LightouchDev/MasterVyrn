@@ -11,7 +11,6 @@
  *             ... etc
  *           },
  *           clickable: (Boolean), - Set this element is clickable
- *           js: {callback}        - Not implemented
  *         }
  */
 
@@ -21,13 +20,13 @@ const placeholder = {
   style: {
     bottom: '0px',
     left: '0px',
-    width: '100vw',
+    width: '320px',
     height: '8px'
   }
 }
 
 const state = {
-  zoom: 1,
+  zoom: 1.5,
   data: {},
   elements: [placeholder]
 }
