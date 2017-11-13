@@ -32,6 +32,7 @@ class WindowManager {
       this.max = msg.max + this.platformPadding
       this.width = msg.width + this.platformPadding
 
+      // move or adjust window to fit monitor size
       let {x, y, height} = global.mainWindow.getBounds()
       if (x > msg.availWidth - this.width) {
         x = msg.availWidth - this.width > 0
@@ -50,14 +51,14 @@ class WindowManager {
         width: this.width,
         height: height
       })
-      event.sender.send('CalibrationStart', msg.width)
+      event.sender.send('CalibrationStart')
     })
 
     // apply platform padding and re-apply window size
-    ipcMain.on('CalibrationResult', (event, msg) => {
-      this.platformPadding = this.platformPadding + msg
+    ipcMain.on('CalibrationResult', (event, offset) => {
+      this.platformPadding = this.platformPadding + offset
       global.Configs.set({platformPadding: this.platformPadding})
-      event.sender.send('Re-applyWindowWidth')
+      event.sender.send('ApplyWindowWidth')
     })
   }
 }

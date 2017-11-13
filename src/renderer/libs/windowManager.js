@@ -7,7 +7,7 @@ class WindowManager {
   constructor () {
     this.zoom = 1.5
     this.url = 'game.granbluefantasy.jp'
-    this.submenuOpened = false
+    this.subOpen = false
     this.delayApply = null
     this.preWindowWidth = 0
     this.setDefault()
@@ -34,17 +34,17 @@ class WindowManager {
     })
 
     // platform-specific calibration
-    ipcRenderer.on('CalibrationStart', (event, msg) => {
-      let platformPadding = msg - window.innerWidth
-      if (platformPadding) {
-        event.sender.send('CalibrationResult', platformPadding)
+    ipcRenderer.on('CalibrationStart', event => {
+      let offset = this.preWindowWidth - window.innerWidth
+      if (offset) {
+        event.sender.send('CalibrationResult', offset)
       } else {
         this.resizeContinue = true
       }
     })
 
     // re-apply window width
-    ipcRenderer.on('Re-applyWindowWidth', () => {
+    ipcRenderer.on('ApplyWindowWidth', () => {
       this.setWindowWidth(this.preWindowWidth)
     })
   }
@@ -81,7 +81,7 @@ class WindowManager {
   }
 
   setWindowWidth (width) {
-    let min = Math.round(this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1))
+    let min = Math.round(this.subButtonWidth + 320 * (this.subOpen ? 2 : 1))
     this.resizeContinue = false
     ipcRenderer.send('resizeWindow', {
       min: min,
@@ -98,9 +98,9 @@ class WindowManager {
       let webWidth = this.baseSize * this.zoom + this.padding + this.unknownPadding
       this.setWebWidth(webWidth)
 
-      let windowWidth = Math.round(this.zoom * (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1)))
+      let windowWidth = Math.round(this.zoom * (this.subButtonWidth + 320 * (this.subOpen ? 2 : 1)))
       if (window.screen.availWidth < windowWidth) {
-        this.calcZoom(window.screen.availWidth / (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1)))
+        this.calcZoom(window.screen.availWidth / (this.subButtonWidth + 320 * (this.subOpen ? 2 : 1)))
       } else {
         this.setWindowWidth(windowWidth)
         this.preWindowWidth = windowWidth
@@ -112,7 +112,7 @@ class WindowManager {
     if (zoom) {
       this.zoom = zoom
     } else if (this.login) {
-      this.zoom = window.innerWidth / (this.subButtonWidth + 320 * (this.submenuOpened ? 2 : 1))
+      this.zoom = window.innerWidth / (this.subButtonWidth + 320 * (this.subOpen ? 2 : 1))
     } else {
       this.zoom = window.innerWidth / 320
     }
@@ -139,12 +139,12 @@ class WindowManager {
 
       if (obj.notLogin) {
         this.login = false
-        this.submenuOpened = false
+        this.subOpen = false
       }
       if (obj.noAutoResize) {
         // automatic process is in webviewService/eventInject.js
         global.triggerFull = true
-        this.submenuOpened = false
+        this.subOpen = false
       }
       if (obj.padding) {
         this.isMbga = obj.isMbga
@@ -155,11 +155,10 @@ class WindowManager {
       this.applyWidth()
     }
 
-    wm.submenuHandler = newSubmenuOpened => {
-      if (this.submenuOpened !== newSubmenuOpened) {
-        this.submenuOpened = newSubmenuOpened
+    wm.submenuHandler = newSubOpen => {
+      if (this.subOpen !== newSubOpen) {
+        this.subOpen = newSubOpen
         this.resizeContinue = false
-        if (!this.login) { this.submenuOpened = false }
         this.applyWidth()
       }
     }
