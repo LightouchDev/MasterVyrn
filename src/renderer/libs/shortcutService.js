@@ -1,16 +1,24 @@
 'use strict'
 
 import {remote} from 'electron'
+import os from 'os'
 
 function shortcutService () {
   window.onkeydown = event => {
-    // Meta + Alt + I: open game view DevTools
-    if (event.metaKey && event.altKey && event.code === 'KeyI') {
-      window.webview.openDevTools({mode: 'detach'})
+    if (os.platform === 'darwin') {
+      // Option + Alt + I: open game view DevTools on OSX
+      if (event.metaKey && event.altKey && event.code === 'KeyI') {
+        window.webview.openDevTools({mode: 'detach'})
+      }
+    } else {
+      // F12: open game view DevTools
+      if (!event.ctrlKey && !event.altKey && !event.metaKey && event.code === 'F12') {
+        window.webview.openDevTools({mode: 'detach'})
+      }
     }
 
-    // Meta + Alt + O: open host view DevTools
-    if (event.metaKey && event.altKey && event.code === 'KeyO') {
+    // Ctrl + Alt + I: open host view DevTools
+    if (event.ctrlKey && event.altKey && event.code === 'KeyI') {
       remote.getCurrentWebContents().openDevTools({mode: 'detach'})
     }
   }
