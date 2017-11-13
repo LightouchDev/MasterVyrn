@@ -10,13 +10,6 @@ const state = {
 const mutations = {
   CHANGE_URL (state, payload) {
     state.url = new window.URL(payload)
-  },
-  NOT_JSSDK (state) {
-    state.cleanClass = false
-    state.notJssdk = true
-  },
-  CLEAN_CLASS (state) {
-    state.cleanClass = true
   }
 }
 

@@ -48,11 +48,6 @@ export default {
 
 
 <style lang="scss">
-
-.hasHeader #overlay {
-  height: calc(100vh - #{$mainHeaderHeight});
-}
-
 #overlay {
   height: 100vh;
   bottom: 0;

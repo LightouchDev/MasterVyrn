@@ -18,19 +18,6 @@ class WebviewService {
     this.getResizer()
     window.webview = this.webview
 
-    // Clean up webview before page start loading
-    this.webview.addEventListener('did-navigate', (event) => {
-      window.vue.$store.commit('CLEAN_CLASS')
-    })
-
-    // Send URL to vue
-    this.webview.addEventListener('did-navigate', (event) => {
-      window.vue.$store.commit('CHANGE_URL', event.url)
-    })
-    this.webview.addEventListener('did-navigate-in-page', (event) => {
-      window.vue.$store.commit('CHANGE_URL', event.url)
-    })
-
     // Restore to default state before page start loading
     this.webview.addEventListener('did-navigate', () => {
       window.vue.$store.commit('DEFAULT_ELEMENTS')

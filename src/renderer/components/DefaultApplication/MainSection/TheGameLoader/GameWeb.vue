@@ -31,11 +31,6 @@ export default {
 </script>
 
 <style lang="scss">
-/* hasHeader Setting */
-.hasHeader #game-web{
-  height: calc(100vh - #{$mainHeaderHeight});
-}
-
 #game-web{
   height: 100vh;
   z-index: 1;
