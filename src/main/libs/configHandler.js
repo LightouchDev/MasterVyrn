@@ -3,6 +3,7 @@
 import {app, ipcMain} from 'electron'
 import fs from 'fs'
 import path from 'path'
+import util from 'util'
 
 function InputException (message) {
   this.message = message
@@ -94,7 +95,7 @@ class ConfigHandler {
   globalMethod () {
     global.Configs.set = obj => {
       if (typeof obj !== 'object') throw new InputException('input is not object')
-      console.log(`config is: ${this.config}\nnew config: ${obj}`)
+      console.log(`current config: ${util.inspect(this.config)}\nnew config: ${util.inspect(obj)}`)
 
       this.filterConfigs(obj).then(result => {
         if (JSON.stringify(result) !== '{}') {
