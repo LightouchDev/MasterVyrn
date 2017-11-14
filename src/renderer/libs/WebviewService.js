@@ -48,18 +48,18 @@ class WebviewService {
    * @param {object} style - button css style
    */
   autoResizerEnabler (style) {
-    delete global.triggerFull
+    global.triggerFull = false
     let js = readStatic('minified_execGetZoom.js')
     this.webview.getWebContents().executeJavaScript(js)
       .then(zoom => {
-        let x = (noPx(style.left) + noPx(style.width) / 2) * zoom
-        let y = (noPx(style.top) + noPx(style.height) / 2) * zoom
+        let x = Math.round((noPx(style.left) + noPx(style.width) / 2) * zoom)
+        let y = Math.round((noPx(style.top) + noPx(style.height) / 2) * zoom)
         setTimeout(() => {
           window.webview.sendInputEvent({ type: 'mouseDown', x: x, y: y })
           setTimeout(() => {
             window.webview.sendInputEvent({ type: 'mouseUp', x: x, y: y })
           })
-        }, 500)
+        })
       })
   }
 

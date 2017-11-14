@@ -40,6 +40,7 @@ class WindowManager {
         event.sender.send('CalibrationResult', offset)
       } else {
         this.resizeContinue = true
+        window.webview.send('AlertRecovery')
       }
     })
 
@@ -56,7 +57,6 @@ class WindowManager {
     this.baseSize = 660
     this.unknownPadding = 0
     this.subButtonWidth = 0
-    this.initialized = false
     this.resizeContinue = true
   }
 

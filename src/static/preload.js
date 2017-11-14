@@ -22,9 +22,9 @@
   // prevent alert popup when resize cause frequency reload
   let _alert = window.alert
   window.alert = () => {}
-  setTimeout(() => {
+  ipcRenderer.once('AlertRecvoery', () => {
     window.alert = _alert
-  }, 5000)
+  })
 
   if (DEBUG) {
     oneshotListener(window, 'DOMContentLoaded', () => {
@@ -57,15 +57,18 @@
   }
 
   function headPre () {
+    if (DEBUG) document.onmousedown = e => { console.log(e) }
+
     ipcRenderer.sendToHost('insertCSS')
     log('css patched')
   }
 
   function headPost (content) {
-    let match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);$/m.exec(content)
+    let match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window\.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);$/m.exec(content)
     let isMbga = /^[ \t]+isMbga.*\n[ \t]+return (.*);$/m.exec(content)[1] === 'true'
-    let baseSize = /^[ \t]+deviceRatio = window.innerWidth \/ (\d+);$/m.exec(content)
+    let baseSize = /^[ \t]+(?:var )?deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)
     let response = {url: window.location.href}
+    log(`match is ${match}\nbaseSize is ${baseSize}`)
     // FIXME use Electron session instead
     if (/^[ \t]+Game.userId = 0;$/m.test(content)) {
       Object.assign(response, {
