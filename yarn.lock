@@ -26,10 +26,6 @@
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/7zip/-/7zip-0.0.6.tgz#9cafb171af82329490353b4816f03347aa150a30"
 
-"@fortawesome/fontawesome-free-solid@^0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free-solid/-/fontawesome-free-solid-0.0.17.tgz#fe9ae40dc79193a3dc0735fca0023f4882e57535"
-
 "@fortawesome/fontawesome@^0.0.21":
   version "0.0.21"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome/-/fontawesome-0.0.21.tgz#282cea251c730aedace61e5a74021b90c584622e"
