@@ -1,8 +1,8 @@
 {
   "name": "mastervyrn",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "author": "Miau Lightouch <miaulightouch@gmail.com>",
-  "description": "MasterVyrn is a clean dedicated GBF loader build on top of electron.",
+  "description": "MasterVyrn is a clean dedicated GBF loader.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
