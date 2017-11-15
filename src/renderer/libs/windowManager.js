@@ -142,7 +142,7 @@ class WindowManager {
         this.subOpen = false
       }
       if (obj.noAutoResize) {
-        // automatic process is in webviewService/eventInject.js
+        // automatic process is in webviewService.js
         global.triggerFull = true
         this.subOpen = false
       }

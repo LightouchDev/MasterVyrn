@@ -66,14 +66,12 @@
   function headPost (content) {
     let match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window\.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);$/m.exec(content)
     let isMbga = /^[ \t]+isMbga.*\n[ \t]+return (.*);$/m.exec(content)[1] === 'true'
-    let baseSize = /^[ \t]+(?:var )?deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)
     let response = {url: window.location.href}
-    log(`match is ${match}\nbaseSize is ${baseSize}`)
+    log(`match is ${match}`)
     // FIXME use Electron session instead
     if (/^[ \t]+Game.userId = 0;$/m.test(content)) {
       Object.assign(response, {
-        notLogin: true,
-        baseSize: Math.round(baseSize[1])
+        notLogin: true
       })
     } else if (match) {
       Object.assign(response, {
@@ -84,8 +82,7 @@
       })
     } else {
       Object.assign(response, {
-        noAutoResize: true,
-        baseSize: baseSize ? Math.round(baseSize[1]) : baseSize
+        noAutoResize: true
       })
     }
     ipcRenderer.sendToHost('sessionInfo', response)
