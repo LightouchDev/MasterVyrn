@@ -4,6 +4,19 @@ import {app, ipcMain} from 'electron'
 import fs from 'fs'
 import path from 'path'
 import util from 'util'
+import os from 'os'
+
+function defaultPadding () {
+  // Windows always sucks, even just window size report, never done things right.
+  if (os.platform() === 'win32') {
+    let ntVersion = /(\d+)\.(\d+)\.(\d+)/.exec(os.release())
+    // Windows 7 require additional 8px
+    if (ntVersion[1] === '6' && ntVersion[2] === '1') return 8
+    // Windows 8/10 require additional 16px
+    return 16
+  }
+  return 0
+}
 
 function InputException (message) {
   this.message = message
@@ -17,7 +30,7 @@ class ConfigHandler {
     this.defaultConfig = {
       noThrottling: false,
       disableHardwareAcceleration: false,
-      platformPadding: 0
+      platformPadding: defaultPadding()
     }
 
     this.config = {}
