@@ -71,7 +71,8 @@
     // FIXME use Electron session instead
     if (/^[ \t]+Game.userId = 0;$/m.test(content)) {
       Object.assign(response, {
-        notLogin: true
+        notLogin: true,
+        baseSize: /^[ \t]+deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)[1]
       })
     } else if (match) {
       Object.assign(response, {
