@@ -2,7 +2,7 @@
 
 import {app, BrowserWindow} from 'electron'
 import path from 'path'
-import configHandler from './libs/configHandler'
+import mainConfig from './libs/mainConfig'
 import windowManager from './libs/windowManager'
 
 /**
@@ -16,7 +16,7 @@ if (process.env.NODE_ENV !== 'development') {
 /**
  * Init service
  */
-configHandler().then(() => {
+mainConfig().then(() => {
   app.isReady()
     ? createWindow()
     : app.on('ready', createWindow)

@@ -1,44 +1,39 @@
 'use strict'
 
-import {app, ipcMain} from 'electron'
-import fs from 'fs'
-import path from 'path'
 import util from 'util'
-import os from 'os'
-
-function defaultPadding () {
-  // Windows always sucks, even just window size report, never done things right.
-  if (os.platform() === 'win32') {
-    let ntVersion = /(\d+)\.(\d+)\.(\d+)/.exec(os.release())
-    // Windows 7 require additional 8px
-    if (ntVersion[1] === '6' && ntVersion[2] === '1') return 8
-    // Windows 8/10 require additional 16px
-    return 16
-  }
-  return 0
-}
-
-function InputException (message) {
-  this.message = message
-  this.name = 'InputException'
-}
 
 class ConfigHandler {
   constructor () {
-    this.workDir = app.getPath('documents')
-    this.configFilename = 'MasterVyrn.json'
-    this.defaultConfig = {
-      noThrottling: false,
-      disableHardwareAcceleration: false,
-      platformPadding: defaultPadding()
-    }
-
     this.config = {}
     global.Configs = {}
 
+    this.setDefaultConfig()
+    this.globalRegister()
     this.globalMethod()
-    this.ipcMethod()
     return this.init()
+  }
+
+  InputException (message = '') {
+    this.message = message
+    this.name = 'InputException'
+  }
+
+  setDefaultConfig () {
+  }
+
+  readConfig () {
+  }
+
+  saveConfig () {
+  }
+
+  globalRegister () {
+  }
+
+  configApply () {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
   }
 
   /**
@@ -48,7 +43,7 @@ class ConfigHandler {
   init () {
     return new Promise((resolve) => {
       try {
-        fs.accessSync(path.join(this.workDir, this.configFilename))
+        this.readConfig()
         resolve()
       } catch (error) {
         console.warn(`[WARN] ConfigHandler can't find config, create one.`)
@@ -56,7 +51,7 @@ class ConfigHandler {
       }
     }).then(() => {
       this.config = Object.assign({}, this.defaultConfig)
-      let savedConfig = JSON.parse(fs.readFileSync(path.join(this.workDir, this.configFilename), 'utf8'))
+      let savedConfig = this.readConfig()
 
       this.filterConfigs(savedConfig)
         .then(result => {
@@ -68,19 +63,8 @@ class ConfigHandler {
   }
 
   /**
-   * Apply configs
-   */
-  configApply () {
-    return new Promise((resolve, reject) => {
-      if (this.config.disableHardwareAcceleration) { app.disableHardwareAcceleration() }
-      if (this.config.noThrottling) { app.commandLine.appendSwitch('disable-renderer-backgrounding') }
-      resolve()
-    })
-  }
-
-  /**
    * filter all unexpected config out,
-   * resolve all diff configs
+   * and resolve all diff configs
    */
   filterConfigs (newConfig, oldConfig = this.config) {
     return new Promise((resolve) => {
@@ -107,7 +91,7 @@ class ConfigHandler {
    */
   globalMethod () {
     global.Configs.set = obj => {
-      if (typeof obj !== 'object') throw new InputException('input is not object')
+      if (typeof obj !== 'object') throw new this.InputException('input is not object')
       console.log(`current config: ${util.inspect(this.config)}\nnew config: ${util.inspect(obj)}`)
 
       this.filterConfigs(obj).then(result => {
@@ -120,23 +104,17 @@ class ConfigHandler {
     }
   }
 
-  ipcMethod () {
-    ipcMain.on('setMainConfig', (event, args) => {
-      global.Configs.set(args)
-    })
-  }
-
   /**
    * Convert object to JSON and save to file system
    * @param {object} obj - config object
    */
   save (obj) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       console.log('save config:', obj)
-      fs.writeFileSync(path.join(this.workDir, this.configFilename), JSON.stringify(obj), 'utf8')
+      this.saveConfig(obj)
       resolve()
     })
   }
 }
 
-export default () => { return new ConfigHandler() }
+export default ConfigHandler
