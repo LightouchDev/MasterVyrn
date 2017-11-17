@@ -22,7 +22,7 @@
   // prevent alert popup when resize cause frequency reload
   let _alert = window.alert
   window.alert = () => {}
-  ipcRenderer.once('AlertRecvoery', () => {
+  ipcRenderer.once('AlertRecovery', () => {
     window.alert = _alert
   })
 
@@ -65,7 +65,7 @@
 
   function headPost (content) {
     let match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window\.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);$/m.exec(content)
-    let isMbga = /^[ \t]+isMbga.*\n[ \t]+return (.*);$/m.exec(content)[1] === 'true'
+    let isMbga = /^[ \t]+isMbga.*\n[ \t]+return (.*);$/m.exec(content)
     let response = {url: window.location.href}
     log(`match is ${match}`)
     // FIXME use Electron session instead
@@ -74,9 +74,17 @@
         notLogin: true,
         baseSize: /^[ \t]+deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)[1]
       })
+    } else if (window.location.pathname === '/maintenance') {
+      Object.assign(response, {
+        notLogin: true,
+        baseSize: /^[ \t]+var deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)[1]
+      })
+      setTimeout(() => {
+        window.fitScreenByZoom(window.displayInitialize())
+      })
     } else if (match) {
       Object.assign(response, {
-        isMbga: isMbga,
+        isMbga: isMbga[1] === 'true',
         padding: Math.round(match[1]),
         unknownPadding: Math.round(match[2]),
         baseSize: Math.round(match[3])
