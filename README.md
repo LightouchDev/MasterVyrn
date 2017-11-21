@@ -33,6 +33,7 @@ MasterVyrn is still in **alpha** stage:
 * Software framework: [Electron](https://electron.atom.io/)
 * Front-end framework: [Vue.js](https://vuejs.org/)
 * Icon framework: [Font Awesome 5](https://fontawesome.com)
+* Localization support: [vue-i18n](https://github.com/kazupon/vue-i18n)
 * Boilerplate: [electron-vue](https://github.com/SimulatedGREG/electron-vue)
 
 ## Build Setup
