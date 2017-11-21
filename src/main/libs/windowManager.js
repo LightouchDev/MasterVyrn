@@ -51,8 +51,11 @@ class WindowManager {
         width: this.width,
         height: height
       })
-      // event.returnValue = 0
-      if (msg.calibration) event.sender.send('CalibrationStart')
+      if (msg.calibration) {
+        event.sender.send('CalibrationStart')
+      } else {
+        event.sender.send('ResizeFinished')
+      }
     })
 
     // apply platform padding and re-apply window size

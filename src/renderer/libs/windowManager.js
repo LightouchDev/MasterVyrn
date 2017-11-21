@@ -3,6 +3,7 @@
 import {ipcRenderer} from 'electron'
 
 // FIXME: re-design process flow for non-mbga login and tutorial support.
+// FIXME: use remote module to re-write entire resize logic
 class WindowManager {
   constructor () {
     this.zoom = global.Configs.window.zoom
@@ -47,6 +48,14 @@ class WindowManager {
     ipcRenderer.on('ApplyWindowWidth', () => {
       this.setWindowWidth(this.preWindowWidth)
     })
+
+    let delayRecover = null
+    ipcRenderer.on('ResizeFinished', () => {
+      clearTimeout(delayRecover)
+      delayRecover = setTimeout(() => {
+        this.resizeContinue = true
+      }, 160)
+    })
   }
 
   setDefault () {
@@ -82,6 +91,7 @@ class WindowManager {
 
   setWindowWidth (width) {
     let min = Math.round(this.subButtonWidth + 320 * (this.subOpen ? 2 : 1))
+    this.resizeContinue = false
     ipcRenderer.send('resizeWindow', {
       min: min,
       max: min * 2,
