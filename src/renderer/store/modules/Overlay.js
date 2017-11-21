@@ -26,7 +26,7 @@ const placeholder = {
 }
 
 const state = {
-  zoom: 1.5,
+  zoom: global.Configs.window.zoom,
   data: {},
   elements: [placeholder]
 }

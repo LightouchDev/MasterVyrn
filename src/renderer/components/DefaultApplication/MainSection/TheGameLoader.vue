@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="the-game-loader">
     <game-web/>
     <overlay/>
   </div>

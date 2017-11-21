@@ -3,13 +3,18 @@
     "globals": ["__static"]
   },
   "cSpell.words": [
+    "accel",
+    "clonedeep",
+    "defaultsdeep",
     "jssdk",
     "mbga",
     "minified",
     "mobage",
     "oneshot",
     "polyfill",
+    "resizable",
     "resizer",
+    "resizers",
     "scrollbar",
     "submenu",
     "vuex",

@@ -5,3 +5,13 @@ $mainHeaderHeight: 40px;
 
 $standardWhite: rgb(242, 238, 226);
 $standardBlack: #1f1f1f;
+
+@mixin setColor ($color) {
+  background-color: $color;
+    text-shadow:
+      -1px -1px 2px $color,
+      1px -1px 2px $color,
+      -1px 1px 2px $color,
+      1px 1px 2px $color;
+  border-color: $color;
+}

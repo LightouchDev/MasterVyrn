@@ -1,9 +1,12 @@
 'use strict'
 
 import util from 'util'
+import defaultsDeep from 'lodash.defaultsdeep'
+import clonedeep from 'lodash.clonedeep'
 
 class ConfigHandler {
   constructor () {
+    this.initialized = false
     this.config = {}
     global.Configs = {}
 
@@ -21,13 +24,20 @@ class ConfigHandler {
   setDefaultConfig () {
   }
 
+  // return config object
   readConfig () {
   }
 
-  saveConfig () {
+  // save config object
+  saveConfig (obj) {
   }
 
+  // any method register on global place here
   globalRegister () {
+  }
+
+  // execute after save
+  postProcess () {
   }
 
   configApply () {
@@ -50,10 +60,9 @@ class ConfigHandler {
         this.save(this.defaultConfig).then(() => { resolve() })
       }
     }).then(() => {
-      this.config = Object.assign({}, this.defaultConfig)
       let savedConfig = this.readConfig()
 
-      this.filterConfigs(savedConfig)
+      this.filterConfigs(savedConfig, this.defaultConfig)
         .then(result => {
           Object.assign(this.config, result)
           Object.assign(global.Configs, this.config)
@@ -67,22 +76,13 @@ class ConfigHandler {
    * and resolve all diff configs
    */
   filterConfigs (newConfig, oldConfig = this.config) {
+    newConfig = clonedeep(newConfig)
+    oldConfig = clonedeep(oldConfig)
     return new Promise((resolve) => {
-      let filteredConfig = {}
-      let configNumber = Object.keys(newConfig).length
-
-      for (let index in newConfig) {
-        configNumber--
-        if (oldConfig[index] !== undefined) {
-          if (oldConfig[index] !== newConfig[index]) {
-            Object.assign(filteredConfig, {[index]: newConfig[index]})
-          }
-        }
-        if (!configNumber) {
-          resolve(filteredConfig)
-          console.log('resolve with', filteredConfig)
-        }
-      }
+      let filteredConfig = defaultsDeep(newConfig, oldConfig)
+      resolve(filteredConfig)
+      console.log(`config: ${util.inspect(oldConfig)}\nnew config: ${util.inspect(newConfig)}`)
+      console.log('resolve with', filteredConfig)
     })
   }
 
@@ -92,15 +92,21 @@ class ConfigHandler {
   globalMethod () {
     global.Configs.set = obj => {
       if (typeof obj !== 'object') throw new this.InputException('input is not object')
-      console.log(`current config: ${util.inspect(this.config)}\nnew config: ${util.inspect(obj)}`)
 
       this.filterConfigs(obj).then(result => {
         if (JSON.stringify(result) !== '{}') {
-          Object.assign(this.config, result)
+          this.config = result
           Object.assign(global.Configs, this.config)
           this.save(this.config)
+          this.configApply()
         }
       })
+    }
+    global.Configs.get = obj => {
+      return clonedeep(this.config)
+    }
+    global.Configs.getDefaults = obj => {
+      return clonedeep(this.defaultConfig)
     }
   }
 
@@ -110,7 +116,7 @@ class ConfigHandler {
    */
   save (obj) {
     return new Promise(resolve => {
-      console.log('save config:', obj)
+      console.log('config saved')
       this.saveConfig(obj)
       resolve()
     })

@@ -1,16 +1,5 @@
-import Vue from 'vue'
-
-import App from './App'
-import router from './router'
-import store from './store'
-
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
-Vue.config.productionTip = false
-
-/* eslint-disable no-new */
-window.vue = new Vue({
-  components: { App },
-  router,
-  store,
-  template: '<App/>'
-}).$mount('#app')
+import RendererConfig from './libs/rendererConfig'
+// force retrieve config before vue start.
+RendererConfig().then(() => {
+  require('./init')
+})

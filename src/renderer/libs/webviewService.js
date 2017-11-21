@@ -2,6 +2,7 @@
 
 import fs from 'fs'
 import path from 'path'
+import {remote} from 'electron'
 
 function noPx (value) {
   return Math.round(value.replace(/px$/, ''))
@@ -41,6 +42,35 @@ class WebviewService {
         this.webview.getWebContents().openDevTools({mode: 'detach'})
       })
     }
+    this.globalMethod()
+    global.wvs.applyProxy()
+  }
+
+  buildPAC () {
+    let pac = `
+      function FindProxyForURL (url, host) {
+        if (host === 'game.granbluefantasy.jp' || host === 'whatismyipaddress.com') {
+          if ('${global.Configs.proxy.type}' !== 'DIRECT') {
+            return '${global.Configs.proxy.type} ${global.Configs.proxy.server}:${global.Configs.proxy.port}'
+          }
+        }
+        return 'DIRECT'
+      }`
+    fs.writeFileSync(path.join(remote.app.getPath('userData'), 'proxy.pac'), pac, 'utf8')
+  }
+
+  globalMethod () {
+    let wvs = {}
+    wvs.applyProxy = () => {
+      this.buildPAC()
+      remote.session
+        .fromPartition(window.vue.$store.state.GameWeb.partition)
+        .setProxy({pacScript: 'file://' + path.join(remote.app.getPath('userData'), 'proxy.pac')}, () => {})
+      remote.session
+        .fromPartition(window.vue.$store.state.GameWeb.partition)
+        .resolveProxy('http://game.granbluefantasy.jp/', proxy => { console.log('resolve proxy:', proxy) })
+    }
+    global.wvs = wvs
   }
 
   /**
@@ -118,4 +148,4 @@ class WebviewService {
  * |    ~1 |  host    | did-stop-loading |
  */
 
-export default WebviewService
+export default () => { return new WebviewService() }

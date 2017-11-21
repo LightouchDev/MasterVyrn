@@ -5,10 +5,9 @@ import {ipcRenderer} from 'electron'
 // FIXME: re-design process flow for non-mbga login and tutorial support.
 class WindowManager {
   constructor () {
-    this.zoom = 1.5
+    this.zoom = global.Configs.window.zoom
     this.url = 'game.granbluefantasy.jp'
     this.subOpen = false
-    this.delayApply = null
     this.preWindowWidth = 0
     this.setDefault()
     this.applyWidth()
@@ -57,6 +56,7 @@ class WindowManager {
     this.baseSize = 660
     this.unknownPadding = 0
     this.subButtonWidth = 0
+    this.calibration = false
     this.resizeContinue = true
   }
 
@@ -82,30 +82,28 @@ class WindowManager {
 
   setWindowWidth (width) {
     let min = Math.round(this.subButtonWidth + 320 * (this.subOpen ? 2 : 1))
-    this.resizeContinue = false
     ipcRenderer.send('resizeWindow', {
       min: min,
       max: min * 2,
       width: width,
       availWidth: window.screen.availWidth,
-      availHeight: window.screen.availHeight
+      availHeight: window.screen.availHeight,
+      calibration: this.calibration
     })
+    if (!this.calibration) window.webview.send('AlertRecovery')
   }
 
   applyWidth () {
-    clearTimeout(this.delayApply)
-    this.delayApply = setTimeout(() => {
-      let webWidth = this.baseSize * this.zoom + this.padding + this.unknownPadding
-      this.setWebWidth(webWidth)
+    let webWidth = this.baseSize * this.zoom + this.padding + this.unknownPadding
+    this.setWebWidth(webWidth)
 
-      let windowWidth = Math.round(this.zoom * (this.subButtonWidth + 320 * (this.subOpen ? 2 : 1)))
-      if (window.screen.availWidth < windowWidth) {
-        this.calcZoom(window.screen.availWidth / (this.subButtonWidth + 320 * (this.subOpen ? 2 : 1)))
-      } else {
-        this.setWindowWidth(windowWidth)
-        this.preWindowWidth = windowWidth
-      }
-    }, 80)
+    let windowWidth = Math.round(this.zoom * (this.subButtonWidth + 320 * (this.subOpen ? 2 : 1)))
+    if (window.screen.availWidth < windowWidth) {
+      this.calcZoom(window.screen.availWidth / (this.subButtonWidth + 320 * (this.subOpen ? 2 : 1)))
+    } else {
+      this.setWindowWidth(windowWidth)
+      this.preWindowWidth = windowWidth
+    }
   }
 
   calcZoom (zoom) {
@@ -162,8 +160,37 @@ class WindowManager {
         this.applyWidth()
       }
     }
+
+    wm.autoCalibration = () => {
+      return new Promise(resolve => {
+        this.resizeContinue = false
+        this.calibration = true
+        this.setWindowWidth(this.preWindowWidth)
+        let timer = 0
+        let loop = setInterval(() => {
+          if (this.resizeContinue) {
+            this.calibration = false
+            resolve(this.resizeContinue)
+            clearInterval(loop)
+          }
+          if (timer > 5000) {
+            this.calibration = false
+            let result = this.resizeContinue
+            this.resizeContinue = true
+            resolve(result)
+            clearInterval(loop)
+          }
+          timer++
+        }, 1)
+      })
+    }
+
+    wm.applyWidth = () => {
+      this.setWindowWidth(this.preWindowWidth)
+    }
+
     global.wm = wm
   }
 }
 
-export default WindowManager
+export default () => { return new WindowManager() }

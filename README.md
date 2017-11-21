@@ -32,6 +32,7 @@ MasterVyrn is still in **alpha** stage:
 
 * Software framework: [Electron](https://electron.atom.io/)
 * Front-end framework: [Vue.js](https://vuejs.org/)
+* Icon framework: [Font Awesome 5](https://fontawesome.com)
 * Boilerplate: [electron-vue](https://github.com/SimulatedGREG/electron-vue)
 
 ## Build Setup
@@ -53,3 +54,9 @@ yarn test
 yarn lint
 
 ```
+
+## License
+
+It's [MIT](https://github.com/LightouchDev/MasterVyrn/blob/master/LICENSE) literally, but [DBAD](https://github.com/philsturgeon/dbad) in mind.
+
+The **Font Awesome 5** files under `src/renderer/libs` is **NOT** included in MIT license.

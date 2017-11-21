@@ -89,8 +89,11 @@
   "dependencies": {
     "@fortawesome/fontawesome": "^0.0.21",
     "@fortawesome/vue-fontawesome": "^0.0.18",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.defaultsdeep": "^4.6.0",
     "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
+    "vue-i18n": "^7.3.2",
     "vue-router": "^2.5.3",
     "vuex": "^2.3.1"
   },

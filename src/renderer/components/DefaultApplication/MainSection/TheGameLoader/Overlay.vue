@@ -39,7 +39,9 @@ export default {
 
       if (event.type === 'mouseup') {
         size = 1 + (size * 0.5)
-        global.wm.setZoom(size)
+        global.Configs.set({
+          window: { zoom: size }
+        })
       }
     }
   }

@@ -1,6 +1,7 @@
 'use strict'
 
 import ConfigHandler from '../../common/configHandler'
+import {remote} from 'electron'
 
 class RendererConfig extends ConfigHandler {
   setDefaultConfig () {
@@ -11,10 +12,11 @@ class RendererConfig extends ConfigHandler {
         zoom: 1.5
       },
       proxy: {
-        type: 'Direct',
+        type: 'DIRECT',
         server: '',
-        port: 65535
-      }
+        port: ''
+      },
+      language: navigator.languages[0] || navigator.language
     }
   }
   readConfig () {
@@ -27,6 +29,29 @@ class RendererConfig extends ConfigHandler {
   }
   saveConfig (obj) {
     window.localStorage.setItem('configure', JSON.stringify(obj))
+  }
+  configApply () {
+    return new Promise((resolve, reject) => {
+      remote.getCurrentWindow().setAlwaysOnTop(this.config.window.alwaysOnTop)
+      remote.getCurrentWindow().setResizable(!this.config.window.lockWindowSize)
+      if (this.initialized) {
+        global.wm.setZoom(this.config.window.zoom)
+        window.vue.$i18n.locale = this.config.language
+        global.wvs.applyProxy()
+      }
+      this.initialized = true
+      resolve()
+    })
+  }
+  globalRegister () {
+    Object.assign(global.Configs, {proxyAddress: () => {
+      let config = global.Configs.proxy
+      let proxy = `${config.type}://`
+      if (global.Configs.proxy.type !== 'direct') {
+        proxy += `${config.server}:${config.port}`
+      }
+      return proxy
+    }})
   }
 }
 

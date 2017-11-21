@@ -4,10 +4,10 @@ import {ipcMain} from 'electron'
 
 class WindowManager {
   constructor () {
-    let subButtonWidth = 19
+    let subButtonWidth = 18
 
     this.width = 320
-    this.platformPadding = global.Configs.platformPadding || 0
+    this.platformOffset = global.Configs.platformOffset || 0
     this.delayResize = null
     this.min = (subButtonWidth + this.width)
     this.max = (subButtonWidth + this.width) * 2
@@ -28,9 +28,9 @@ class WindowManager {
 
     // resize events from resizers
     ipcMain.on('resizeWindow', (event, msg) => {
-      this.min = msg.min + this.platformPadding
-      this.max = msg.max + this.platformPadding
-      this.width = msg.width + this.platformPadding
+      this.min = msg.min + this.platformOffset
+      this.max = msg.max + this.platformOffset
+      this.width = msg.width + this.platformOffset
 
       // move or adjust window to fit monitor size
       let {x, y, height} = global.mainWindow.getBounds()
@@ -51,15 +51,21 @@ class WindowManager {
         width: this.width,
         height: height
       })
-      event.sender.send('CalibrationStart')
+      // event.returnValue = 0
+      if (msg.calibration) event.sender.send('CalibrationStart')
     })
 
     // apply platform padding and re-apply window size
     ipcMain.on('CalibrationResult', (event, offset) => {
-      this.platformPadding = this.platformPadding + offset
-      global.Configs.set({platformPadding: this.platformPadding})
+      this.platformOffset = this.platformOffset + offset
+      global.Configs.set({platformOffset: this.platformOffset})
       event.sender.send('ApplyWindowWidth')
     })
+
+    global.wm = {
+      setWidthOffset: (offset) => {
+        this.platformOffset = offset
+      }}
   }
 }
 
