@@ -1,0 +1,62 @@
+{
+  "option": {
+    "language": {
+      "title": "語言"
+    },
+    "window": {
+      "title": "視窗",
+      "item": {
+        "alwaysOnTop": "視窗永遠置頂"
+      }
+    },
+    "system": {
+      "title": "系統",
+      "warning": "（需要重新啟動）",
+      "item": {
+        "noThrottling": "防止遊戲在背景休眠",
+        "noHardwareAccel": "停用硬體加速"
+      }
+    },
+    "proxy": {
+      "title": "代理",
+      "warning": "(現不可用)",
+      "item": {
+        "direct": "直接連線",
+        "hostname": "伺服器地址",
+        "port": "連接埠",
+        "username": "使用者名稱",
+        "password": "密碼"
+      }
+    },
+    "storage": {
+      "title": "儲存空間",
+      "item": {
+        "clearLogin": "清除登入",
+        "clearCache": "清除快取",
+        "clearAll": "清除所有資料"
+      }
+    },
+    "button": {
+      "default": "預設值",
+      "apply": "套用",
+      "close": "關閉"
+    },
+    "alert": {
+      "clearStorage": {
+        "text": "確定要清除",
+        "login": "@:option.alert.clearStorage.text 登入認證？",
+        "cache": "@:option.alert.clearStorage.text 快取內容？",
+        "all": "@:option.alert.clearStorage.text 所有資料？"
+      },
+      "setDefault": "這會重設本頁所有設定至預設值，您確定嗎？"
+    }
+  },
+  "language": {
+    "en-US": "英文 (美國)",
+    "zh-TW": "傳統中文"
+  },
+  "common": {
+    "close": "關閉",
+    "option": "選項"
+  }
+}

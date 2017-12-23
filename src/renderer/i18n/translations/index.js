@@ -3,12 +3,12 @@
  * in a one-shot manner. There should not be any reason to edit this file.
  */
 
-const files = require.context('.', false, /\.js$/)
+const files = require.context('.', false, /\.json$/)
 const language = {}
 
 files.keys().forEach(key => {
   if (key === './index.js') return
-  language[key.replace(/(\.\/|\.js)/g, '')] = files(key).default
+  language[key.replace(/(\.\/|\.json)/g, '')] = files(key)
 })
 
 export default language

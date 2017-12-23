@@ -1,0 +1,62 @@
+{
+  "option": {
+    "language": {
+      "title": "Language"
+    },
+    "window": {
+      "title": "Window",
+      "item": {
+        "alwaysOnTop": "Always on top"
+      }
+    },
+    "system": {
+      "title": "System",
+      "warning": "(Relaunch required)",
+      "item": {
+        "noThrottling": "No game throttling when inactive",
+        "noHardwareAccel": "Disable Hardware Acceleration"
+      }
+    },
+    "proxy": {
+      "title": "Proxy",
+      "warning": "(Now Unavailable)",
+      "item": {
+        "direct": "Direct",
+        "hostname": "Server Address",
+        "port": "Port",
+        "username": "User Name",
+        "password": "Password"
+      }
+    },
+    "storage": {
+      "title": "Storage",
+      "item": {
+        "clearLogin": "Clear Login",
+        "clearCache": "Clear Cache",
+        "clearAll": "Clear All"
+      }
+    },
+    "button": {
+      "default": "Default",
+      "apply": "Apply",
+      "close": "Close"
+    },
+    "alert": {
+      "clearStorage": {
+        "text": "Are you sure to clear",
+        "login": "@:option.alert.clearStorage.text login?",
+        "cache": "@:option.alert.clearStorage.text cache?",
+        "all": "@:option.alert.clearStorage.text all?"
+      },
+      "setDefault": "It would reset EVERYTHING on this page to defaults, are you sure?"
+    }
+  },
+  "language": {
+    "en-US": "English (United States)",
+    "zh-TW": "Chinese Traditional"
+  },
+  "common": {
+    "close": "Close",
+    "option": "Option"
+  }
+}
