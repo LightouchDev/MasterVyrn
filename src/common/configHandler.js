@@ -16,11 +16,6 @@ class ConfigHandler {
     return this.init()
   }
 
-  InputException (message = '') {
-    this.message = message
-    this.name = 'InputException'
-  }
-
   setDefaultConfig () {
   }
 
@@ -91,7 +86,7 @@ class ConfigHandler {
    */
   globalMethod () {
     global.Configs.set = obj => {
-      if (typeof obj !== 'object') throw new this.InputException('input is not object')
+      if (typeof obj !== 'object') throw new Error('input is not object')
 
       this.filterConfigs(obj).then(result => {
         if (JSON.stringify(result) !== '{}') {
@@ -107,6 +102,10 @@ class ConfigHandler {
     }
     global.Configs.getDefaults = obj => {
       return clonedeep(this.defaultConfig)
+    }
+    global.Configs.setDefaults = () => {
+      this.config = Object.assign({}, this.defaultConfig)
+      this.save(this.defaultConfig)
     }
   }
 
