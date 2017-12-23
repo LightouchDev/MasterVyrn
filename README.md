@@ -14,14 +14,13 @@ MasterVyrn is a clean dedicated GBF loader build on top of electron.
 
 * **Clean**: MasterVyrn doesn't modify any game content. (only inject css into webview to hide scrollbar.)
 * **Quick**: It's dedicated and no game throttling. (fight won't stop at current turn when you minimize program.)
-* **Safe**: There's no different with regular Chromium. (**WARNING**: not all Electron exports were removed.) [#10](https://github.com/LightouchDev/MasterVyrn/issues/10)
+* **Safe**: There's no different with regular Chromium. (**WARNING**: but not all Electron exports were removed.) [#10](https://github.com/LightouchDev/MasterVyrn/issues/10)
 
 ## Problem
 
 MasterVyrn is still in **alpha** stage:
 
-* Game view is bugged, fixes incoming.
-* No capabilities to inspect incoming message like character status, raid information ...etc.
+* No capabilities to inspect websocket message like raid information.
 * Need suggestions for further development, please post issue with "*feature request*" label to let me know.
 
 ## Supported Platform
@@ -59,5 +58,3 @@ yarn lint
 ## License
 
 It's [MIT](https://github.com/LightouchDev/MasterVyrn/blob/master/LICENSE) literally, but [DBAD](https://github.com/philsturgeon/dbad) in mind.
-
-The **Font Awesome 5** files under `src/renderer/libs` is **NOT** included in MIT license.
