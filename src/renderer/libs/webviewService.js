@@ -1,132 +1,5 @@
 'use strict'
 
-import fs from 'fs'
-import path from 'path'
-import {remote} from 'electron'
-
-function noPx (value) {
-  return Math.round(value.replace(/px$/, ''))
-}
-
-function readStatic (filename) {
-  return fs.readFileSync(path.join(__static, filename), 'utf8')
-}
-
-class WebviewService {
-  constructor () {
-    this.webview = document.querySelector('webview')
-    this.init()
-    this.getResizer()
-    window.webview = this.webview
-
-    // Restore to default state before page start loading
-    this.webview.addEventListener('did-navigate', () => {
-      window.vue.$store.commit('DEFAULT_ELEMENTS')
-    })
-
-    // Remove placeholder of overlay when page loaded
-    this.webview.addEventListener('did-finish-load', () => {
-      window.vue.$store.commit('CLEAN_ELEMENTS')
-    })
-
-    // IPC message event
-    this.webview.addEventListener('ipc-message', (event) => {
-      this.channelAction(event.channel, event.args[0])
-    })
-  }
-
-  init () {
-    if (process.env.NODE_ENV === 'development') {
-      this.webview.addEventListener('dom-ready', () => {
-        console.log('WEBVIEW READY!')
-        this.webview.getWebContents().openDevTools({mode: 'detach'})
-      })
-    }
-    this.globalMethod()
-    global.wvs.applyProxy()
-  }
-
-  buildPAC () {
-    let pac = `
-      function FindProxyForURL (url, host) {
-        if (host === 'game.granbluefantasy.jp' || host === 'whatismyipaddress.com') {
-          if ('${global.Configs.proxy.type}' !== 'DIRECT') {
-            return '${global.Configs.proxy.type} ${global.Configs.proxy.server}:${global.Configs.proxy.port}'
-          }
-        }
-        return 'DIRECT'
-      }`
-    fs.writeFileSync(path.join(remote.app.getPath('userData'), 'proxy.pac'), pac, 'utf8')
-  }
-
-  globalMethod () {
-    let wvs = {}
-    wvs.applyProxy = () => {
-      this.buildPAC()
-      remote.session
-        .fromPartition(window.vue.$store.state.GameWeb.partition)
-        .setProxy({pacScript: 'file://' + path.join(remote.app.getPath('userData'), 'proxy.pac')}, () => {})
-      remote.session
-        .fromPartition(window.vue.$store.state.GameWeb.partition)
-        .resolveProxy('http://game.granbluefantasy.jp/', proxy => { console.log('resolve proxy:', proxy) })
-    }
-    global.wvs = wvs
-  }
-
-  /**
-   * Automatically click 'Full' to get auto resize ability
-   * @param {object} style - button css style
-   */
-  autoResizerEnabler (style) {
-    global.triggerFull = false
-    let js = readStatic('minified_execGetZoom.js')
-    this.webview.getWebContents().executeJavaScript(js)
-      .then(zoom => {
-        let x = Math.round((noPx(style.left) + noPx(style.width) / 2) * zoom)
-        let y = Math.round((noPx(style.top) + noPx(style.height) / 2) * zoom)
-        setTimeout(() => {
-          window.webview.sendInputEvent({ type: 'mouseDown', x: x, y: y })
-          setTimeout(() => {
-            window.webview.sendInputEvent({ type: 'mouseUp', x: x, y: y })
-          })
-        })
-      })
-  }
-
-  /**
-   * Get footer resizers
-   */
-  getResizer () {
-    let js = readStatic('minified_execGetResizer.js')
-    let queryRequired = true
-    this.webview.addEventListener('did-finish-load', () => {
-      if (queryRequired) {
-        queryRequired = false
-        this.webview.getWebContents().executeJavaScript(js)
-          .then(result => {
-            if (global.triggerFull && typeof result[3] === 'object') this.autoResizerEnabler(result[3].style)
-            for (let msg of result) {
-              window.vue.$store.commit('CREATE_NODE', msg)
-            }
-            queryRequired = true
-          })
-      }
-    })
-  }
-
-  /**
-   * Process received message from webview
-   * @param {string} channel - Message type
-   * @param {object} msg     - Message body
-   */
-  channelAction (channel, msg) {
-    if (channel === 'insertCSS') { this.webview.insertCSS('::-webkit-scrollbar{display:none}body{cursor:default}[class*=btn-]{cursor:pointer}') }
-    if (channel === 'submenu') { global.wm.submenuHandler(msg) }
-    if (channel === 'sessionInfo') { global.wm.sessionHandler(msg) }
-    // if (channel === 'hostLog') { console.log(msg) }
-  }
-}
-
 /**
  * #### ATTENTION:
  *   These 'static/minified_*' files is generate from
@@ -148,4 +21,46 @@ class WebviewService {
  * |    ~1 |  host    | did-stop-loading |
  */
 
-export default () => { return new WebviewService() }
+let webview
+
+/**
+ * Process received message from webview
+ * @param {string} channel - Message type
+ * @param {object} msg     - Message body
+ */
+function channelAction (channel, msg) {
+  if (channel === 'insertCSS') { webview.insertCSS('::-webkit-scrollbar{display:none}body{cursor:default}[class*=btn-]{cursor:pointer}') }
+  if (channel === 'submenu') {
+    window.commit('VIEW_UPDATE', {
+      subOpen: msg
+    })
+  }
+}
+
+export default () => {
+  webview = document.querySelector('webview')
+  window.webview = webview
+
+  if (process.env.NODE_ENV === 'development') {
+    webview.addEventListener('dom-ready', () => {
+      console.log('WEBVIEW READY!')
+      webview.getWebContents().openDevTools({mode: 'detach'})
+    })
+  }
+
+  webview.addEventListener('dom-ready', () => {
+    webview.send('AlertRecovery')
+  })
+
+  /*
+  // Remove placeholder of overlay when page loaded
+  webview.addEventListener('did-finish-load', () => {
+    window.commit('CLEAN_ELEMENTS')
+  })
+  */
+
+  // IPC message from webview
+  webview.addEventListener('ipc-message', (event) => {
+    channelAction(event.channel, event.args[0])
+  })
+}
