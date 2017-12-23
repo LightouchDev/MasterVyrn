@@ -14,30 +14,12 @@
  *         }
  */
 
-// Prevent click event when overlay button didn't initialized
-const placeholder = {
-  id: 'placeholder',
-  style: {
-    bottom: '0px',
-    left: '0px',
-    width: '320px',
-    height: '8px'
-  }
-}
-
 const state = {
-  zoom: global.Configs.window.zoom,
   data: {},
-  elements: [placeholder]
+  elements: []
 }
 
 const mutations = {
-  SET_ZOOM (state, payload) {
-    state.zoom = payload
-  },
-  DEFAULT_ELEMENTS (state) {
-    state.elements = [placeholder]
-  },
   CLEAN_ELEMENTS (state) {
     state.elements = []
   },
