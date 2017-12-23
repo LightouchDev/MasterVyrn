@@ -7,13 +7,13 @@
 <script>
 import MainSection from './DefaultApplication/MainSection'
 
-import WindowManager from '../libs/windowManager'
+import ipcService from '../libs/ipcService'
 import WebviewService from '../libs/webviewService'
 import shortcutService from '../libs/shortcutService'
 
 window.addEventListener('DOMContentLoaded', () => {
+  ipcService()
   WebviewService()
-  WindowManager()
 })
 shortcutService()
 

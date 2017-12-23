@@ -15,3 +15,6 @@ window.vue = new Vue({
   store,
   template: '<App/>'
 }).$mount('#app')
+
+window.commit = window.vue.$store.commit
+window.state = window.vue.$store.state

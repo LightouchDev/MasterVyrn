@@ -1,21 +1,13 @@
 'use strict'
 
 import ConfigHandler from '../../common/configHandler'
-import {remote} from 'electron'
+import { remote } from 'electron'
 
 class RendererConfig extends ConfigHandler {
   setDefaultConfig () {
     this.defaultConfig = {
-      window: {
-        alwaysOnTop: false,
-        lockWindowSize: false,
-        zoom: 1.5
-      },
-      proxy: {
-        type: 'DIRECT',
-        server: '',
-        port: ''
-      },
+      alwaysOnTop: false,
+      proxy: 'direct://',
       language: navigator.languages[0] || navigator.language
     }
   }
@@ -32,26 +24,13 @@ class RendererConfig extends ConfigHandler {
   }
   configApply () {
     return new Promise((resolve, reject) => {
-      remote.getCurrentWindow().setAlwaysOnTop(this.config.window.alwaysOnTop)
-      remote.getCurrentWindow().setResizable(!this.config.window.lockWindowSize)
+      remote.getCurrentWindow().setAlwaysOnTop(this.config.alwaysOnTop)
       if (this.initialized) {
-        global.wm.setZoom(this.config.window.zoom)
         window.vue.$i18n.locale = this.config.language
-        global.wvs.applyProxy()
       }
       this.initialized = true
       resolve()
     })
-  }
-  globalRegister () {
-    Object.assign(global.Configs, {proxyAddress: () => {
-      let config = global.Configs.proxy
-      let proxy = `${config.type}://`
-      if (global.Configs.proxy.type !== 'direct') {
-        proxy += `${config.server}:${config.port}`
-      }
-      return proxy
-    }})
   }
 }
 

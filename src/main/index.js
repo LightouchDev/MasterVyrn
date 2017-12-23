@@ -3,7 +3,7 @@
 import {app, BrowserWindow} from 'electron'
 import path from 'path'
 import mainConfig from './libs/mainConfig'
-import windowManager from './libs/windowManager'
+import inspectProxy from './libs/inspectProxy'
 
 /**
  * Set `__static` path to static files in production
@@ -54,20 +54,20 @@ app.on('activate', () => {
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: Math.round((320 + 18) * 1.5) + global.Configs.platformOffset,
+    width: 480,
     height: 870,
     useContentSize: true,
     fullscreenable: false,
     maximizable: false
   })
-  global.mainWindow = mainWindow
 
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-  windowManager()
+
+  global.proxy = inspectProxy(mainWindow)
 }
 
 /**

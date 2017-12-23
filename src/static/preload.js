@@ -1,5 +1,4 @@
 /* global DEBUG */
-// FIXME: gather page information from preload script, not from webview API.
 
 (() => {
   'use strict'
@@ -61,41 +60,6 @@
 
     ipcRenderer.sendToHost('insertCSS')
     log('css patched')
-  }
-
-  function headPost (content) {
-    let match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window\.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);$/m.exec(content)
-    let isMbga = /^[ \t]+isMbga.*\n[ \t]+return (.*);$/m.exec(content)
-    let response = {url: window.location.href}
-    log(`match is ${match}`)
-    // FIXME use Electron session instead
-    if (/^[ \t]+Game.userId = 0;$/m.test(content)) {
-      Object.assign(response, {
-        notLogin: true,
-        baseSize: /^[ \t]+deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)[1]
-      })
-    } else if (window.location.pathname === '/maintenance') {
-      Object.assign(response, {
-        notLogin: true,
-        baseSize: /^[ \t]+var deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)[1]
-      })
-      setTimeout(() => {
-        window.fitScreenByZoom(window.displayInitialize())
-      })
-    } else if (match) {
-      Object.assign(response, {
-        isMbga: isMbga[1] === 'true',
-        padding: Math.round(match[1]),
-        unknownPadding: Math.round(match[2]),
-        baseSize: Math.round(match[3])
-      })
-    } else {
-      Object.assign(response, {
-        noAutoResize: true
-      })
-    }
-    ipcRenderer.sendToHost('sessionInfo', response)
-    log('target passed!', 'warn')
 
     let submenuWatcher = setInterval(() => {
       if (document.querySelector('#submenu')) {
@@ -114,40 +78,15 @@
    */
   function DOMWatcher () {
     const config = { childList: true, subtree: true }
-    let onetimeSwitch = true
     const htmlWatcher = new window.MutationObserver(mutations => {
       log('start looking for head!', 'warn')
-      if (onetimeSwitch) {
-        headPre()
-        onetimeSwitch = false
-      }
       if (document.head) {
+        headPre()
         log('head detected!', 'warn')
         htmlWatcher.disconnect()
-        headWatcher.observe(document.head, config)
       }
     })
     htmlWatcher.observe(document, config)
-
-    const headWatcher = new window.MutationObserver(mutations => {
-      log('start looking for target!', 'warn')
-      for (let mutation of mutations) {
-        if (onetimeSwitch) break
-        if (mutation.addedNodes) {
-          for (let element of mutation.addedNodes) {
-            if (element.nodeName === 'SCRIPT') {
-              if (/deviceRatio/.test(element.text)) {
-                log('target found!')
-                headPost(element.text)
-                headWatcher.disconnect()
-                onetimeSwitch = true
-                break
-              }
-            }
-          }
-        }
-      }
-    })
   }
 
   /**

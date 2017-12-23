@@ -24,7 +24,7 @@ export default {
       return this.state.elements
     },
     zoom () {
-      return {zoom: this.state.zoom}
+      return {zoom: this.$store.state.GameView.zoom}
     }
   },
   methods: {
@@ -33,16 +33,6 @@ export default {
       let thisPreset = event.target.dataset.preset
       const data = this.state.data[thisPreset]
       return this[thisPreset](event, data)
-    },
-    resizer: function (event, data) {
-      let {size} = data[event.target.id]
-
-      if (event.type === 'mouseup') {
-        size = 1 + (size * 0.5)
-        global.Configs.set({
-          window: { zoom: size }
-        })
-      }
     }
   }
 }
@@ -51,6 +41,7 @@ export default {
 
 <style lang="scss">
 #overlay {
+  width: 100%;
   height: 100vh;
   bottom: 0;
   z-index: 2;
