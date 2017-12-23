@@ -26,6 +26,10 @@
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/7zip/-/7zip-0.0.6.tgz#9cafb171af82329490353b4816f03347aa150a30"
 
+"@fortawesome/fontawesome-free-regular@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free-regular/-/fontawesome-free-regular-5.0.1.tgz#9ef856209d4635d6d09902e8e953c056add8ce3f"
+
 "@fortawesome/fontawesome@^0.0.21":
   version "0.0.21"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome/-/fontawesome-0.0.21.tgz#282cea251c730aedace61e5a74021b90c584622e"
@@ -4269,6 +4273,14 @@ inquirer@^3.0.6, inquirer@~3.3.0:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
+"inspectproxy@https://github.com/LightouchDev/inspectProxy":
+  version "0.1.2"
+  resolved "https://github.com/LightouchDev/inspectProxy#065e1775cf494138eee2dc533a52ba5def4b3d49"
+  dependencies:
+    debug "^3.1.0"
+    portfinder "^1.0.13"
+    url-parser "https://github.com/LightouchDev/url-parser"
+
 int64-buffer@^0.1.9:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/int64-buffer/-/int64-buffer-0.1.9.tgz#9e039da043b24f78b196b283e04653ef5e990f61"
@@ -5993,7 +6005,7 @@ pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
 
-portfinder@^1.0.9:
+portfinder@^1.0.13, portfinder@^1.0.9:
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.13.tgz#bb32ecd87c27104ae6ee44b5a3ccbf0ebb1aede9"
   dependencies:
@@ -6607,6 +6619,10 @@ punycode@1.3.2:
 punycode@^1.2.4, punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
+
+punycode@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.0.tgz#5f863edc89b96db09074bad7947bf09056ca4e7d"
 
 q@^1.1.2, q@~1.5.0:
   version "1.5.1"
@@ -8098,6 +8114,12 @@ url-parse@^1.1.8:
   dependencies:
     querystringify "~1.0.0"
     requires-port "~1.0.0"
+
+"url-parser@https://github.com/LightouchDev/url-parser":
+  version "0.1.0"
+  resolved "https://github.com/LightouchDev/url-parser#e33c3330e77b4e26fcdf4bb419e051c8713cbdd9"
+  dependencies:
+    punycode "^2.1.0"
 
 url@^0.11.0, url@~0.11.0:
   version "0.11.0"
