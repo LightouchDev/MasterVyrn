@@ -19,7 +19,7 @@
     },
     "proxy": {
       "title": "代理",
-      "warning": "(現不可用)",
+      "warning": "（現不可用）",
       "item": {
         "direct": "直接連線",
         "hostname": "伺服器地址",
