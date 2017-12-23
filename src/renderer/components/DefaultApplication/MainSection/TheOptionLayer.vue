@@ -1,106 +1,74 @@
 <template>
-  <div id="the-option-layer" :style="zoom" :class="open ? 'open' : ''">
-    <div id="option-button" @click="menuToggle"><font-awesome-icon :icon="open ? faTimes : faCog" /></div>
-    <div id="option-page">
-      <div id="option-titleBar">
-        <div id="option-tab-preference" @click="changeTab('Preference')">{{ $t('option.tab.preference') }}</div>
-        <div id="option-tab-advanced" @click="changeTab('Advanced')">{{ $t('option.tab.advanced') }}</div>
+  <div id="the-option-layer" :style="zoom" :class="menuOpen ? 'open' : ''">
+    <div id="toolbar">
+      <div id="button-option" class="toolbar-button" @click="menuToggle">
+        <font-awesome-icon :icon="optionIcon" transform="grow-14 down-7" />
+        <div class="toolbar-button-desc">{{ (menuOpen ? $t('common.close') : $t('common.option')).toUpperCase() }}</div>
       </div>
+    </div>
+    <div id="option-page">
       <div id="container">
-        <div id="option-tabPage-preference" v-if="tabName === 'Preference'">
-          <div id="option-language" class="option-group option-flex">
-            <div class="option-groupTitle">{{ $t('option.language.title') }}</div>
-            <select name="option-select-language" v-model="config.language">
-              <option value="en-US">{{ $t('language.en-US') }}</option>
-              <option value="zh-TW">{{ $t('language.zh-TW') }}</option>
-            </select>
+        <div id="option-language" class="option-group option-flex">
+          <div class="option-groupTitle">{{ $t('option.language.title') }}</div>
+          <select name="option-select-language" v-model="config.language">
+            <option value="en-US">{{ $t('language.en-US') }}</option>
+            <option value="zh-TW">{{ $t('language.zh-TW') }}</option>
+          </select>
+        </div>
+        <div id="option-system" class="option-group">
+          <div class="option-groupTitle">{{ $t('option.system.title') }}
+            <span class="warning">{{ $t('option.system.warning') }}</span>
           </div>
-          <div id="option-window" class="option-group">
-            <div class="option-groupTitle">{{ $t('option.window.title') }}</div>
-            <div class="option-item">
-              <input type="checkbox" id="option-item-alwaysOnTop" v-model="config.window.alwaysOnTop">
-              <label
-                for="option-item-alwaysOnTop"
-                v-t="'option.window.item.alwaysOnTop'"
-              ></label>
-            </div>
-            <div class="option-item">
-              <input type="checkbox" id="option-item-lockWindowSize" v-model="config.window.lockWindowSize">
-              <label
-                for="option-item-lockWindowSize"
-                v-t="'option.window.item.lockWindowSize'"
-              ></label>
-            </div>
+          <div class="option-item">
+            <label for="option-item-noThrottling">
+              <input type="checkbox" id="option-item-noThrottling" v-model="system.noThrottling">{{ $t('option.system.item.noThrottling')}}
+            </label>
           </div>
-          <div id="option-zoom" class="option-group">
-            <div class="option-groupTitle">{{ $t('option.zoom.title') }}</div>
-            <div class="option-item option-flex">
-              <button type="button" class="button default" @click="setInitZoom(1.0)">x1.0</button>
-              <button type="button" class="button default" @click="setInitZoom(1.5)">x1.5</button>
-              <button type="button" class="button default" @click="setInitZoom(2.0)">x2.0</button>
-              <div>
-                {{ $t('option.zoom.item.initialRatio') }}
-                <input type="number" id="option-item-zoom" step="0.1" min="1" max="2" v-model="config.window.zoom">
-              </div>
+          <div class="option-item">
+            <label for="option-item-noHardwareAccel">
+              <input type="checkbox" id="option-item-noHardwareAccel" v-model="system.noHardwareAccel">{{ $t('option.system.item.noHardwareAccel') }}
+            </label>
+          </div>
+        </div>
+        <div id="option-window" class="option-group">
+          <div class="option-groupTitle">{{ $t('option.window.title') }}</div>
+          <div class="option-item">
+            <label for="option-item-alwaysOnTop">
+              <input type="checkbox" id="option-item-alwaysOnTop" v-model="config.alwaysOnTop">{{ $t('option.window.item.alwaysOnTop') }}
+            </label>
+          </div>
+        </div>
+        <div id="option-proxy" class="option-group">
+          <div class="option-groupTitle">{{ $t('option.proxy.title') }}
+            <span class="warning">{{ $t('option.proxy.warning') }}</span>
+          </div>
+          <div class="option-item">
+            <div class="option-flex">
+              <select name="option-select-proxyType" v-model="proxy.protocol">
+                <option value="direct:">{{ $t('option.proxy.item.direct') }}</option>
+                <option value="http:">HTTP</option>
+                <option value="https:">HTTPS</option>
+                <option value="socks:">SOCKS4</option>
+                <option value="socks5:">SOCKS5</option>
+              </select>
+              <input type="text" id="option-item-proxyServer" :disabled="disableProxyOptions" v-model="proxy.hostname" :placeholder="$t('option.proxy.item.hostname')">
+              :
+              <input type="number" id="option-item-proxyPort" :disabled="disableProxyOptions" v-model="proxy.port" :placeholder="$t('option.proxy.item.port')">
+            </div>
+            <div id="option-userinfo" class="option-flex">
+              <input type="text" :disabled="disableProxyOptions" v-model="proxy.username" :placeholder="$t('option.proxy.item.username')">
+              :
+              <input type="password" :disabled="disableProxyOptions" v-model="proxy.password" :placeholder="$t('option.proxy.item.password')">
             </div>
           </div>
         </div>
-        <div id="option-tabPage-advanced" v-else-if="tabName === 'Advanced'">
-          <div id="option-system" class="option-group">
-            <div class="option-groupTitle">{{ $t('option.system.title') }}
-              <span class="warning">{{ $t('option.system.warning') }}</span>
-            </div>
-            <div class="option-item">
-              <input type="checkbox" id="option-item-noThrottling" v-model="system.noThrottling">
-              <label
-                for="option-item-noThrottling"
-                v-t="'option.system.item.noThrottling'"
-              ></label>
-            </div>
-            <div class="option-item">
-              <input type="checkbox" id="option-item-noHardwareAccel" v-model="system.noHardwareAccel">
-              <label
-                for="option-item-noHardwareAccel"
-                v-t="'option.system.item.noHardwareAccel'"
-              ></label>
-            </div>
-          </div>
-          <div id="option-fix" class="option-group">
-            <div class="option-groupTitle">{{ $t('option.fix.title') }}</div>
-            <div id="option-widthOffset" class="option-item option-flex">
-              <span>{{ $t('option.fix.item.widthOffset.title') }}</span>
-              <input type="number" id="option-item-widthOffset" min="-50" max="50" step="1" v-model="system.platformOffset" @change="changeWidthOffset">
-              <span>px</span>
-              <div class="indent"></div>
-              <button type="button" id="option-button-calibration" class="button gray" @click="autoCalibration">{{ $t('option.fix.item.autoCalibration') }}</button>
-            </div>
-            <div id="option-item-widthOffset-desc" class="desc">{{ $t('option.fix.item.widthOffset.desc') }}</div>
-          </div>
-          <div id="option-proxy" class="option-group">
-            <div class="option-groupTitle">{{ $t('option.proxy.title') }}</div>
-            <div class="option-item">
-              <div class="option-flex">
-                <select name="option-select-proxyType" v-model="config.proxy.type">
-                  <option value="DIRECT">{{ $t('option.proxy.item.direct') }}</option>
-                  <option value="PROXY">HTTP</option>
-                  <option value="HTTPS">HTTPS</option>
-                  <option value="SOCKS">SOCKS4</option>
-                  <option value="SOCKS5">SOCKS5</option>
-                </select>
-                <input type="text" id="option-item-proxyServer" :disabled="config.proxy.type === 'DIRECT'" v-model="config.proxy.server" :placeholder="$t('option.proxy.item.server')">
-                :
-                <input type="number" id="option-item-proxyPort" :disabled="config.proxy.type === 'DIRECT'" v-model="config.proxy.port" :placeholder="$t('option.proxy.item.port')">
-              </div>
-            </div>
-          </div>
-          <div id="option-storage" class="option-group">
-            <div class="option-groupTitle">{{ $t('option.storage.title') }}</div>
-            <div class="option-item option-flex">
-              <button type="button" class="button default" @click="cleanStorage('login')">{{ $t('option.storage.item.clearLogin') }}</button>
-              <button type="button" class="button default" @click="cleanStorage('cache')">{{ $t('option.storage.item.clearCache') }}</button>
-              <div class="indent"></div>
-              <button type="button" class="button default" @click="cleanStorage('all')">{{ $t('option.storage.item.clearAll') }}</button>
-            </div>
+        <div id="option-storage" class="option-group">
+          <div class="option-groupTitle">{{ $t('option.storage.title') }}</div>
+          <div class="option-item option-flex">
+            <button type="button" class="button default" @click="cleanStorage('login')">{{ $t('option.storage.item.clearLogin') }}</button>
+            <button type="button" class="button default" @click="cleanStorage('cache')">{{ $t('option.storage.item.clearCache') }}</button>
+            <div class="indent"></div>
+            <button type="button" class="button default" @click="cleanStorage('all')">{{ $t('option.storage.item.clearAll') }}</button>
           </div>
         </div>
         <div id="option-buttons" class="option-group option-flex">
@@ -115,37 +83,35 @@
 </template>
 
 <script>
+import urlParser from 'url-parser'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import faCog from '../../../libs/fontawesome-pro-regular/faCog'
-import faTimes from '../../../libs/fontawesome-pro-regular/faTimes'
+import { faListAlt, faTimesCircle } from '@fortawesome/fontawesome-free-regular'
 
 let mainConfigs = require('electron').remote.getGlobal('Configs')
 
 export default {
   data () {
     return {
-      faCog: faCog,
-      faTimes: faTimes,
       menuOpen: false,
-      tabName: 'Preference',
       config: Object.assign({}, global.Configs.get()),
+      proxy: urlParser(global.Configs.get().proxy),
       system: mainConfigs.get()
     }
   },
   computed: {
     zoom () {
-      return {zoom: this.$store.state.Overlay.zoom}
+      return {zoom: this.$store.state.GameView.zoom}
     },
-    open () {
-      return this.menuOpen
+    optionIcon () {
+      return this.menuOpen ? faTimesCircle : faListAlt
+    },
+    disableProxyOptions () {
+      return this.proxy.protocol === 'direct:'
     }
   },
   methods: {
     menuToggle () {
       this.menuOpen = !this.menuOpen
-    },
-    changeTab (tabName) {
-      this.tabName = tabName
     },
     cleanStorage (type) {
       if (confirm(this.$t(`option.alert.clearStorage.${type}`))) {
@@ -153,42 +119,24 @@ export default {
         if (type !== 'cache') window.webview.getWebContents().session.clearStorageData()
       }
     },
-    changeWidthOffset () {
-      mainConfigs.set({platformOffset: this.system.platformOffset})
-      global.wm.applyWidth()
-    },
-    autoCalibration () {
-      let previousZoom = this.config.window.zoom
-      let platformOffset = this.system.platformOffset
-      window.wm.autoCalibration().then(result => {
-        if (!result) {
-          window.alert(this.$t('option.alert.calibrationFailed'))
-          mainConfigs.set({platformOffset: platformOffset})
-          global.Configs.set({window: {zoom: previousZoom}})
-        }
-        this.refrashConfig()
-      })
-    },
     refrashConfig () {
       this.system = mainConfigs.get()
       this.config = global.Configs.get()
     },
     setDefault () {
       if (confirm(this.$t('option.alert.setDefault'))) {
-        if (this.tabName === 'Preference') {
-          this.config.window = global.Configs.getDefaults().window
-        }
-        if (this.tabName === 'Advanced') {
-          this.system = mainConfigs.getDefaults()
-          this.config.proxy = global.Configs.getDefaults().proxy
-        }
+        mainConfigs.setDefaults()
+        global.Configs.setDefaults()
+        this.refrashConfig()
         this.applyConfig()
       }
     },
-    setInitZoom (zoom) {
-      this.config.window.zoom = zoom
-    },
     applyConfig () {
+      if (this.proxy.protocol === 'direct:') {
+        this.proxy.hostname = ''
+        this.proxy.port = null
+      }
+      this.config.proxy = `${this.proxy.protocol}//${this.proxy.hostname}${this.proxy.port ? `:${this.proxy.port}` : ''}`
       mainConfigs.set(this.system)
       global.Configs.set(this.config)
       window.webview.reload()
@@ -203,20 +151,34 @@ export default {
 <style lang="scss">
 
 #the-option-layer {
-  #option-button {
-    background-image: -webkit-linear-gradient(bottom, #3a5764 0%,#0a1f29 97%);
-    color: darken($standardWhite, 3%);
-    width: 18px;
-    height: 25px;
-    right: 0px;
+  #toolbar {
+    left: 320px;
     bottom: 0px;
-    padding-top: 4px;
-    padding-right: 1px;
     position: absolute;
     text-align: center;
-    border-top: 1px solid #839d9e;
-    border-radius: 0 10px 0 0;
-    box-sizing: border-box;
+    .toolbar-button {
+      color: #c5f7f9;
+      width: 64px;
+      height: 45px;
+      margin: 9px 0 9px;
+      position: relative;
+      @include gradient-text('linear-gradient(#c5f7f9, #94d4dd, #c5f7f9)', 'dark');
+    }
+    .toolbar-button-desc {
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.75px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      text-shadow:
+        -1px -1px 2px $standardBlack,
+        1px -1px 2px $standardBlack,
+        -1px 1px 2px $standardBlack,
+        1px 1px 2px $standardBlack;
+      @include gradient-text('linear-gradient(#c5f7f9, #94d4dd, #c5f7f9)', 'dark');
+    }
   }
   #option-page {
     display: none;
@@ -239,19 +201,6 @@ export default {
     position: absolute;
     z-index: 10;
     display: block;
-      #option-titleBar {
-        display: flex;
-        div {
-          background-color: $standardWhite;
-          border-color: lighten($standardBlack, 10%);
-          border-width: 1px;
-          border-style: solid;
-          color: $standardBlack;
-          width: 100%;
-          text-align: center;
-          text-shadow: initial;
-        }
-      }
     #container {
       margin: 0px 10px;
       .option-group {
@@ -261,30 +210,18 @@ export default {
           margin: 4px 0px;
           font-size: 18px;
         }
-        #option-widthOffset {
-          display: flex;
-          margin: 4px 0px;
-          span {
-            vertical-align: middle;
-          }
-          input {
-            width: 3em;
-          }
-        }
-        &#option-zoom {
-          .option-flex {
-            justify-content: space-around;
-          }
-          input {
-            width: 3em;
-          }
-        }
         &#option-proxy {
           #option-item-proxyServer {
             width: 100%;
           }
           #option-item-proxyPort {
             width: 5em;
+          }
+          #option-userinfo {
+            padding-top: 5px;
+            > * {
+              width: 100%;
+            }
           }
         }
         &#option-storage {
@@ -314,6 +251,10 @@ export default {
   }
 }
 
+input[type="checkbox"] {
+  vertical-align: middle;
+}
+
 .warning {
   margin: 0px 4px;
   color: lighten(red, 10%);
@@ -335,6 +276,7 @@ export default {
 .button {
   color: $standardWhite;
   font-size: 12px;
+  font-weight: bold;
   border-radius: 3px;
   border-style: solid;
   border-width: 1px;
