@@ -40,7 +40,8 @@ function contentProcessor (type, message) {
           baseSize: Number(match[3]),
           subMenuWidth: Number(match[3] - 640) // each
         })
-      } else {
+        /* eslint-disable no-tabs */
+      } else if (content.indexOf('	deviceRatio') !== -1) {
         // when view is not responsive
         window.commit('VIEW_RESET')
         window.commit('VIEW_UPDATE', {
@@ -49,6 +50,8 @@ function contentProcessor (type, message) {
           isMbga: isMbga[1] === 'true'
         })
         window.commit('VIEW_PRESET')
+      } else {
+        console.warn(`can't extract info.`)
       }
     }
 
