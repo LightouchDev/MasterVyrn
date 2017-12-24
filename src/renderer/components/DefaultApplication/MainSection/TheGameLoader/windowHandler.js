@@ -9,9 +9,9 @@ const platformPadding = (() => {
   // Windows always sucks, even just window size report, never done things right.
   if (os.platform() === 'win32') {
     let ntVersion = /(\d+)\.(\d+)\.(\d+)/.exec(os.release())
-    // Windows 7 require additional 8px
-    if (ntVersion[1] === '6' && ntVersion[2] === '1') return 8
-    // Windows 8/10 require additional 16px
+    // Windows 7/8 require additional 8px
+    if (ntVersion[1] === '6') return 8
+    // Windows 10 require additional 16px
     return 16
   }
   return 0
