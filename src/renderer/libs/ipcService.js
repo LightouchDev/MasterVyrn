@@ -66,6 +66,13 @@ function contentProcessor (type, message) {
       })
     }
   }
+
+  if (type === 'request') {
+    // open submenu when purchase page popup
+    if (/purchase_jssdk/.test(message.url)) {
+      if (!window.state.GameView.subOpen) window.webview.executeJavaScript('Game.submenu.mainView.showChat()')
+    }
+  }
 }
 
 export default () => {
