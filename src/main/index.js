@@ -61,13 +61,14 @@ function createWindow () {
     maximizable: false
   })
 
-  mainWindow.loadURL(winURL)
-
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 
-  global.proxy = inspectProxy(mainWindow)
+  global.proxy = inspectProxy(mainWindow).once('listening', () => {
+    console.log(`Proxy listen on ${global.proxy.port}`)
+    mainWindow.loadURL(winURL)
+  })
 }
 
 /**

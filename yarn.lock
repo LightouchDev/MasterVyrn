@@ -4116,6 +4116,10 @@ get-func-name@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/get-func-name/-/get-func-name-2.0.0.tgz#ead774abee72e20409433a066366023dd6887a41"
 
+get-port@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/get-port/-/get-port-3.2.0.tgz#dd7ce7de187c06c8bf353796ac71e099f0980ebc"
+
 get-stdin@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-4.0.1.tgz#b968c6b0a04384324902e8bf1a5df32579a450fe"
@@ -4764,11 +4768,11 @@ insert-module-globals@^7.0.0:
     xtend "^4.0.0"
 
 "inspectproxy@https://github.com/LightouchDev/inspectProxy":
-  version "0.1.2"
-  resolved "https://github.com/LightouchDev/inspectProxy#065e1775cf494138eee2dc533a52ba5def4b3d49"
+  version "0.1.5"
+  resolved "https://github.com/LightouchDev/inspectProxy#a7d29a12857b83f5d124dc7acad0ea82efd0998e"
   dependencies:
     debug "^3.1.0"
-    portfinder "^1.0.13"
+    get-port "^3.2.0"
     url-parser "https://github.com/LightouchDev/url-parser"
 
 int64-buffer@^0.1.10:
@@ -6709,7 +6713,7 @@ pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
 
-portfinder@^1.0.13, portfinder@^1.0.9:
+portfinder@^1.0.9:
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.13.tgz#bb32ecd87c27104ae6ee44b5a3ccbf0ebb1aede9"
   dependencies:

@@ -75,6 +75,9 @@ function contentProcessor (type, message) {
   }
 }
 
+/**
+ * FIXME: replace hard-coded rules with plugin structure.
+ */
 export default () => {
   // Setup session
   const currentSession = remote.session.fromPartition(window.state.GameWeb.partition)
@@ -91,9 +94,9 @@ export default () => {
     if (typeof type !== 'string' && typeof message !== 'object') throw new Error(`'HTTPContent' got wrong`)
 
     if (inspectCondition(type, message)) {
-      if (message.header['content-encoding'] === 'gzip') {
+      if (message.headers['content-encoding'] === 'gzip') {
         message.body = gunzipSync(message.body)
-      } else if (message.header['content-encoding'] === 'deflate') {
+      } else if (message.headers['content-encoding'] === 'deflate') {
         message.body = inflateRawSync(message.body)
       }
       contentProcessor(type, message)
