@@ -18,7 +18,7 @@ const platformPadding = (() => {
 })()
 
 let previousSize
-const windowSize = {
+let windowSize = {
   min: 320,
   max: 640,
   width: 480,
@@ -42,11 +42,12 @@ currentWindow.on('resize', event => {
 })
 
 export default (size) => {
-  console.log(`get window size: ${require('util').inspect(size)}`)
-  windowSize.min = size.min + platformPadding
-  windowSize.max = size.min * 2 + platformPadding
-  windowSize.width = size.width + platformPadding
-  windowSize.autoResize = size.autoResize
+  windowSize = {
+    min: size.min + platformPadding,
+    max: size.min * 2 + platformPadding,
+    width: size.width + platformPadding,
+    autoResize: size.autoResize
+  }
 
   if (JSON.stringify(windowSize) !== JSON.stringify(previousSize)) {
     // adjust window to fit monitor size

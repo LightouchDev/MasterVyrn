@@ -10,6 +10,8 @@ import GameWeb from './TheGameLoader/GameWeb'
 import Overlay from './TheGameLoader/Overlay'
 import windowHandler from './TheGameLoader/windowHandler'
 
+let delayResize = null
+
 export default {
   name: 'the-game-loader',
   components: {
@@ -18,8 +20,7 @@ export default {
   },
   data () {
     return {
-      view: this.$store.state.GameView,
-      resizerRegistered: false
+      view: this.$store.state.GameView
     }
   },
   methods: {
@@ -44,24 +45,28 @@ export default {
       // only reload page when game is responsive
       if (zoom === undefined) { window.webview.reload() }
     },
-    windowResizer () {
-      if (this.resizerRegistered) {
+    setupWindow () {
+      if (window.onresize) {
         if (!this.view.autoResize) {
           // unregister resize event when game is not resposive
           window.onresize = null
-          this.resizerRegistered = false
+          delayResize = null
         }
       } else if (this.view.autoResize) {
         // register resize event when game is resposive
-        let delayResize = null
         window.onresize = () => {
           clearTimeout(delayResize)
           delayResize = setTimeout(() => {
             this.calcZoom()
           }, 80)
         }
-        this.resizerRegistered = true
       }
+      // setup browser window size
+      windowHandler({
+        min: Number(this.windowBase),
+        width: this.windowWidth,
+        autoResize: this.view.autoResize
+      })
     }
   },
   computed: {
@@ -73,26 +78,18 @@ export default {
       )
     },
     windowWidth () {
-      const windowWidth = Number(
-        this.view.zoom *
-        (this.view.subMenuWidth + 320 * (this.view.subOpen ? 2 : 1))
-      )
+      const windowWidth = Number(this.view.zoom * this.windowBase)
       if (window.screen.availWidth < windowWidth && this.view.autoResize) {
-        this.calcZoom(
-          window.screen.availWidth /
-          (this.view.subMenuWidth + 320 * (this.view.subOpen ? 2 : 1))
+        this.calcZoom(window.screen.availWidth / this.windowBase
         )
       }
       return windowWidth
     },
+    windowBase () {
+      return this.view.subMenuWidth + 320 * (this.view.subOpen ? 2 : 1)
+    },
     style () {
-      // setup window
-      this.windowResizer()
-      windowHandler({
-        min: Number(this.view.subMenuWidth + 320 * (this.view.subOpen ? 2 : 1)),
-        width: this.windowWidth,
-        autoResize: this.view.autoResize
-      })
+      this.setupWindow()
       return {
         'width': `${this.webviewWidth}px`,
         'margin-left': this.view.isMbga ? `-${this.view.sidePadding}px` : '0px'
