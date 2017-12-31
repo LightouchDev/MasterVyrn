@@ -8,12 +8,12 @@
 import MainSection from './DefaultApplication/MainSection'
 
 import ipcService from '../libs/ipcService'
-import WebviewService from '../libs/webviewService'
+import webviewService from '../libs/webviewService'
 import shortcutService from '../libs/shortcutService'
 
 window.addEventListener('DOMContentLoaded', () => {
   ipcService()
-  WebviewService()
+  webviewService()
 })
 shortcutService()
 

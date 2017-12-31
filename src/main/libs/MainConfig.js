@@ -1,6 +1,6 @@
 'use strict'
 
-import ConfigHandler from '../../common/configHandler'
+import ConfigHandler from '../../common/ConfigHandler'
 import { app } from 'electron'
 import fs from 'fs'
 import path from 'path'

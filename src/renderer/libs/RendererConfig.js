@@ -1,6 +1,6 @@
 'use strict'
 
-import ConfigHandler from '../../common/configHandler'
+import ConfigHandler from '../../common/ConfigHandler'
 import { remote } from 'electron'
 
 class RendererConfig extends ConfigHandler {
