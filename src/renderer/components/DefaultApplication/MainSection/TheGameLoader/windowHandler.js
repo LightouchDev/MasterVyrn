@@ -1,21 +1,10 @@
 'use strict'
 
-import os from 'os'
 import { remote } from 'electron'
 
 const currentWindow = remote.getCurrentWindow()
 
-const platformPadding = (() => {
-  // Windows always sucks, even just window size report, never done things right.
-  if (os.platform() === 'win32') {
-    let ntVersion = /(\d+)\.(\d+)\.(\d+)/.exec(os.release())
-    // Windows 7/8 require additional 8px
-    if (ntVersion[1] === '6') return 8
-    // Windows 10 require additional 16px
-    return 16
-  }
-  return 0
-})()
+const platformPadding = currentWindow.getSize()[0] - currentWindow.getContentSize()[0]
 
 let previousSize
 let windowSize = {
