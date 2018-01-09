@@ -71,6 +71,13 @@ function createWindow () {
   })
 }
 
+// handle common error
+function printError (error) {
+  process.env.NODE_ENV === 'development' && console.warn(error)
+}
+process.on('unhandledRejection', printError)
+process.on('uncaughtException', printError)
+
 /**
  * Auto Updater
  *
