@@ -18,7 +18,6 @@ import { oneshotListener } from './libs/utils'
   }
   DOMWatcher()
   noMute()
-  // eventInjector()
   window.process = undefined
 
   // prevent alert popup when resize cause frequency reload
@@ -92,30 +91,4 @@ import { oneshotListener } from './libs/utils'
       }
     })
   }
-
-  /**
-   * Inject addEventListener to clear mute event
-   * FIXME: standardize this
-   */
-  /*
-  function eventInjector () {
-    let _addEventListener = window.addEventListener
-    window.addEventListener = function (event, callback) {
-      let funcString = callback.toString()
-      let whiteReg = /unmute/
-      let blockReg = /mute/
-      if (!whiteReg.test(funcString)) {
-        if (blockReg.test(funcString)) {
-          if (DEBUG) {
-            if (!this.eventListenerBlockedList) this.eventListenerBlockedList = {}
-            if (!this.eventListenerBlockedList[event]) this.eventListenerBlockedList[event] = []
-            this.eventListenerBlockedList[event].push(callback)
-          }
-          return // do not register event listener if match
-        }
-      }
-      _addEventListener.apply(this, arguments)
-    }
-  }
-  */
 })()
