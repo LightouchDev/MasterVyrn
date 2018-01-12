@@ -29,9 +29,6 @@
     "files": [
       "dist/electron/**/*"
     ],
-    "electronDownload": {
-      "mirror": "https://github.com/LightouchDev/electronDist/releases/download/v"
-    },
     "dmg": {
       "contents": [
         {
@@ -117,7 +114,7 @@
     "cssnano-preset-default": "^4.0.0-rc.2",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "github:LightouchDev/electronDist",
+    "electron": "^1.7.10",
     "electron-builder": "^19.49.0",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.3",

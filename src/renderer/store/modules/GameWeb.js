@@ -5,6 +5,11 @@ const state = {
   url: ''
 }
 
+state.userAgent = (() => {
+  return navigator.userAgent.replace(
+    new RegExp(`(Electron|${require('../../../../package.json').name})\\/[\\d.]+\\s`, 'g'), '')
+})()
+
 export default {
   state
 }

@@ -4,6 +4,7 @@
     :src="gameURL"
     :preload="preloadScript"
     :partition="partition"
+    :useragent="userAgent"
     allowpopups
   >
   </webview>
@@ -25,6 +26,9 @@ export default {
     },
     partition () {
       return this.state.partition
+    },
+    userAgent () {
+      return this.state.userAgent
     }
   }
 }
