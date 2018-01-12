@@ -11,6 +11,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
+const preloadConfig = require('./webpack.preload.config')
 
 let electronProcess = null
 let manualRestart = false
@@ -36,13 +37,6 @@ function logStats (proc, data) {
   log += '\n' + chalk.yellow.bold(`┗ ${new Array(28 + 1).join('-')}`) + '\n'
 
   console.log(log)
-}
-
-function minifyStatic () {
-  const staticMinify = require('./staticMinify')
-  return new Promise((resolve, reject) => {
-    staticMinify(true, resolve, reject)
-  })
 }
 
 function startRenderer () {
@@ -120,6 +114,24 @@ function startMain () {
   })
 }
 
+function startPreload () {
+  return new Promise((resolve, reject) => {
+    const compiler = webpack(preloadConfig)
+
+    compiler.watch({}, (err, stats) => {
+      if (err) {
+        console.log(err)
+        return
+      }
+
+      logStats('Preload', stats)
+      hotMiddleware.publish({ action: 'reload' })
+
+      resolve()
+    })
+  })
+}
+
 function startElectron () {
   electronProcess = spawn(electron, ['--inspect=5858', path.join(__dirname, '../dist/electron/main.js')])
 
@@ -173,7 +185,7 @@ function greeting () {
 function init () {
   greeting()
 
-  Promise.all([startRenderer(), startMain(), minifyStatic()])
+  Promise.all([startRenderer(), startMain(), startPreload()])
     .then(() => {
       startElectron()
     })

@@ -12,14 +12,13 @@ const Multispinner = require('multispinner')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
+const preloadConfig = require('./webpack.preload.config')
 const webConfig = require('./webpack.web.config')
 
 const doneLog = chalk.bgGreen.white(' DONE ') + ' '
 const errorLog = chalk.bgRed.white(' ERROR ') + ' '
 const okayLog = chalk.bgBlue.white(' OKAY ') + ' '
 const isCI = process.env.CI || false
-
-const staticMinify = require('./staticMinify')
 
 if (process.env.BUILD_TARGET === 'clean') clean()
 else if (process.env.BUILD_TARGET === 'web') web()
@@ -36,15 +35,13 @@ function build () {
 
   del.sync(['dist/electron/*', '!.gitkeep'])
 
-  const tasks = ['main', 'renderer']
+  const tasks = ['main', 'renderer', 'preload']
   const m = new Multispinner(tasks, {
     preText: 'building',
     postText: 'process'
   })
 
   let results = ''
-
-  staticMinify()
 
   m.on('success', () => {
     process.stdout.write('\x1B[2J\x1B[0f')
@@ -69,6 +66,16 @@ function build () {
   }).catch(err => {
     m.error('renderer')
     console.log(`\n  ${errorLog}failed to build renderer process`)
+    console.error(`\n${err}\n`)
+    process.exit(1)
+  })
+
+  pack(preloadConfig).then(result => {
+    results += result + '\n\n'
+    m.success('preload')
+  }).catch(err => {
+    m.error('preload')
+    console.log(`\n  ${errorLog}failed to build preload process`)
     console.error(`\n${err}\n`)
     process.exit(1)
   })

@@ -1,15 +1,6 @@
 'use strict'
 
 /**
- * #### ATTENTION:
- *   These 'static/minified_*' files is generate from
- *   'src/static' by '.electron-vue/staticMinify.js'
- *   and has no hot-reload capabilities.
- *
- *   use 'node .electron-vue/staticMinify.js --dev'
- *   to apply change manually when develop.
- *
- * ------------------------------------
  * #### Event order between webview and host
  *
  * |  Time | Instance |       Event      |

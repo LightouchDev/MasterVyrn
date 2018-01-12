@@ -1,20 +1,23 @@
-/* global DEBUG */
+'use strict'
+
+import { ipcRenderer } from 'electron'
+import { oneshotListener } from './libs/utils'
 
 (() => {
-  'use strict'
-
-  const {ipcRenderer} = require('electron')
+  const DEBUG = process.env.NODE_ENV === 'development'
+  let console, startTime
 
   if (DEBUG) {
-    var console = {
+    console = {
       log: window.console.log,
       warn: window.console.warn,
       error: window.console.error
     }
-    var startTime = window.performance.now()
+    startTime = window.performance.now()
     console.log(startTime, 'page start!')
   }
   DOMWatcher()
+  noMute()
   // eventInjector()
   window.process = undefined
 
@@ -39,20 +42,6 @@
 
   function log (msg, type = 'log') {
     if (DEBUG) console[type]((window.performance.now() - startTime).toFixed(2), msg)
-  }
-
-  /**
-   * Oneshot event listener
-   * @param   {object}    node        - html node
-   * @param   {string}    event       - event
-   * @param   {function}  callback    - callback
-   * @param   {boolean}   useCapture  - useCapture
-   */
-  function oneshotListener (node, event, callback, useCapture) {
-    node.addEventListener(event, function handler (event) {
-      this.removeEventListener(event.type, handler)
-      return callback(event)
-    }, useCapture)
   }
 
   function headPre () {
@@ -87,6 +76,21 @@
       }
     })
     htmlWatcher.observe(document, config)
+  }
+
+  /**
+   * remove mute function
+   */
+  function noMute () {
+    const whileLoop = setInterval(() => {
+      try {
+        window.require.s.contexts._.defined['lib/sound-player'].mute = window.$.noop
+        log('===> mute method removed! <===')
+        clearInterval(whileLoop)
+      } catch (error) {
+        log('!!! mute method remove failed !!!')
+      }
+    })
   }
 
   /**
