@@ -1,8 +1,6 @@
 'use strict'
 
 import util from 'util'
-import defaultsDeep from 'lodash.defaultsdeep'
-import clonedeep from 'lodash.clonedeep'
 
 class ConfigHandler {
   constructor () {
@@ -71,10 +69,10 @@ class ConfigHandler {
    * and resolve all diff configs
    */
   filterConfigs (newConfig, oldConfig = this.config) {
-    newConfig = clonedeep(newConfig)
-    oldConfig = clonedeep(oldConfig)
+    newConfig = Object.assign({}, newConfig)
+    oldConfig = Object.assign({}, oldConfig)
     return new Promise((resolve) => {
-      let filteredConfig = defaultsDeep(newConfig, oldConfig)
+      let filteredConfig = Object.assign(newConfig, oldConfig)
       resolve(filteredConfig)
       console.log(`config: ${util.inspect(oldConfig)}\nnew config: ${util.inspect(newConfig)}`)
       console.log('resolve with', filteredConfig)
@@ -98,10 +96,10 @@ class ConfigHandler {
       })
     }
     global.Configs.get = obj => {
-      return clonedeep(this.config)
+      return Object.assign({}, this.config)
     }
     global.Configs.getDefaults = obj => {
-      return clonedeep(this.defaultConfig)
+      return this.defaultConfig
     }
     global.Configs.setDefaults = () => {
       this.config = Object.assign({}, this.defaultConfig)

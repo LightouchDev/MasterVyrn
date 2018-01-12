@@ -13,11 +13,10 @@ class RendererConfig extends ConfigHandler {
   }
   readConfig () {
     let config = JSON.parse(window.localStorage.getItem('configure'))
-    if (config) {
-      return config
-    } else {
-      throw new this.InputException()
+    if (!config) {
+      throw new Error(`Can't read config from localStorage!`)
     }
+    return config
   }
   saveConfig (obj) {
     window.localStorage.setItem('configure', JSON.stringify(obj))

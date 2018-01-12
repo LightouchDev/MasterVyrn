@@ -29,7 +29,9 @@ let webview
  * @param {object} msg     - Message body
  */
 function channelAction (channel, msg) {
-  if (channel === 'insertCSS') { webview.insertCSS('::-webkit-scrollbar{display:none}body{cursor:default}[class*=btn-]{cursor:pointer}') }
+  if (channel === 'insertCSS') {
+    webview.insertCSS('::-webkit-scrollbar{display:none}body{cursor:default}[class*=btn-]{cursor:pointer}')
+  }
   if (channel === 'submenu') {
     window.commit('VIEW_UPDATE', {
       subOpen: msg
