@@ -20,7 +20,6 @@ const defaults = {
   sidePadding: 0,
   baseSize: 0,
   unknownPadding: 0,
-  subOpen: false,
   subMenuWidth: 64 // ensure there always has submenu.
 }
 
@@ -31,7 +30,8 @@ const preset = {
   subMenuWidth: 64
 }
 
-const state = Object.assign({}, defaults)
+// only set subOpen when initialize
+const state = Object.assign({ subOpen: false }, defaults)
 
 const mutations = {
   VIEW_UPDATE (state, payload) {
