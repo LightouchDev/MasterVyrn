@@ -21,6 +21,11 @@ function shortcutService () {
     if (event.ctrlKey && event.altKey && event.code === 'KeyI') {
       remote.getCurrentWebContents().openDevTools({mode: 'detach'})
     }
+
+    // H: hide sidebar
+    if (!event.ctrlKey && !event.altKey && !event.metaKey && event.code === 'KeyH') {
+      window.commit('HIDE_SUB')
+    }
   }
 }
 

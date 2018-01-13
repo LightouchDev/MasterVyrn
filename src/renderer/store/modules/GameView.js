@@ -31,7 +31,10 @@ const preset = {
 }
 
 // only set subOpen when initialize
-const state = Object.assign({ subOpen: false }, defaults)
+const state = Object.assign({
+  subOpen: false,
+  subHide: false
+}, defaults)
 
 const mutations = {
   VIEW_UPDATE (state, payload) {
@@ -42,6 +45,9 @@ const mutations = {
   },
   VIEW_RESET (state, payload) {
     Object.assign(state, defaults)
+  },
+  HIDE_SUB (state) {
+    state.subHide = !state.subHide
   }
 }
 
