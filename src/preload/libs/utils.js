@@ -19,16 +19,16 @@ function init () {
     const _alert = window.alert
     window.alert = () => {}
 
-    oneshotListener(window, 'DOMContentLoaded', () => {
+    DEBUG && oneshotListener(window, 'DOMContentLoaded', () => {
       log('DOM parsed')
       // recover console function
       Object.assign(window.console, console)
-      // restore alert
-      window.alert = _alert
     })
 
     oneshotListener(window, 'load', () => {
-      log('DOM ready')
+      DEBUG && log('DOM ready')
+      // restore alert
+      window.alert = _alert
     })
   }
 }
