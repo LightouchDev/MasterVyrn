@@ -1,5 +1,6 @@
 const state = {
   gameURL: 'http://game.granbluefantasy.jp/',
+  gameObject: {},
   partition: 'persist:main',
   url: ''
 }
@@ -15,6 +16,13 @@ state.preloadScript = (() => {
     : `file://${require('path').resolve(__dirname, '../../../../dist/electron/preload.js')}`
 })()
 
+const mutations = {
+  GAME_UPDATE (state, payload) {
+    Object.assign(state.gameObject, payload)
+  }
+}
+
 export default {
-  state
+  state,
+  mutations
 }

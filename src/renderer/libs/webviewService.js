@@ -20,13 +20,14 @@ let webview
  * @param {object} msg     - Message body
  */
 function channelAction (channel, msg) {
-  if (channel === 'insertCSS') {
-    webview.insertCSS('::-webkit-scrollbar{display:none}body{cursor:default}[class*=btn-]{cursor:pointer}')
+  if (channel === 'commit') {
+    window.commit(msg.mutation, msg.payload)
   }
-  if (channel === 'submenu') {
-    window.commit('VIEW_UPDATE', {
-      subOpen: msg
-    })
+  if (channel === 'log') {
+    console[msg.type](msg.content)
+  }
+  if (channel === 'injectReady') {
+    webview.insertCSS('::-webkit-scrollbar{display:none}body{cursor:default}[class*=btn-]{cursor:pointer}')
   }
 }
 
@@ -41,8 +42,12 @@ export default () => {
     })
   }
 
-  webview.addEventListener('dom-ready', () => {
-    webview.send('AlertRecovery')
+  /* eslint-disable standard/no-callback-literal */
+  require('electron').remote.session.fromPartition(window.state.GameWeb.partition).webRequest.onBeforeRequest([window.state.GameWeb.gameURL], (details, callback) => {
+    if (details.url.indexOf('purchase_jssdk') !== -1 && !window.state.GameView.subOpen) {
+      webview.executeJavaScript('Game.submenu.mainView.switchCurrent(Game.submenu.mainView.state.current)')
+    }
+    callback({cancel: false})
   })
 
   /*

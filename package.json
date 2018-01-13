@@ -88,7 +88,6 @@
     "@fortawesome/fontawesome": "^1.1.0",
     "@fortawesome/fontawesome-free-regular": "^5.0.2",
     "@fortawesome/vue-fontawesome": "^0.0.22",
-    "inspectproxy": "https://github.com/LightouchDev/inspectProxy",
     "url-parser": "https://github.com/LightouchDev/url-parser",
     "vue": "^2.5.13",
     "vue-electron": "^1.0.6",

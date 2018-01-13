@@ -3,7 +3,6 @@
 import {app, BrowserWindow} from 'electron'
 import path from 'path'
 import mainConfig from './libs/mainConfig'
-import inspectProxy from './libs/inspectProxy'
 
 /**
  * Set `__static` path to static files in production
@@ -65,10 +64,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  global.proxy = inspectProxy(mainWindow).once('listening', () => {
-    console.log(`Proxy listen on ${global.proxy.port}`)
-    mainWindow.loadURL(winURL)
-  })
+  mainWindow.loadURL(winURL)
 }
 
 // handle common error
