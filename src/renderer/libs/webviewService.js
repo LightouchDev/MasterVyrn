@@ -43,12 +43,13 @@ export default () => {
   }
 
   /* eslint-disable standard/no-callback-literal */
-  require('electron').remote.session.fromPartition(window.state.GameWeb.partition).webRequest.onBeforeRequest([window.state.GameWeb.gameURL], (details, callback) => {
-    if (details.url.indexOf('purchase_jssdk') !== -1 && !window.state.GameView.subOpen) {
+  require('electron').remote.session.fromPartition(window.state.GameWeb.partition)
+    .webRequest.onBeforeRequest({
+      urls: [(window.state.GameWeb.gameURL + '*/purchase_jssdk*')]
+    }, (details, callback) => {
       webview.executeJavaScript('Game.submenu.mainView.switchCurrent(Game.submenu.mainView.state.current)')
-    }
-    callback({cancel: false})
-  })
+      callback({cancel: false})
+    })
 
   /*
   // Remove placeholder of overlay when page loaded

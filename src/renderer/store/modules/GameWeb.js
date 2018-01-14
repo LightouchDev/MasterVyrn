@@ -4,9 +4,10 @@ const state = {
   url: ''
 }
 
+// clean up userAgent like Electron or package name
 state.userAgent = (() => {
-  return navigator.userAgent.replace(
-    new RegExp(`(Electron|${require('../../../../package.json').name})\\/[\\d.]+\\s`, 'g'), '')
+  return navigator.userAgent
+    .replace(new RegExp(`(Electron|${require('../../../../package.json').name})\\/[\\d.]+\\s`, 'g'), '')
 })()
 
 state.preloadScript = (() => {
