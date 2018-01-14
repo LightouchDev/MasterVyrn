@@ -1,5 +1,7 @@
 'use strict'
 
+import { oneshotListener } from '../../common/utils'
+
 /**
  * #### Event order between webview and host
  *
@@ -35,14 +37,19 @@ export default () => {
   webview = document.querySelector('webview')
   window.webview = webview
 
-  if (process.env.NODE_ENV === 'development') {
-    webview.addEventListener('dom-ready', () => {
+  oneshotListener(webview, 'dom-ready', () => {
+    const currentWebContents = webview.getWebContents()
+    if (process.env.NODE_ENV === 'development') {
       console.log('WEBVIEW READY!')
-      webview.getWebContents().openDevTools({mode: 'detach'})
-    })
-  }
+      currentWebContents.openDevTools({mode: 'detach'})
+    }
+    // Set context-menu, require here instead of import to prevent vue wasn't initialized.
+    const contextMenuListener = require('./contextMenu').default(currentWebContents)
+    currentWebContents.on('context-menu', contextMenuListener)
+  })
 
   /* eslint-disable standard/no-callback-literal */
+  // Open submenu when purchase page show up.
   require('electron').remote.session.fromPartition(window.state.GameWeb.partition)
     .webRequest.onBeforeRequest({
       urls: [(window.state.GameWeb.gameURL + '*/purchase_jssdk*')]

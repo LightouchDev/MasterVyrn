@@ -58,5 +58,13 @@
   "common": {
     "close": "關閉",
     "option": "選項"
+  },
+  "contextMenu": {
+    "undo": "復原",
+    "redo": "重做",
+    "cut": "剪下",
+    "copy": "複製",
+    "paste": "貼上",
+    "selectAll": "全選"
   }
 }

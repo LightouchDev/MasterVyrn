@@ -1,11 +1,11 @@
 'use strict'
 
-import {remote} from 'electron'
-import os from 'os'
+const currentWebContents = require('electron').remote.getCurrentWebContents()
 
-function shortcutService () {
+export default function () {
+  // Set hotkey
   window.onkeydown = event => {
-    if (os.platform === 'darwin') {
+    if (require('os').platform === 'darwin') {
       // Option + Alt + I: open game view DevTools on OSX
       if (event.metaKey && event.altKey && event.code === 'KeyI') {
         window.webview.openDevTools({mode: 'detach'})
@@ -19,7 +19,7 @@ function shortcutService () {
 
     // Ctrl + Alt + I: open host view DevTools
     if (event.ctrlKey && event.altKey && event.code === 'KeyI') {
-      remote.getCurrentWebContents().openDevTools({mode: 'detach'})
+      currentWebContents.openDevTools({mode: 'detach'})
     }
 
     // H: hide sidebar
@@ -27,6 +27,8 @@ function shortcutService () {
       window.commit('HIDE_SUB')
     }
   }
-}
 
-export default shortcutService
+  // Set context-menu, require here instead of import to prevent vue wasn't initialized.
+  const contextMenuListener = require('./contextMenu').default(currentWebContents)
+  currentWebContents.on('context-menu', contextMenuListener)
+}

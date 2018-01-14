@@ -58,5 +58,13 @@
   "common": {
     "close": "Close",
     "option": "Option"
+  },
+  "contextMenu": {
+    "undo": "Undo",
+    "redo": "Redo",
+    "cut": "Cut",
+    "copy": "Copy",
+    "paste": "Paste",
+    "selectAll": "Select All"
   }
 }
