@@ -10,6 +10,10 @@ import MainSection from './DefaultApplication/MainSection'
 import webviewService from '../libs/webviewService'
 import shortcutService from '../libs/shortcutService'
 
+// prevent unexpected drag and drop event
+document.addEventListener('dragover', event => event.preventDefault())
+document.addEventListener('drop', event => event.preventDefault())
+
 window.addEventListener('DOMContentLoaded', () => {
   webviewService()
 })

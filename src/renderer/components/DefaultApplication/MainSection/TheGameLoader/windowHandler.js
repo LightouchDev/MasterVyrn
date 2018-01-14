@@ -60,6 +60,5 @@ export default (size) => {
       height
     })
     previousSize = Object.assign({}, windowSize)
-    console.log(previousSize)
   }
 }
