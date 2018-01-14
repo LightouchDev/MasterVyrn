@@ -23,9 +23,11 @@ class MainConfig extends ConfigHandler {
     fs.writeFileSync(path.join(this.workDir, this.filename), JSON.stringify(obj), 'utf8')
   }
   configApply () {
-    return new Promise((resolve, reject) => {
-      if (this.config.noHardwareAccel) { app.disableHardwareAcceleration() }
-      if (this.config.noThrottling) { app.commandLine.appendSwitch('disable-renderer-backgrounding') }
+    return new Promise((resolve) => {
+      if (!app.isReady()) {
+        this.config.noHardwareAccel && app.disableHardwareAcceleration()
+        this.config.noThrottling && app.commandLine.appendSwitch('disable-renderer-backgrounding')
+      }
       resolve()
     })
   }

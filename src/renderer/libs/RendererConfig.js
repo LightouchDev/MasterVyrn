@@ -22,7 +22,7 @@ class RendererConfig extends ConfigHandler {
     window.localStorage.setItem('configure', JSON.stringify(obj))
   }
   configApply () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       remote.getCurrentWindow().setAlwaysOnTop(this.config.alwaysOnTop)
       if (this.initialized) {
         window.vue.$i18n.locale = this.config.language

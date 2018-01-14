@@ -34,7 +34,7 @@ class ConfigHandler {
   }
 
   configApply () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve()
     })
   }
@@ -69,10 +69,8 @@ class ConfigHandler {
    * and resolve all diff configs
    */
   filterConfigs (newConfig, oldConfig = this.config) {
-    newConfig = Object.assign({}, newConfig)
-    oldConfig = Object.assign({}, oldConfig)
     return new Promise((resolve) => {
-      let filteredConfig = Object.assign(newConfig, oldConfig)
+      let filteredConfig = Object.assign(oldConfig, newConfig)
       resolve(filteredConfig)
       console.log(`config: ${util.inspect(oldConfig)}\nnew config: ${util.inspect(newConfig)}`)
       console.log('resolve with', filteredConfig)
