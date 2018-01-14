@@ -27,23 +27,16 @@ export default {
     // calculate proper zoom size
     calcZoom (zoom) {
       if (!zoom && this.view.autoResize) {
-        if (this.view.login) {
-          zoom =
-            window.innerWidth /
-            ((this.subShouldHide ? 0 : this.view.subMenuWidth) + this.view.baseWidth * (this.view.subOpen ? 2 : 1))
-        } else {
-          zoom = window.innerWidth / this.view.baseWidth
-        }
+        zoom = window.innerWidth / this.view.login ? this.windowBase : this.view.baseWidth
       }
 
-      if (zoom > 2) {
-        zoom = 2
-      } else if (zoom < 1) {
-        zoom = 1
-      }
+      zoom > 2 && (zoom = 2)
+      zoom < 1 && (zoom = 1)
+
       window.commit('VIEW_UPDATE', {zoom: zoom})
-      // only reload page when game is responsive
-      if (zoom === undefined) { window.webview.reload() }
+
+      // only reload page when zoom ism't manually set.
+      zoom === undefined && window.webview.reload()
     },
     setupWindow () {
       if (window.onresize) {
@@ -63,19 +56,16 @@ export default {
       }
       // setup browser window size
       windowHandler({
-        min: Number(this.windowBase),
+        min: this.windowBase,
         width: this.windowWidth,
         autoResize: this.view.autoResize
       })
     }
   },
   computed: {
-    subShouldHide () {
-      return this.view.subHide && !this.view.subOpen
-    },
     webviewWidth () {
       return (
-        this.view.baseSize * this.view.zoom +
+        Number(this.view.baseSize * this.view.zoom) +
         this.view.sidePadding +
         this.view.unknownPadding
       )
@@ -83,13 +73,13 @@ export default {
     windowWidth () {
       const windowWidth = Number(this.view.zoom * this.windowBase)
       if (window.screen.availWidth < windowWidth && this.view.autoResize) {
-        this.calcZoom(window.screen.availWidth / this.windowBase
-        )
+        this.calcZoom(window.screen.availWidth / this.windowBase)
       }
       return windowWidth
     },
     windowBase () {
-      return (this.subShouldHide ? 0 : this.view.subMenuWidth) + this.view.baseWidth * (this.view.subOpen ? 2 : 1)
+      return ((this.view.subHide && !this.view.subOpen) ? 0 : this.view.subMenuWidth) +
+        this.view.baseWidth * (this.view.subOpen ? 2 : 1)
     },
     style () {
       this.setupWindow()
