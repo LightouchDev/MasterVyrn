@@ -4,6 +4,8 @@ import { remote } from 'electron'
 
 const currentWindow = remote.getCurrentWindow()
 
+// calc extra padding, and prevent window minimized when calc.
+currentWindow.isMinimized() && currentWindow.showInactive()
 const platformPadding = currentWindow.getSize()[0] - currentWindow.getContentSize()[0]
 
 let previousSize
@@ -58,5 +60,6 @@ export default (size) => {
       height
     })
     previousSize = Object.assign({}, windowSize)
+    console.log(previousSize)
   }
 }
