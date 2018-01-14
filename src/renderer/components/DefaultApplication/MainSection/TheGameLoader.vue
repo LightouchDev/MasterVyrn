@@ -30,9 +30,9 @@ export default {
         if (this.view.login) {
           zoom =
             window.innerWidth /
-            ((this.view.subHide ? 0 : this.view.subMenuWidth) + 320 * (this.view.subOpen ? 2 : 1))
+            ((this.view.subHide ? 0 : this.view.subMenuWidth) + this.view.baseWidth * (this.view.subOpen ? 2 : 1))
         } else {
-          zoom = window.innerWidth / 320
+          zoom = window.innerWidth / this.view.baseWidth
         }
       }
 
@@ -86,13 +86,13 @@ export default {
       return windowWidth
     },
     windowBase () {
-      return (this.view.subHide ? 0 : this.view.subMenuWidth) + 320 * (this.view.subOpen ? 2 : 1)
+      return (this.view.subHide ? 0 : this.view.subMenuWidth) + this.view.baseWidth * (this.view.subOpen ? 2 : 1)
     },
     style () {
       this.setupWindow()
       return {
         'width': `${this.webviewWidth}px`,
-        'margin-left': this.view.isMbga ? `-${this.view.sidePadding}px` : '0px'
+        'margin-left': this.view.isJssdkSideMenu ? `-${this.view.sidePadding}px` : '0px'
       }
     }
   }

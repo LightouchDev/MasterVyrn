@@ -3,6 +3,13 @@
 import { commit, log, hostLog, DEBUG, sendToHost } from './utils'
 
 function extractViewInfo (content) {
+  try {
+    commit('VIEW_UPDATE', {
+      baseWidth: window.Game.actualPexWidth / 2,
+      isJssdkSideMenu: window.Game.ua.isJssdkSideMenu()
+    })
+  } catch (error) {}
+
   if (window.location.pathname === '/') {
     // Setup view when not log in
     if (window.Game.userId === 0) {
@@ -15,16 +22,16 @@ function extractViewInfo (content) {
       return
     }
     // Setup view when login
-    const match = /^[ \t]+var sideMenuWidth = (.*);$[\n \t]+deviceRatio = \(window\.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);/m.exec(content)
+    const match = /^[ \t]+deviceRatio = \(window\.outerWidth - sideMenuWidth - (\d+)\) \/ (\d+);/m.exec(content)
     if (match) {
+      const sideMenuWidth = /^[ \t]+var sideMenuWidth = (.*);/m.exec(content)
       commit('VIEW_UPDATE', {
         login: true,
         autoResize: true,
-        isMbga: window.Game.ua.isMbga(),
-        sidePadding: Number(match[1]),
-        unknownPadding: Number(match[2]),
-        baseSize: Number(match[3]),
-        subMenuWidth: Number(match[3] - 640) // each
+        sidePadding: Number(sideMenuWidth && sideMenuWidth[1]),
+        unknownPadding: Number(match[1]),
+        baseSize: Number(match[2]),
+        subMenuWidth: Number(match[2] - 640) // each
       })
       /* eslint-disable no-tabs */
     } else if (content.indexOf('	deviceRatio') !== -1) {
@@ -32,8 +39,7 @@ function extractViewInfo (content) {
       commit('VIEW_RESET')
       commit('VIEW_UPDATE', {
         login: true,
-        zoom: Number(/^[ \t]+deviceRatio = ([\d.]+);/m.exec(content)[1]),
-        isMbga: window.Game.ua.isMbga()
+        zoom: Number(/^[ \t]+deviceRatio = ([\d.]+);/m.exec(content)[1])
       })
       commit('VIEW_PRESET')
     } else {
@@ -78,11 +84,10 @@ function domWatcher () {
                   commit('GAME_UPDATE', window.Game)
                   log('ViewInfo found')
                 } else if (document.querySelector('#submenu')) {
+                  const submenu = document.querySelector('#submenu')
                   new window.MutationObserver(mutations => {
-                    mutations.forEach(mutation => {
-                      commit('VIEW_UPDATE', { subOpen: /open/.test(mutation.target.className) })
-                    })
-                  }).observe(document.querySelector('#submenu'), {attributes: true})
+                    commit('VIEW_UPDATE', { subOpen: /open/.test(submenu.className) })
+                  }).observe(submenu, {attributes: true})
                   clearInterval(findHead)
                 }
               }, 0)

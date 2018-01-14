@@ -4,9 +4,10 @@
  *  maintenance: game is in maintenance or not.
  *  autoResize: game is in responsive mode (or call "Full size")
  *  login: user has login the game or not.
- *  isMbga: is user use mobage account to login.
+ *  isJssdkSideMenu: is there has a useless sidebar.
  *  sidePadding: the width of sidebar of account provider, use for hiding that.
  *  baseSize: the basic size for full game width size, use for detecting zoom.
+ *  baseWidth: the basic size for single game width.
  *  unknownPadding: extra width that I don't know the purpose.
  *  subOpen: submenu is opened or not.
  *  subMenuWidth: submenu width.
@@ -16,7 +17,6 @@ const defaults = {
   maintenance: false,
   autoResize: false,
   login: false,
-  isMbga: false,
   sidePadding: 0,
   baseSize: 0,
   unknownPadding: 0,
@@ -30,8 +30,10 @@ const preset = {
   subMenuWidth: 64
 }
 
-// only set subOpen when initialize
+// only set variables when initialize
 const state = Object.assign({
+  isJssdkSideMenu: false,
+  baseWidth: 320,
   subOpen: false,
   subHide: false
 }, defaults)
