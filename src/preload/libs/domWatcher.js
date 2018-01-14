@@ -68,7 +68,6 @@ function domWatcher () {
       log('head detected!', 'warn')
       sendToHost('injectReady')
       log('dom ready for patching')
-      if (DEBUG) document.onmousedown = e => console.log(e)
 
       // Initial a watcher to get target ready
       const headWatcher = new window.MutationObserver(mutations => {
