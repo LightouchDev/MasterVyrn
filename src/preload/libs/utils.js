@@ -1,6 +1,7 @@
 'use strict'
 
 import { ipcRenderer } from 'electron'
+import { oneshotListener } from '../../common/utils'
 
 let startTime, console, DEBUG
 
@@ -33,19 +34,6 @@ function init () {
   }
 }
 
-/**
- * Oneshot event listener
- * @param   {object}    element     - html element
- * @param   {string}    event       - event
- * @param   {function}  callback    - callback
- * @param   {boolean}   useCapture  - useCapture
- */
-function oneshotListener (element, event, callback, useCapture) {
-  element.addEventListener(event, function handler (event) {
-    this.removeEventListener(event.type, handler)
-    return callback(event)
-  }, useCapture)
-}
 function log (msg, type = 'log') {
   DEBUG && console[type]((window.performance.now() - startTime).toFixed(2), msg)
 }
@@ -59,5 +47,5 @@ function hostLog (content, type = 'log') {
 }
 
 export { DEBUG }
-export { init, oneshotListener, commit, log, hostLog }
+export { init, commit, log, hostLog }
 export const sendToHost = ipcRenderer.sendToHost
