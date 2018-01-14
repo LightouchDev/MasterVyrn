@@ -30,7 +30,7 @@ export default {
         if (this.view.login) {
           zoom =
             window.innerWidth /
-            ((this.view.subHide ? 0 : this.view.subMenuWidth) + this.view.baseWidth * (this.view.subOpen ? 2 : 1))
+            ((this.subShouldHide ? 0 : this.view.subMenuWidth) + this.view.baseWidth * (this.view.subOpen ? 2 : 1))
         } else {
           zoom = window.innerWidth / this.view.baseWidth
         }
@@ -70,6 +70,9 @@ export default {
     }
   },
   computed: {
+    subShouldHide () {
+      return this.view.subHide && !this.view.subOpen
+    },
     webviewWidth () {
       return (
         this.view.baseSize * this.view.zoom +
@@ -86,7 +89,7 @@ export default {
       return windowWidth
     },
     windowBase () {
-      return (this.view.subHide ? 0 : this.view.subMenuWidth) + this.view.baseWidth * (this.view.subOpen ? 2 : 1)
+      return (this.subShouldHide ? 0 : this.view.subMenuWidth) + this.view.baseWidth * (this.view.subOpen ? 2 : 1)
     },
     style () {
       this.setupWindow()

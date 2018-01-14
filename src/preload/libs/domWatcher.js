@@ -1,6 +1,6 @@
 'use strict'
 
-import { commit, log, hostLog, DEBUG, sendToHost } from './utils'
+import { commit, log, hostLog, sendToHost } from './utils'
 
 function extractViewInfo (content) {
   try {
