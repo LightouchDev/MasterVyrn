@@ -2,7 +2,7 @@
 
 import {app, BrowserWindow} from 'electron'
 import path from 'path'
-import mainConfig from './libs/mainConfig'
+import mainConfig from './libs/MainConfig'
 
 /**
  * Set `__static` path to static files in production
