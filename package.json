@@ -50,11 +50,14 @@
       "icon": "build/icons/icon.icns",
       "target": "zip"
     },
+    "nsis": {
+      "artifactName": "${productName}-${version}-${os}-setup.${ext}"
+    },
     "win": {
+      "artifactName": "${productName}-${version}-${os}-portable.${ext}",
       "icon": "build/icons/icon.ico",
       "target": [
         {
-          "artifactName": "${productName}-${version}-${os}-portable.${ext}",
           "target": "portable",
           "arch": [
             "x64",
@@ -62,7 +65,6 @@
           ]
         },
         {
-          "artifactName": "${productName}-${version}-${os}-setup.${ext}",
           "target": "nsis",
           "arch": [
             "x64",
