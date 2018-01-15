@@ -11,6 +11,7 @@ import Overlay from './TheGameLoader/Overlay'
 import windowHandler from './TheGameLoader/windowHandler'
 
 let delayResize = null
+const delayLength = process.platform === 'darwin' ? 600 : 80
 
 export default {
   name: 'the-game-loader',
@@ -26,8 +27,9 @@ export default {
   methods: {
     // calculate proper zoom size
     calcZoom (zoom) {
+      const shouldReload = !zoom
       if (!zoom && this.view.autoResize) {
-        zoom = window.innerWidth / this.view.login ? this.windowBase : this.view.baseWidth
+        zoom = window.innerWidth / this.windowBase
       }
 
       zoom > 2 && (zoom = 2)
@@ -35,8 +37,8 @@ export default {
 
       window.commit('VIEW_UPDATE', {zoom: zoom})
 
-      // only reload page when zoom ism't manually set.
-      zoom === undefined && window.webview.reload()
+      // only reload page when zoom is manually set.
+      shouldReload && window.webview.reload()
     },
     setupWindow () {
       if (window.onresize) {
@@ -51,7 +53,7 @@ export default {
           clearTimeout(delayResize)
           delayResize = setTimeout(() => {
             this.calcZoom()
-          }, 80)
+          }, delayLength)
         }
       }
       // setup browser window size
