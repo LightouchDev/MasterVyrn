@@ -6,7 +6,6 @@ language: c
 cache:
   directories:
   - node_modules
-  - "$HOME/.electron"
   - "$HOME/.cache"
 addons:
   apt:
