@@ -5,7 +5,7 @@ const currentWebContents = require('electron').remote.getCurrentWebContents()
 export default function () {
   // Set hotkey
   window.onkeydown = event => {
-    if (require('os').platform === 'darwin') {
+    if (process.platform === 'darwin') {
       // Option + Alt + I: open game view DevTools on OSX
       if (event.metaKey && event.altKey && event.code === 'KeyI') {
         window.webview.openDevTools({mode: 'detach'})
@@ -22,9 +22,13 @@ export default function () {
       currentWebContents.openDevTools({mode: 'detach'})
     }
 
-    // H: hide sidebar
-    if (!event.ctrlKey && !event.altKey && !event.metaKey && event.code === 'KeyH') {
-      window.commit('HIDE_SUB')
+    // Ensure single hotkey do not affect input box
+    if (event.target.nodeName !== 'INPUT' && event.target.nodeName !== 'SELECT') {
+      // H: hide sidebar
+      if (!event.ctrlKey && !event.altKey && !event.metaKey && event.code === 'KeyH') {
+        console.log(event)
+        window.commit('HIDE_SUB')
+      }
     }
   }
 
