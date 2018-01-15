@@ -39,9 +39,7 @@
           </div>
         </div>
         <div id="option-proxy" class="option-group">
-          <div class="option-groupTitle">{{ $t('option.proxy.title') }}
-            <span class="warning">{{ $t('option.proxy.warning') }}</span>
-          </div>
+          <div class="option-groupTitle">{{ $t('option.proxy.title') }}</div>
           <div class="option-item">
             <div class="option-flex">
               <select name="option-select-proxyType" v-model="proxy.protocol">
@@ -133,10 +131,15 @@ export default {
     },
     applyConfig () {
       if (this.proxy.protocol === 'direct:') {
-        this.proxy.hostname = ''
-        this.proxy.port = null
+        this.config.proxy = 'direct://'
+      } else {
+        this.config.proxy = this.proxy.protocol + '//'
+        this.proxy.username && (this.config.proxy += this.proxy.username)
+        this.proxy.password && (this.config.proxy += `:${this.proxy.password}`)
+        this.proxy.username && (this.config.proxy += '@')
+        this.config.proxy += this.proxy.hostname
+        this.proxy.port > 0 && this.proxy.port < 65536 && (this.config.proxy += `:${this.proxy.port}`)
       }
-      this.config.proxy = `${this.proxy.protocol}//${this.proxy.hostname}${this.proxy.port ? `:${this.proxy.port}` : ''}`
       mainConfigs.set(this.system)
       global.Configs.set(this.config)
       window.webview.reload()

@@ -39,24 +39,28 @@ export default () => {
 
   oneshotListener(webview, 'dom-ready', () => {
     const currentWebContents = webview.getWebContents()
+    webview.session = currentWebContents.session
     if (process.env.NODE_ENV === 'development') {
       console.log('WEBVIEW READY!')
       currentWebContents.openDevTools({mode: 'detach'})
     }
+
     // Set context-menu, require here instead of import to prevent vue wasn't initialized.
     const contextMenuListener = require('./contextMenu').default(currentWebContents)
     currentWebContents.on('context-menu', contextMenuListener)
-  })
 
-  /* eslint-disable standard/no-callback-literal */
-  // Open submenu when purchase page show up.
-  require('electron').remote.session.fromPartition(window.state.GameWeb.partition)
-    .webRequest.onBeforeRequest({
+    /* eslint-disable standard/no-callback-literal */
+    // Open submenu when purchase page show up.
+    webview.session.webRequest.onBeforeRequest({
       urls: [(window.state.GameWeb.gameURL + '*/purchase_jssdk*')]
     }, (details, callback) => {
       webview.executeJavaScript('Game.submenu.mainView.switchCurrent(Game.submenu.mainView.state.current)')
       callback({cancel: false})
     })
+  })
+
+  require('electron').remote.session.fromPartition(webview.partition)
+    .setProxy({proxyRules: global.Configs.proxy}, () => {})
 
   /*
   // Remove placeholder of overlay when page loaded

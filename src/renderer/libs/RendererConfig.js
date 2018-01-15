@@ -23,10 +23,11 @@ class RendererConfig extends ConfigHandler {
   }
   configApply () {
     return new Promise((resolve) => {
-      remote.getCurrentWindow().setAlwaysOnTop(this.config.alwaysOnTop)
       // prevent old configs cause crash
       typeof this.config.proxy !== 'string' && global.Configs.setDefaults()
+      remote.getCurrentWindow().setAlwaysOnTop(this.config.alwaysOnTop)
       if (this.initialized) {
+        window.webview.session.setProxy({proxyRules: this.config.proxy}, () => {})
         window.vue.$i18n.locale = this.config.language
       }
       this.initialized = true
