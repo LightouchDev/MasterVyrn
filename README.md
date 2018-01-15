@@ -2,7 +2,7 @@
 
 > Someday, Vyrn learned magic and became a very helpful companion.
 
-[![Travis Build Status](https://travis-ci.org/LightouchDev/MasterVyrn.svg?branch=master)](https://travis-ci.org/LightouchDev/MasterVyrn) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/d77hk0cun4h5iw3n?svg=true)](https://ci.appveyor.com/project/MiauLightouch/mastervyrn) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LightouchDev/MasterVyrn/blob/master/LICENSE)
+[![Travis Build Status](https://travis-ci.org/LightouchDev/MasterVyrn.svg?branch=master)](https://travis-ci.org/LightouchDev/MasterVyrn) [![Bitrise Build Status](https://www.bitrise.io/app/7295fbc20a35511f/status.svg?token=gabvHK_3ltZM2xNoDVmGGg&branch=master)](https://www.bitrise.io/app/7295fbc20a35511f) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/d77hk0cun4h5iw3n?svg=true)](https://ci.appveyor.com/project/MiauLightouch/mastervyrn) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LightouchDev/MasterVyrn/blob/master/LICENSE)
 
 [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
 
