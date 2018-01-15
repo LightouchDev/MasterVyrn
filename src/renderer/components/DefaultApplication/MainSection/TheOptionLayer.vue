@@ -86,13 +86,14 @@ import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faListAlt, faTimesCircle } from '@fortawesome/fontawesome-free-regular'
 
 let mainConfigs = require('electron').remote.getGlobal('Configs')
+let previousProxy = global.Configs.get().proxy
 
 export default {
   data () {
     return {
       menuOpen: false,
       config: Object.assign({}, global.Configs.get()),
-      proxy: urlParser(global.Configs.get().proxy),
+      proxy: urlParser(previousProxy),
       system: mainConfigs.get()
     }
   },
@@ -132,6 +133,7 @@ export default {
     applyConfig () {
       if (this.proxy.protocol === 'direct:') {
         this.config.proxy = 'direct://'
+        this.proxy = urlParser('direct://')
       } else {
         this.config.proxy = this.proxy.protocol + '//'
         this.proxy.username && (this.config.proxy += this.proxy.username)
@@ -142,7 +144,10 @@ export default {
       }
       mainConfigs.set(this.system)
       global.Configs.set(this.config)
-      window.webview.reload()
+      if (this.config.proxy !== previousProxy) {
+        previousProxy = this.config.proxy
+        window.webview.reload()
+      }
     }
   },
   components: {
