@@ -69,6 +69,8 @@ class ConfigHandler {
    * and resolve all diff configs
    */
   filterConfigs (newConfig, oldConfig = this.config) {
+    newConfig = Object.assign({}, newConfig)
+    oldConfig = Object.assign({}, oldConfig)
     return new Promise((resolve) => {
       let filteredConfig = Object.assign(oldConfig, newConfig)
       resolve(filteredConfig)

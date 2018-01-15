@@ -24,6 +24,8 @@ class RendererConfig extends ConfigHandler {
   configApply () {
     return new Promise((resolve) => {
       remote.getCurrentWindow().setAlwaysOnTop(this.config.alwaysOnTop)
+      // prevent old configs cause crash
+      typeof this.config.proxy !== 'string' && global.Configs.setDefaults()
       if (this.initialized) {
         window.vue.$i18n.locale = this.config.language
       }
