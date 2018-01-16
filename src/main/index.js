@@ -67,7 +67,45 @@ function createWindow () {
   mainWindow.loadURL(winURL)
 }
 
-// handle common error
+/**
+ * Prevent outside browsing
+ */
+function createNewWindow (url, session) {
+  const win = new BrowserWindow({
+    width: 1280,
+    height: 1024,
+    webPreferences: {
+      session,
+      nodeIntegration: false
+    }
+  })
+  win.once('ready-to-show', () => win.show())
+  win.loadURL(url)
+}
+
+app.on('web-contents-created', (event, contents) => {
+  if (contents.getType() === 'webview') {
+    const strictUrl = 'http://game.granbluefantasy.jp'
+    contents.on('will-navigate', (event, url) => {
+      if (url.indexOf(strictUrl) === -1) {
+        event.preventDefault()
+        createNewWindow(url, contents.session)
+      }
+    })
+    contents.on('new-window', (event, url) => {
+      if (url.indexOf(strictUrl) !== -1) {
+        contents.loadURL(url)
+      } else {
+        event.preventDefault()
+        createNewWindow(url, contents.session)
+      }
+    })
+  }
+})
+
+/**
+ * Handle common error
+ */
 function printError (error) {
   process.env.NODE_ENV === 'development' && console.warn(error)
 }
