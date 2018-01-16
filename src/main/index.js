@@ -70,34 +70,31 @@ function createWindow () {
 /**
  * Prevent outside browsing
  */
-function createNewWindow (url, session) {
-  const win = new BrowserWindow({
-    width: 1280,
-    height: 1024,
-    webPreferences: {
-      session,
-      nodeIntegration: false
-    }
-  })
-  win.once('ready-to-show', () => win.show())
-  win.loadURL(url)
-}
 
+let preload
 app.on('web-contents-created', (event, contents) => {
+  if (contents.getType() === 'window') {
+    contents.on('will-attach-webview', (event, webPreferences) => {
+      preload = webPreferences.preloadURL
+    })
+  }
   if (contents.getType() === 'webview') {
     const strictUrl = 'http://game.granbluefantasy.jp'
     contents.on('will-navigate', (event, url) => {
       if (url.indexOf(strictUrl) === -1) {
         event.preventDefault()
-        createNewWindow(url, contents.session)
-      }
-    })
-    contents.on('new-window', (event, url) => {
-      if (url.indexOf(strictUrl) !== -1) {
-        contents.loadURL(url)
-      } else {
-        event.preventDefault()
-        createNewWindow(url, contents.session)
+        const win = new BrowserWindow({
+          width: 1280,
+          height: 1024,
+          webPreferences: {
+            preload: preload.replace(/file:\/\/\/?/, ''),
+            session: contents.session,
+            nodeIntegration: false
+          }
+        })
+        win.once('ready-to-show', () => win.show())
+        win.webContents.setUserAgent(contents.getUserAgent())
+        win.loadURL(url)
       }
     })
   }
