@@ -81,11 +81,12 @@
 </template>
 
 <script>
+import { remote } from 'electron'
 import urlParser from 'url-parser'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faListAlt, faTimesCircle } from '@fortawesome/fontawesome-free-regular'
 
-let mainConfigs = require('electron').remote.getGlobal('Configs')
+let mainConfigs = remote.getGlobal('Configs')
 let previousProxy = global.Configs.get().proxy
 
 export default {

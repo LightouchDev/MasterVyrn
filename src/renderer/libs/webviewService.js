@@ -1,5 +1,6 @@
 'use strict'
 
+import { remote } from 'electron'
 import { oneshotListener } from '../../common/utils'
 
 /**
@@ -36,10 +37,12 @@ function channelAction (channel, msg) {
 export default () => {
   webview = document.querySelector('webview')
   window.webview = webview
+  webview.session = remote.session.fromPartition(webview.partition)
+
+  webview.session.setProxy({proxyRules: global.Configs.proxy}, () => {})
 
   oneshotListener(webview, 'dom-ready', () => {
     const currentWebContents = webview.getWebContents()
-    webview.session = currentWebContents.session
     if (process.env.NODE_ENV === 'development') {
       console.log('WEBVIEW READY!')
       currentWebContents.openDevTools({mode: 'detach'})
@@ -60,9 +63,6 @@ export default () => {
       callback({cancel: false})
     })
   })
-
-  require('electron').remote.session.fromPartition(webview.partition)
-    .setProxy({proxyRules: global.Configs.proxy}, () => {})
 
   /*
   // Remove placeholder of overlay when page loaded
