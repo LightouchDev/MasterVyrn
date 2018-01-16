@@ -54,7 +54,9 @@ export default () => {
     webview.session.webRequest.onBeforeRequest({
       urls: [(window.state.GameWeb.gameURL + '*/purchase_jssdk*')]
     }, (details, callback) => {
-      webview.executeJavaScript('Game.submenu.mainView.switchCurrent(Game.submenu.mainView.state.current)')
+      if (!window.state.GameView.subOpen) {
+        webview.executeJavaScript('Game.submenu.mainView.switchCurrent(Game.submenu.mainView.state.current)')
+      }
       callback({cancel: false})
     })
   })
