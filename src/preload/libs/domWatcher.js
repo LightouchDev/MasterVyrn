@@ -17,7 +17,8 @@ function extractViewInfo (content) {
       commit('VIEW_RESET')
       commit('VIEW_UPDATE', {
         login: false,
-        baseSize: /^[ \t]+deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)[1]
+        baseSize: /^[ \t]+deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)[1],
+        subOpen: false
       })
       return
     }
@@ -87,6 +88,8 @@ function domWatcher () {
                   new window.MutationObserver(mutations => {
                     commit('VIEW_UPDATE', { subOpen: /open/.test(submenu.className) })
                   }).observe(submenu, {attributes: true})
+                  clearInterval(findHead)
+                } else if (window.Game.userId === 0) {
                   clearInterval(findHead)
                 }
               }, 0)
