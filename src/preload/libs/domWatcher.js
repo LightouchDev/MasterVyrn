@@ -62,20 +62,21 @@ function extractViewInfo (content) {
 
 function bruteWatcher () {
   // brutely extract info from DOM
-  let found
+  let displayFound, gameFound
   const findHead = setInterval(() => {
-    if (!found && window.displayInitialize) {
-      found = true
+    if (!displayFound && window.displayInitialize) {
+      displayFound = true
       extractViewInfo(window.displayInitialize.toString())
-      commit('GAME_UPDATE', window.Game)
       log('ViewInfo found')
-    } else if (document.querySelector('#submenu')) {
+    } else if (!gameFound && window.Game && typeof window.Game === 'object') {
+      gameFound = true
+      commit('GAME_UPDATE', window.Game)
+      if (window.Game.userId === 0) clearInterval(findHead)
+    } else if (displayFound && gameFound && document.querySelector('#submenu')) {
       const submenu = document.querySelector('#submenu')
       new window.MutationObserver(mutations => {
         commit('VIEW_UPDATE', { subOpen: /open/.test(submenu.className) })
       }).observe(submenu, {attributes: true})
-      clearInterval(findHead)
-    } else if (window.Game.userId === 0) {
       clearInterval(findHead)
     }
   }, 0)
