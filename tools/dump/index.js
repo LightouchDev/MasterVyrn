@@ -66,4 +66,5 @@ proxy.on('getResponse', (response) => {
 // Access port when start listening
 proxy.once('listening', () => {
   console.log(`Proxy listen on ${proxy.port}`)
+  console.log('Output folder:', path.resolve(targetFolder))
 })
