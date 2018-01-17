@@ -13,19 +13,29 @@ MasterVyrn is a clean dedicated GBF loader build on top of electron.
 ## Feature
 
 * **Clean**: MasterVyrn doesn't modify any game content. (only inject css into webview to hide scrollbar.)
-* **Quick**: It's dedicated and no game throttling. (fight won't stop at current turn when you minimize program.)
+* **Quick**: It's dedicated and no game throttling. (fight won't stop at current turn when program inactive.)
 * **Safe**: There's no different with regular Chromium. (**WARNING**: but not all Electron exports were removed.) [#10](https://github.com/LightouchDev/MasterVyrn/issues/10)
 
 ## Problem
 
 MasterVyrn is still in **alpha** stage:
 
-* No capabilities to inspect websocket message like raid information.
+* No capabilities to inspect raid information.
 * Need suggestions for further development, please post issue with "*feature request*" label to let me know.
 
 ## Supported Platform
 
 * Mobage Account
+* DMM Account (experimental, but recommended)*
+
+\* Other than Mobage account login would make game loading faster, because even I hide mobage sidebar, it still cause very heavily performance drop when page loading, but this issue affected Mobage accounts only.
+
+## Hotkey
+
+* DevTools:
+  * Windows/Linux: `F12`
+  * OSX: `Command+Alt+I`
+* Hide Sub Menu: `H`
 
 ## Thanks to
 
