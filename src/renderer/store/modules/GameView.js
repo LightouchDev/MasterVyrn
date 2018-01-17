@@ -3,7 +3,6 @@
  *  zoom: the zoom of game that read from header or calculate from window size
  *  maintenance: game is in maintenance or not.
  *  autoResize: game is in responsive mode (or call "Full size")
- *  login: user has login the game or not.
  *  isJssdkSideMenu: is there has a useless sidebar.
  *  platformName: account provider.
  *  sidePadding: the width of sidebar of account provider, use for hiding that.
@@ -17,7 +16,6 @@ const defaults = {
   zoom: 1.5,
   maintenance: false,
   autoResize: false,
-  login: false,
   sidePadding: 0,
   baseSize: 0,
   unknownPadding: 0,

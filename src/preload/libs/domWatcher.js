@@ -16,10 +16,9 @@ function extractViewInfo (content) {
     log('url correct!')
     // Setup view when not log in
     if (window.Game.userId === 0 || window.Game.ua.platformName() === 'notlogin') {
-      hostLog('not login')
+      log('not login')
       commit('VIEW_RESET')
       commit('VIEW_UPDATE', {
-        login: false,
         baseSize: /^[ \t]+deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)[1],
         subOpen: false
       })
@@ -31,7 +30,6 @@ function extractViewInfo (content) {
       log('login with autoresize')
       const sideMenuWidth = /^[ \t]+var sideMenuWidth = (.*);/m.exec(content)
       commit('VIEW_UPDATE', {
-        login: true,
         autoResize: true,
         sidePadding: Number(sideMenuWidth && sideMenuWidth[1]),
         unknownPadding: Number(match[1]),
@@ -44,7 +42,6 @@ function extractViewInfo (content) {
       log('login without autoresize')
       commit('VIEW_RESET')
       commit('VIEW_UPDATE', {
-        login: true,
         zoom: Number(/^[ \t]+deviceRatio = ([\d.]+);/m.exec(content)[1])
       })
       commit('VIEW_PRESET')
@@ -57,7 +54,6 @@ function extractViewInfo (content) {
     commit('VIEW_RESET')
     commit('VIEW_UPDATE', {
       maintenance: true,
-      login: false,
       autoResize: true,
       baseSize: /^[ \t]+var deviceRatio = window\.innerWidth \/ (\d+);$/m.exec(content)[1]
     })
