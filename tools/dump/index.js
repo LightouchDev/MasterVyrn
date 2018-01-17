@@ -6,7 +6,7 @@ const HttpProxy = require('inspectproxy')
 const urlParser = require('url-parser')
 
 const proxy = HttpProxy.createServer()
-const regex = /game(?:-\w+)?\.granbluefantasy\.jp/
+const regex = /(?:game(?:-\w+)?\.granbluefantasy\.jp)|(?:gbf\.game(?:-\w+)?\.mbga\.jp)/
 
 const targetFolder = process.env.targetFolder || 'collected'
 
