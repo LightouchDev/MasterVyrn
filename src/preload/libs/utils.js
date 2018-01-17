@@ -1,11 +1,25 @@
 'use strict'
 
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import { oneshotListener } from '../../common/utils'
 
 let startTime, console, DEBUG
 
 function init () {
+  /*
+  * Get webviewId, and close child window, reload host when login success via DMM account
+  */
+  if (remote.getCurrentWebContents().getType() !== 'webview') {
+    ipcRenderer.on('hostWebviewId', (event, contentsId) => {
+      console.log('webviewId is', contentsId)
+      ipcRenderer.send('webviewRefresh', contentsId, window.location.href)
+      window.close()
+    })
+  }
+
+  /*
+  * DEBUG info
+  */
   DEBUG = process.env.NODE_ENV === 'development'
   if (DEBUG) {
     console = {

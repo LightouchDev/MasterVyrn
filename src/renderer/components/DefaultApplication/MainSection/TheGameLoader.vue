@@ -87,7 +87,7 @@ export default {
       this.setupWindow()
       return {
         'width': `${this.webviewWidth}px`,
-        'margin-left': this.view.isJssdkSideMenu ? `-${this.view.sidePadding}px` : '0px'
+        'margin-left': (this.view.isJssdkSideMenu && this.view.platformName === 'mobage') ? `-${this.view.sidePadding}px` : '0px'
       }
     }
   }

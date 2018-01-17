@@ -1,6 +1,6 @@
 'use strict'
 
-import {app, BrowserWindow} from 'electron'
+import { app, BrowserWindow, ipcMain, webContents } from 'electron'
 import path from 'path'
 import mainConfig from './libs/MainConfig'
 
@@ -87,6 +87,7 @@ app.on('web-contents-created', (event, contents) => {
           width: 1280,
           height: 1024,
           webPreferences: {
+            parent: BrowserWindow.fromWebContents(contents),
             preload: preload.replace(/file:\/\/\/?/, ''),
             session: contents.session,
             nodeIntegration: false
@@ -94,10 +95,28 @@ app.on('web-contents-created', (event, contents) => {
         })
         win.once('ready-to-show', () => win.show())
         win.webContents.setUserAgent(contents.getUserAgent())
+        win.webContents.on('dom-ready', () => win.webContents.send('hostWebviewId', contents.id))
+        win.webContents.on('new-window', (event, url) => {
+          event.preventDefault()
+          if (url.indexOf(strictUrl) !== -1) {
+            event.preventDefault()
+            contents.loadURL(url)
+            win.close()
+          } else {
+            win.loadURL(url)
+          }
+        })
         win.loadURL(url)
+        event.newGuest = win
       }
     })
   }
+})
+
+ipcMain.on('webviewRefresh', (event, contentsId, url) => {
+  url
+    ? webContents.fromId(contentsId).loadURL(url)
+    : webContents.fromId(contentsId).reload()
 })
 
 /**

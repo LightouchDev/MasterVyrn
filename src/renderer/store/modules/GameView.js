@@ -5,6 +5,7 @@
  *  autoResize: game is in responsive mode (or call "Full size")
  *  login: user has login the game or not.
  *  isJssdkSideMenu: is there has a useless sidebar.
+ *  platformName: account provider.
  *  sidePadding: the width of sidebar of account provider, use for hiding that.
  *  baseSize: the basic size for full game width size, use for detecting zoom.
  *  baseWidth: the basic size for single game width.
@@ -33,6 +34,7 @@ const preset = {
 // only set variables when initialize
 const state = Object.assign({
   isJssdkSideMenu: false,
+  platformName: '',
   baseWidth: 320,
   subOpen: false,
   subHide: false
