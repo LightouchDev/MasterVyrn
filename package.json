@@ -79,6 +79,7 @@
     "@fortawesome/fontawesome": "^1.1.2",
     "@fortawesome/fontawesome-free-regular": "^5.0.4",
     "@fortawesome/vue-fontawesome": "^0.0.22",
+    "debug": "^3.1.0",
     "url-parser": "https://github.com/LightouchDev/url-parser",
     "vue": "^2.5.13",
     "vue-electron": "^1.0.6",

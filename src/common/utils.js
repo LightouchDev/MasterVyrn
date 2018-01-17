@@ -1,5 +1,7 @@
 'use strict'
 
+import debug from 'debug'
+
 /**
  * Oneshot event listener
  * @param   {object}    element     - html element
@@ -14,4 +16,8 @@ function oneshotListener (element, event, callback, useCapture) {
   }, useCapture)
 }
 
-export { oneshotListener }
+const DEBUG = process.env.NODE_ENV !== 'development'
+const log = debug('mastervyrn:log')
+
+export { DEBUG }
+export { oneshotListener, log }
