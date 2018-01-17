@@ -72,6 +72,7 @@ function createWindow () {
  */
 
 let preload
+const contentPair = {}
 app.on('web-contents-created', (event, contents) => {
   if (contents.getType() === 'window') {
     contents.on('will-attach-webview', (event, webPreferences) => {
@@ -95,7 +96,7 @@ app.on('web-contents-created', (event, contents) => {
         })
         win.once('ready-to-show', () => win.show())
         win.webContents.setUserAgent(contents.getUserAgent())
-        win.webContents.on('dom-ready', () => win.webContents.send('hostWebviewId', contents.id))
+        contentPair[win.webContents.id] = contents.id
         win.webContents.on('new-window', (event, url) => {
           event.preventDefault()
           if (url.indexOf(strictUrl) !== -1) {
@@ -113,10 +114,11 @@ app.on('web-contents-created', (event, contents) => {
   }
 })
 
-ipcMain.on('webviewRefresh', (event, contentsId, url) => {
+ipcMain.on('webviewRefresh', (event, url) => {
   url
-    ? webContents.fromId(contentsId).loadURL(url)
-    : webContents.fromId(contentsId).reload()
+    ? webContents.fromId(contentPair[event.sender.id]).loadURL(url)
+    : webContents.fromId(contentPair[event.sender.id]).reload()
+  delete contentPair[event.sender.id]
 })
 
 /**

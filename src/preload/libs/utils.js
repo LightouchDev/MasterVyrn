@@ -10,12 +10,18 @@ function init () {
   * Get webviewId, and close child window, reload host when login success via DMM account
   */
   if (remote.getCurrentWebContents().getType() !== 'webview') {
-    ipcRenderer.on('hostWebviewId', (event, contentsId) => {
-      console.log('webviewId is', contentsId)
-      ipcRenderer.send('webviewRefresh', contentsId, window.location.href)
-      window.close()
-    })
+    ipcRenderer.send('webviewRefresh', window.location.href)
+    window.close()
   }
+
+  // prevent alert popup when resize cause frequency reload
+  const _alert = window.alert
+  window.alert = () => {}
+  oneshotListener(window, 'load', () => {
+    DEBUG && log('DOM ready')
+    // restore alert
+    window.alert = _alert
+  })
 
   /*
   * DEBUG info
@@ -30,20 +36,10 @@ function init () {
     startTime = window.performance.now()
     console.log(startTime, 'page start!')
 
-    // prevent alert popup when resize cause frequency reload
-    const _alert = window.alert
-    window.alert = () => {}
-
     DEBUG && oneshotListener(window, 'DOMContentLoaded', () => {
       log('DOM parsed')
       // recover console function
       Object.assign(window.console, console)
-    })
-
-    oneshotListener(window, 'load', () => {
-      DEBUG && log('DOM ready')
-      // restore alert
-      window.alert = _alert
     })
   }
 }
