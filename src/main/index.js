@@ -3,7 +3,7 @@
 import { app, BrowserWindow, ipcMain, webContents } from 'electron'
 import path from 'path'
 import mainConfig from './libs/MainConfig'
-import { DEV } from '../common/utils'
+import { DEV, error } from '../common/utils'
 
 /**
  * Set `__static` path to static files in production
@@ -125,11 +125,8 @@ ipcMain.on('webviewRefresh', (event, url) => {
 /**
  * Handle common error
  */
-function printError (error) {
-  DEV && console.warn(error)
-}
-process.on('unhandledRejection', printError)
-process.on('uncaughtException', printError)
+process.on('unhandledRejection', error)
+process.on('uncaughtException', error)
 
 /**
  * Auto Updater

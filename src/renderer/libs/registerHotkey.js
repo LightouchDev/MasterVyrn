@@ -49,7 +49,7 @@ function registerHotkey (hotkeys, callback) {
 
 // Register on keyup event
 registerHotkey.startListen = () => {
-  log('Hotkeys: %j', registeredSet)
+  log('hotkeys: %o', registeredSet)
   window.onkeydown = function (event) {
     log(
       'ctrl: %s, alt: %s, meta: %s, shift: %s, key: %s',

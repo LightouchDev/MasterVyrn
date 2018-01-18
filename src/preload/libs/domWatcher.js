@@ -46,7 +46,7 @@ function extractViewInfo (content) {
       })
       commit('VIEW_PRESET')
     } else {
-      hostLog(`can't extract info.`, 'warn')
+      hostLog(`can't extract info.`)
     }
   }
   if (window.location.pathname === '/maintenance') {
@@ -90,9 +90,8 @@ function domWatcher () {
   // Initial a watcher to get head ready
   const htmlWatcher = new window.MutationObserver(() => {
     if (document.head) {
-      log('head detected!', 'warn')
+      log('head detected!')
       sendToHost('injectReady')
-      log('dom ready for patching')
       bruteWatcher()
       htmlWatcher.disconnect()
     }

@@ -1,7 +1,8 @@
 'use strict'
 
 import { remote } from 'electron'
-import { DEV, oneshotListener } from '../../common/utils'
+import debug from 'debug'
+import { DEV, oneshotListener, log } from '../../common/utils'
 
 /**
  * #### Event order between webview and host
@@ -16,6 +17,7 @@ import { DEV, oneshotListener } from '../../common/utils'
  */
 
 let webview
+const hostLog = debug('mastervyrn:webview')
 
 /**
  * Process received message from webview
@@ -27,7 +29,7 @@ function channelAction (channel, msg) {
     window.commit(msg.mutation, msg.payload)
   }
   if (channel === 'log') {
-    console[msg.type](msg.content)
+    hostLog(msg)
   }
   if (channel === 'injectReady') {
     webview.insertCSS('::-webkit-scrollbar{display:none}body{cursor:default}[class*=btn-]{cursor:pointer}')
@@ -42,11 +44,10 @@ export default () => {
   webview.session.setProxy({proxyRules: global.Configs.proxy}, () => {})
 
   oneshotListener(webview, 'dom-ready', () => {
+    log('WEBVIEW READY!')
     const currentWebContents = webview.getWebContents()
-    if (DEV) {
-      console.log('WEBVIEW READY!')
-      currentWebContents.openDevTools({mode: 'detach'})
-    }
+
+    DEV && currentWebContents.openDevTools({mode: 'detach'})
 
     // Set context-menu, require here instead of import to prevent vue wasn't initialized.
     const contextMenuListener = require('./contextMenu').default(currentWebContents)

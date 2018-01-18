@@ -1,6 +1,6 @@
 'use strict'
 
-import util from 'util'
+import { log, warn } from '../common/utils'
 
 class ConfigHandler {
   constructor () {
@@ -49,7 +49,7 @@ class ConfigHandler {
         this.readConfig()
         resolve()
       } catch (error) {
-        console.warn(`[WARN] ConfigHandler can't find config, create one.`)
+        warn(`ConfigHandler can't find config, create one.`)
         this.save(this.defaultConfig).then(() => { resolve() })
       }
     }).then(() => {
@@ -74,8 +74,8 @@ class ConfigHandler {
     return new Promise((resolve) => {
       let filteredConfig = Object.assign(oldConfig, newConfig)
       resolve(filteredConfig)
-      console.log(`config: ${util.inspect(oldConfig)}\nnew config: ${util.inspect(newConfig)}`)
-      console.log('resolve with', filteredConfig)
+      log(`\nold config: %j\nnew config: %j`, oldConfig, newConfig)
+      log('resolve with %o', filteredConfig)
     })
   }
 
@@ -113,7 +113,7 @@ class ConfigHandler {
    */
   save (obj) {
     return new Promise(resolve => {
-      console.log('config saved')
+      log('config saved!')
       this.saveConfig(obj)
       resolve()
     })
