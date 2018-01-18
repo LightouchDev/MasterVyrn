@@ -2,10 +2,9 @@
 
 const fs = require('fs-extra')
 const path = require('path')
-const HttpProxy = require('inspectproxy')
 const urlParser = require('url-parser')
 
-const proxy = HttpProxy.createServer()
+const proxy = require('inspectproxy').createServer()
 const regex = /(?:game(?:-\w+)?\.granbluefantasy\.jp)|(?:gbf\.game(?:-\w+)?\.mbga\.jp)/
 
 const targetFolder = process.env.targetFolder || 'collected'
@@ -15,7 +14,7 @@ proxy.setResInspectCondition((clientRequest, remoteResponse) => {
   return regex.test(clientRequest.url)
 })
 
-proxy.smartListen(55688)
+proxy.smartListen(Number(process.env.listenPort) || 8000)
 
 function promiseProcess (exists, name, ext, dir, response) {
   let append = 0

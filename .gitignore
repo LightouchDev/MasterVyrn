@@ -12,3 +12,4 @@ thumbs.db
 !.gitkeep
 tools/dump/collected
 tools/dump/yarn.lock
+tools/dump/*.bat
