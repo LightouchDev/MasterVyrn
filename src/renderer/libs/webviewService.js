@@ -2,7 +2,7 @@
 
 import { remote } from 'electron'
 import debug from 'debug'
-import { DEV, oneshotListener, log } from '../../common/utils'
+import { oneshotListener } from '../../common/utils'
 
 /**
  * #### Event order between webview and host
@@ -28,7 +28,7 @@ function channelAction (channel, msg) {
   if (channel === 'commit') {
     window.commit(msg.mutation, msg.payload)
   }
-  if (channel === 'log') {
+  if (channel === 'hostLog') {
     hostLog(msg)
   }
   if (channel === 'injectReady') {
@@ -44,10 +44,7 @@ export default () => {
   webview.session.setProxy({proxyRules: global.Configs.proxy}, () => {})
 
   oneshotListener(webview, 'dom-ready', () => {
-    log('WEBVIEW READY!')
     const currentWebContents = webview.getWebContents()
-
-    DEV && currentWebContents.openDevTools({mode: 'detach'})
 
     // Set context-menu, require here instead of import to prevent vue wasn't initialized.
     const contextMenuListener = require('./contextMenu').default(currentWebContents)

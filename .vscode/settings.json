@@ -3,16 +3,13 @@
     "globals": ["__static"]
   },
   "cSpell.words": [
-    "accel",
-    "clonedeep",
-    "defaultsdeep",
     "fullscreenable",
     "granbluefantasy",
     "jssdk",
+    "mastervyrn",
     "maximizable",
-    "mbga",
-    "minified",
     "mobage",
+    "notlogin",
     "oneshot",
     "polyfill",
     "preload",

@@ -1,17 +1,22 @@
 'use strict'
 
 import { ipcRenderer, remote } from 'electron'
-import { oneshotListener, log } from '../../common/utils'
+import { oneshotListener } from '../../common/utils'
+
+// send log to host console
+function log (content) {
+  ipcRenderer.sendToHost('hostLog', content)
+}
 
 function init () {
-  log('%s page start!', window.performance.now())
+  log(`page start! ${window.performance.now().toFixed(2)}`)
 
   // prevent alert popup when resize cause frequency reload
   const _alert = window.alert
   window.alert = () => {}
 
   /*
-  * Get webviewId, and close child window, reload host when login success via DMM account
+  * Close child window, send URL to host when login success via non-mobage account
   */
   if (remote.getCurrentWebContents().getType() !== 'webview') {
     ipcRenderer.send('webviewRefresh', window.location.href)
@@ -33,10 +38,5 @@ function commit (mutation, payload) {
   ipcRenderer.sendToHost('commit', { mutation, payload })
 }
 
-// send log to host console
-function hostLog (content) {
-  ipcRenderer.sendToHost(content)
-}
-
-export { init, commit, log, hostLog }
+export { init, commit, log }
 export const sendToHost = ipcRenderer.sendToHost
