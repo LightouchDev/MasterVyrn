@@ -17,7 +17,7 @@ import { oneshotListener } from '../../common/utils'
  */
 
 let webview
-const hostLog = debug('mastervyrn:webview')
+const hostLog = debug('MasterVyrn:webview')
 
 /**
  * Process received message from webview
