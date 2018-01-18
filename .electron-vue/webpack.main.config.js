@@ -6,7 +6,7 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
-const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 let mainConfig = {
   entry: {
@@ -73,11 +73,23 @@ if (process.env.NODE_ENV !== 'production') {
  */
 if (process.env.NODE_ENV === 'production') {
   mainConfig.plugins.push(
-    new BabelMinifyWebpackPlugin(),
+    new UglifyJsPlugin({
+      parallel: true,
+      uglifyOptions: {
+        ecma: 6,
+        parse: {
+          ecma: 8
+        },
+        compress : {
+          collapse_vars: false
+        }
+      }
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     })
   )
+  delete mainConfig.externals
 }
 
 module.exports = mainConfig

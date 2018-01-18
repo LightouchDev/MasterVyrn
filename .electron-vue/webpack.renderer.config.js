@@ -6,7 +6,7 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
-const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -159,7 +159,18 @@ if (process.env.NODE_ENV === 'production') {
   rendererConfig.devtool = ''
 
   rendererConfig.plugins.push(
-    new BabelMinifyWebpackPlugin(),
+    new UglifyJsPlugin({
+      parallel: true,
+      uglifyOptions: {
+        ecma: 6,
+        parse: {
+          ecma: 8
+        },
+        compress : {
+          collapse_vars: false
+        }
+      }
+    }),
     new CopyWebpackPlugin([
       {
         from: path.join(__dirname, '../static'),
@@ -174,6 +185,7 @@ if (process.env.NODE_ENV === 'production') {
       minimize: true
     })
   )
+  delete rendererConfig.externals
 }
 
 module.exports = rendererConfig

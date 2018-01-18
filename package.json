@@ -29,7 +29,8 @@
       "output": "build"
     },
     "files": [
-      "dist/electron/**/*"
+      "dist/electron/**/*",
+      "!node_modules/**/*"
     ],
     "mac": {
       "artifactName": "${productName}-${version}-${os}.${ext}",
@@ -91,7 +92,6 @@
     "babel-core": "^6.25.0",
     "babel-eslint": "^8.2.1",
     "babel-loader": "^7.1.1",
-    "babel-minify-webpack-plugin": "^0.2.0",
     "babel-plugin-istanbul": "^4.1.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
@@ -140,6 +140,7 @@
     "sass-loader": "^6.0.6",
     "spectron": "^3.7.1",
     "style-loader": "^0.19.1",
+    "uglifyjs-webpack-plugin": "^1.1.6",
     "url-loader": "^0.6.2",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^13.7.0",

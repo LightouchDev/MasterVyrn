@@ -6,7 +6,7 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
-const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 let preloadConfig = {
   devtool: '#cheap-module-eval-source-map',
@@ -65,11 +65,23 @@ if (process.env.NODE_ENV === 'production') {
   preloadConfig.devtool = ''
 
   preloadConfig.plugins.push(
-    new BabelMinifyWebpackPlugin(),
+    new UglifyJsPlugin({
+      parallel: true,
+      uglifyOptions: {
+        ecma: 6,
+        parse: {
+          ecma: 8
+        },
+        compress : {
+          collapse_vars: false
+        }
+      }
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     })
   )
+  delete preloadConfig.externals
 }
 
 module.exports = preloadConfig
