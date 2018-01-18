@@ -73,6 +73,8 @@ if (process.env.NODE_ENV === 'production') {
           ecma: 8
         },
         compress : {
+          passes: 4,
+          toplevel: true,
           collapse_vars: false
         }
       }
