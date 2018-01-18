@@ -16,8 +16,8 @@ function oneshotListener (element, event, callback, useCapture) {
   }, useCapture)
 }
 
-const DEBUG = process.env.NODE_ENV !== 'development'
+const DEV = process.env.NODE_ENV === 'development'
 const log = debug('mastervyrn:log')
 
-export { DEBUG }
+export { DEV }
 export { oneshotListener, log }

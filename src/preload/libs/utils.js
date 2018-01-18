@@ -1,9 +1,9 @@
 'use strict'
 
 import { ipcRenderer, remote } from 'electron'
-import { oneshotListener } from '../../common/utils'
+import { DEV, oneshotListener } from '../../common/utils'
 
-let startTime, console, DEBUG
+let startTime, console
 
 function init () {
   /*
@@ -18,7 +18,7 @@ function init () {
   const _alert = window.alert
   window.alert = () => {}
   oneshotListener(window, 'load', () => {
-    DEBUG && log('DOM ready')
+    DEV && log('DOM ready')
     // restore alert
     window.alert = _alert
   })
@@ -26,8 +26,7 @@ function init () {
   /*
   * DEBUG info
   */
-  DEBUG = process.env.NODE_ENV === 'development'
-  if (DEBUG) {
+  if (DEV) {
     console = {
       log: window.console.log,
       warn: window.console.warn,
@@ -36,7 +35,7 @@ function init () {
     startTime = window.performance.now()
     console.log(startTime, 'page start!')
 
-    DEBUG && oneshotListener(window, 'DOMContentLoaded', () => {
+    oneshotListener(window, 'DOMContentLoaded', () => {
       log('DOM parsed')
       // recover console function
       Object.assign(window.console, console)
@@ -45,7 +44,7 @@ function init () {
 }
 
 function log (msg, type = 'log') {
-  DEBUG && console[type]((window.performance.now() - startTime).toFixed(2), msg)
+  DEV && console[type]((window.performance.now() - startTime).toFixed(2), msg)
 }
 function commit (mutation, payload) {
   ipcRenderer.sendToHost('commit', { mutation, payload })
@@ -56,6 +55,5 @@ function hostLog (content, type = 'log') {
   ipcRenderer.sendToHost('log', { content, type })
 }
 
-export { DEBUG }
 export { init, commit, log, hostLog }
 export const sendToHost = ipcRenderer.sendToHost

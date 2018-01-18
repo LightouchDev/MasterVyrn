@@ -3,6 +3,7 @@
 import { app, BrowserWindow, ipcMain, webContents } from 'electron'
 import path from 'path'
 import mainConfig from './libs/MainConfig'
+import { DEV } from '../common/utils'
 
 /**
  * Set `__static` path to static files in production
@@ -26,7 +27,7 @@ mainConfig().then(() => {
  */
 let mainWindow
 
-const winURL = process.env.NODE_ENV === 'development'
+const winURL = DEV
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
@@ -125,7 +126,7 @@ ipcMain.on('webviewRefresh', (event, url) => {
  * Handle common error
  */
 function printError (error) {
-  process.env.NODE_ENV === 'development' && console.warn(error)
+  DEV && console.warn(error)
 }
 process.on('unhandledRejection', printError)
 process.on('uncaughtException', printError)
@@ -146,6 +147,6 @@ autoUpdater.on('update-downloaded', () => {
 })
 
 app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
+  if (!DEV) autoUpdater.checkForUpdates()
 })
  */

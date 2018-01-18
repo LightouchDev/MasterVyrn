@@ -1,7 +1,7 @@
 'use strict'
 
 import { remote } from 'electron'
-import { oneshotListener } from '../../common/utils'
+import { DEV, oneshotListener } from '../../common/utils'
 
 /**
  * #### Event order between webview and host
@@ -43,7 +43,7 @@ export default () => {
 
   oneshotListener(webview, 'dom-ready', () => {
     const currentWebContents = webview.getWebContents()
-    if (process.env.NODE_ENV === 'development') {
+    if (DEV) {
       console.log('WEBVIEW READY!')
       currentWebContents.openDevTools({mode: 'detach'})
     }
