@@ -8,7 +8,8 @@ class RendererConfig extends ConfigHandler {
     this.defaultConfig = {
       alwaysOnTop: false,
       proxy: 'direct://',
-      language: navigator.languages[0] || navigator.language
+      language: navigator.languages[0] || navigator.language,
+      subHide: false
     }
   }
   readConfig () {
