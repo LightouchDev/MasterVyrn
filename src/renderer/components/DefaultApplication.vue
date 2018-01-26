@@ -1,11 +1,13 @@
 <template>
   <div id="wrapper">
-    <main-section></main-section>
+    <the-option-layer/>
+    <the-game-loader/>
   </div>
 </template>
 
 <script>
-import MainSection from './DefaultApplication/MainSection'
+import TheGameLoader from './DefaultApplication/TheGameLoader'
+import TheOptionLayer from './DefaultApplication/TheOptionLayer'
 
 // prevent unexpected drag and drop event
 document.addEventListener('dragover', event => event.preventDefault())
@@ -19,7 +21,8 @@ window.addEventListener('DOMContentLoaded', () => {
 export default {
   name: 'default-application',
   components: {
-    MainSection
+    TheGameLoader,
+    TheOptionLayer
   }
 }
 </script>
