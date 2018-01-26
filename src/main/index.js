@@ -74,14 +74,15 @@ function createWindow () {
 
 let preload
 const contentPair = {}
+const strictUrl = 'http://game.granbluefantasy.jp'
+
 app.on('web-contents-created', (event, contents) => {
   if (contents.getType() === 'window') {
     contents.on('will-attach-webview', (event, webPreferences) => {
-      preload = webPreferences.preloadURL
+      preload = webPreferences.preloadURL.replace(/file:\/\/\/?/, '')
     })
   }
   if (contents.getType() === 'webview') {
-    const strictUrl = 'http://game.granbluefantasy.jp'
     contents.on('will-navigate', (event, url) => {
       if (url.indexOf(strictUrl) === -1) {
         event.preventDefault()
@@ -90,18 +91,17 @@ app.on('web-contents-created', (event, contents) => {
           height: 1024,
           webPreferences: {
             parent: BrowserWindow.fromWebContents(contents),
-            preload: preload.replace(/file:\/\/\/?/, ''),
+            preload,
             session: contents.session,
             nodeIntegration: false
           }
         })
-        win.once('ready-to-show', () => win.show())
-        win.webContents.setUserAgent(contents.getUserAgent())
         contentPair[win.webContents.id] = contents.id
+        win.webContents.setUserAgent(contents.getUserAgent())
+        win.once('ready-to-show', () => win.show())
         win.webContents.on('new-window', (event, url) => {
           event.preventDefault()
           if (url.indexOf(strictUrl) !== -1) {
-            event.preventDefault()
             contents.loadURL(url)
             win.close()
           } else {
