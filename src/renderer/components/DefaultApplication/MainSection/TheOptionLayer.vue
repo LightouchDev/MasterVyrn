@@ -115,8 +115,15 @@ export default {
     },
     cleanStorage (type) {
       if (confirm(this.$t(`option.alert.clearStorage.${type}`))) {
-        if (type !== 'login') window.webview.getWebContents().session.clearCache(() => { window.webview.reload() })
-        if (type !== 'cache') window.webview.getWebContents().session.clearStorageData()
+        if (type !== 'login') {
+          window.webview.session.clearCache(() => {})
+        }
+        if (type !== 'cache') {
+          window.webview.session.clearStorageData(() => {
+            window.webview.loadURL(window.state.GameWeb.gameURL)
+            this.menuOpen = false
+          })
+        }
       }
     },
     refrashConfig () {
