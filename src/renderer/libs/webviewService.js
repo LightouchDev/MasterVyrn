@@ -16,9 +16,6 @@ import { oneshotListener } from '../../common/utils'
  * |    ~1 |  host    | did-stop-loading |
  */
 
-let webview
-const hostLog = debug('MasterVyrn:webview')
-
 /**
  * Process received message from webview
  * @param {string} channel - Message type
@@ -36,41 +33,41 @@ function channelAction (channel, msg) {
   }
 }
 
-export default () => {
-  webview = document.querySelector('webview')
-  window.webview = webview
-  webview.session = remote.session.fromPartition(webview.partition)
+const hostLog = debug('MasterVyrn:webview')
 
-  webview.session.setProxy({proxyRules: global.Configs.proxy}, () => {})
+const webview = document.querySelector('webview')
+window.webview = webview
+webview.session = remote.session.fromPartition(webview.partition)
 
-  oneshotListener(webview, 'dom-ready', () => {
-    const currentWebContents = webview.getWebContents()
+webview.session.setProxy({proxyRules: global.Configs.proxy}, () => {})
 
-    // Set context-menu, require here instead of import to prevent vue wasn't initialized.
-    const contextMenuListener = require('./contextMenu').default(currentWebContents)
-    currentWebContents.on('context-menu', contextMenuListener)
+oneshotListener(webview, 'dom-ready', () => {
+  const currentWebContents = webview.getWebContents()
 
-    /* eslint-disable standard/no-callback-literal */
-    // Open submenu when purchase page show up.
-    webview.session.webRequest.onBeforeRequest({
-      urls: [(window.state.GameWeb.gameURL + '*/purchase_jssdk*')]
-    }, (details, callback) => {
-      if (!window.state.GameView.subOpen) {
-        webview.executeJavaScript('Game.submenu.mainView.switchCurrent(Game.submenu.mainView.state.current)')
-      }
-      callback({cancel: false})
-    })
+  // Set context-menu, require here instead of import to prevent vue wasn't initialized.
+  const contextMenuListener = require('./contextMenu').default(currentWebContents)
+  currentWebContents.on('context-menu', contextMenuListener)
+
+  /* eslint-disable standard/no-callback-literal */
+  // Open submenu when purchase page show up.
+  webview.session.webRequest.onBeforeRequest({
+    urls: [(window.state.GameWeb.gameURL + '*/purchase_jssdk*')]
+  }, (details, callback) => {
+    if (!window.state.GameView.subOpen) {
+      webview.executeJavaScript('Game.submenu.mainView.switchCurrent(Game.submenu.mainView.state.current)')
+    }
+    callback({cancel: false})
   })
+})
 
-  /*
-  // Remove placeholder of overlay when page loaded
-  webview.addEventListener('did-finish-load', () => {
-    window.commit('CLEAN_ELEMENTS')
-  })
-  */
+/*
+// Remove placeholder of overlay when page loaded
+webview.addEventListener('did-finish-load', () => {
+  window.commit('CLEAN_ELEMENTS')
+})
+*/
 
-  // IPC message from webview
-  webview.addEventListener('ipc-message', (event) => {
-    channelAction(event.channel, event.args[0])
-  })
-}
+// IPC message from webview
+webview.addEventListener('ipc-message', (event) => {
+  channelAction(event.channel, event.args[0])
+})
