@@ -14,10 +14,10 @@ const regex = /(?:game(?:-\w+)?\.granbluefantasy\.jp)|(?:gbf\.game(?:-\w+)?\.mbg
 
 const targetFolder = process.env.targetFolder || 'collected'
 const applyPrettier = process.env.applyPrettier || false
+const threads = process.env.threads || require('os').cpus().length - 1
 const versionFile = path.resolve(targetFolder, 'version.txt')
 
 const yarn = process.platform === 'win32' ? 'yarn.cmd' : 'yarn'
-const cpuCount = require('os').cpus().length
 const queue = {}
 const task = {}
 let assetVersion
@@ -28,7 +28,7 @@ try {
 } catch (error) {}
 
 function taskRunner () {
-  if (fsIsReady && queue[assetVersion] && queue[assetVersion].length && Object.keys(task).length < cpuCount) {
+  if (fsIsReady && Object.keys(task).length < threads && queue[assetVersion] && queue[assetVersion].length) {
     // if queue is not empty and running task is lower than logic cpu count
     const child = exec(
       `${yarn} -s prettier-standard ${queue[assetVersion].shift()}`,
@@ -114,7 +114,7 @@ proxy.on('getResponse', (response) => {
     checkAssets(pathname).then(result => {
       fs.pathExists(result.outputPath, (error, exists) => {
         if (error) { err(error) }
-        if (exists && fs.readFileSync(result.outputPath).compare(response.body) !== 0) {
+        if (exists && fs.readFileSync(result.outputPath).compare(response.body) === 0) {
           log('Exists: %s', pathname)
         } else {
           log('Create: %s', pathname)
