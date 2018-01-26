@@ -8,6 +8,7 @@
     "fs-extra": "^5.0.0",
     "inspectproxy": "https://github.com/LightouchDev/inspectProxy",
     "prettier-standard": "^8.0.0",
+    "supports-color": "^5.1.0",
     "url-parser": "https://github.com/LightouchDev/url-parser"
   }
 }
