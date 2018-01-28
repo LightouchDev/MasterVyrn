@@ -78,20 +78,13 @@ function bruteWatcher () {
   }, 0)
 }
 
-/**
- * Watch DOMs
- */
-function domWatcher () {
-  // Initial a watcher to get head ready
-  const htmlWatcher = new window.MutationObserver(() => {
-    if (document.head) {
-      log('head detected!')
-      sendToHost('injectReady')
-      bruteWatcher()
-      htmlWatcher.disconnect()
-    }
-  })
-  htmlWatcher.observe(document, { childList: true, subtree: true })
-}
-
-export default domWatcher
+// Initial a watcher to get head ready
+const htmlWatcher = new window.MutationObserver(() => {
+  if (document.head) {
+    log('head detected!')
+    sendToHost('injectReady')
+    bruteWatcher()
+    htmlWatcher.disconnect()
+  }
+})
+htmlWatcher.observe(document, { childList: true, subtree: true })

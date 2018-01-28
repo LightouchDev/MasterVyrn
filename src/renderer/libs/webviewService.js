@@ -26,14 +26,14 @@ function channelAction (channel, msg) {
     window.commit(msg.mutation, msg.payload)
   }
   if (channel === 'hostLog') {
-    hostLog(msg)
+    hostLog(...msg)
   }
   if (channel === 'injectReady') {
     webview.insertCSS('::-webkit-scrollbar{display:none}body{cursor:default}[class*=btn-]{cursor:pointer}')
   }
 }
 
-const hostLog = debug('MasterVyrn:webview')
+const hostLog = debug('MasterVyrn:web')
 
 const webview = document.querySelector('webview')
 window.webview = webview
