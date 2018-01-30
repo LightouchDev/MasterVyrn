@@ -19,11 +19,13 @@ const actions = {
   noThrottling (args) {
     if (args && !app.isReady()) {
       app.commandLine.appendSwitch('disable-renderer-backgrounding')
+      log('noThrottling is enabled!')
     }
   },
   noHardwareAccel (args) {
     if (args && !app.isReady()) {
       app.disableHardwareAcceleration()
+      log('noHardwareAccel is enabled!')
     }
   }
 }
