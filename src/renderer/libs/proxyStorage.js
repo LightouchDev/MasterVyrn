@@ -17,9 +17,7 @@ const actions = {
     remote.getCurrentWindow().setAlwaysOnTop(args)
   },
   proxy (args) {
-    if (window.webview && window.webview.session) {
-      window.webview.session.setProxy({proxyRules: args}, () => {})
-    }
+    remote.session.defaultSession.setProxy({proxyRules: args, proxyBypassRules: '<local>'}, () => {})
   },
   language (args) {
     if (window.vue && window.vue.$i18n) {

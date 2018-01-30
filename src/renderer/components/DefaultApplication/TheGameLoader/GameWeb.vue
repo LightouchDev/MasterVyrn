@@ -1,10 +1,8 @@
 <template>
   <webview
     id="game-web"
-    :src="gameURL"
-    :preload="preloadScript"
-    :partition="partition"
-    :useragent="userAgent"
+    :src="site"
+    :preload="preloadPath"
     allowpopups
   >
   </webview>
@@ -14,21 +12,15 @@
 export default {
   data () {
     return {
-      state: this.$store.state.GameWeb
+      state: this.$store.state.Constants
     }
   },
   computed: {
-    gameURL () {
-      return this.state.gameURL
+    site () {
+      return this.state.site
     },
-    preloadScript () {
-      return this.state.preloadScript
-    },
-    partition () {
-      return this.state.partition
-    },
-    userAgent () {
-      return this.state.userAgent
+    preloadPath () {
+      return this.state.preloadPath
     }
   }
 }

@@ -1,8 +1,9 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, webContents } from 'electron'
+import { app, BrowserWindow, ipcMain, webContents, session } from 'electron'
 import path from 'path'
 import { DEV, err, log } from '../common/utils'
+import './libs/deprecated'
 import './libs/jsonStorage'
 
 log('App start!')
@@ -54,6 +55,14 @@ app.on('activate', () => {
 })
 
 function createWindow () {
+  /**
+   * Session setup
+   */
+  session.defaultSession.setUserAgent(
+    session.defaultSession.getUserAgent()
+      .replace(new RegExp(`(Electron|${require('../../package.json').name})\\/[\\d.]+\\s`, 'g'), '')
+  )
+
   mainWindow = new BrowserWindow({
     width: 480,
     height: 870,
@@ -93,12 +102,10 @@ app.on('web-contents-created', (event, contents) => {
           webPreferences: {
             parent: BrowserWindow.fromWebContents(contents),
             preload,
-            session: contents.session,
             nodeIntegration: false
           }
         })
         contentPair[win.webContents.id] = contents.id
-        win.webContents.setUserAgent(contents.getUserAgent())
         win.once('ready-to-show', () => win.show())
         win.webContents.on('new-window', (event, url) => {
           event.preventDefault()
@@ -126,8 +133,10 @@ ipcMain.on('webviewRefresh', (event, url) => {
 /**
  * Handle common error
  */
-process.on('unhandledRejection', err)
-process.on('uncaughtException', err)
+if (DEV) {
+  process.on('unhandledRejection', err)
+  process.on('uncaughtException', err)
+}
 
 /**
  * Auto Updater

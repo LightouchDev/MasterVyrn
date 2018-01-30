@@ -1,12 +1,16 @@
 'use strict'
 
+import { remote } from 'electron'
 import registerHotkey from './registerHotkey'
 
-const currentWebContents = require('electron').remote.getCurrentWebContents()
+const currentWebContents = remote.getCurrentWebContents()
 
 function webviewDevTools () {
   window.webview.openDevTools({mode: 'detach'})
 }
+
+// Set proxy
+remote.session.defaultSession.setProxy({proxyRules: window.proxyStorage.proxy, proxyBypassRules: '<local>'}, () => {})
 
 // Set hotkey
 if (process.platform === 'darwin') {

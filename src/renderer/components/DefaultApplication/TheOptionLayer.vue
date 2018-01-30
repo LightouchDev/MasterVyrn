@@ -115,13 +115,18 @@ export default {
     cleanStorage (type) {
       if (confirm(this.$t(`option.alert.clearStorage.${type}`))) {
         if (type !== 'login') {
-          window.webview.session.clearCache(() => {})
+          remote.session.defaultSession.clearCache(() => {})
         }
         if (type !== 'cache') {
-          window.webview.session.clearStorageData(() => {
-            window.webview.loadURL(window.state.GameWeb.gameURL)
-            this.menuOpen = false
-          })
+          remote.session.defaultSession.clearStorageData({ origin: 'https://www.dmm.com' })
+          remote.session.defaultSession.clearStorageData({ origin: 'https://connect.mobage.jp' })
+          remote.session.defaultSession.clearStorageData(
+            { origin: window.state.Constants.site },
+            () => {
+              window.webview.loadURL(window.state.Constants.site)
+              this.menuOpen = false
+            }
+          )
         }
       }
     },
@@ -149,7 +154,7 @@ export default {
         this.proxy.password && (proxyString += `:${this.proxy.password}`)
         this.proxy.username && (proxyString += '@')
         proxyString += this.proxy.hostname
-        this.proxy.port > 0 && this.proxy.port < 65536 && (this.config.proxy += `:${this.proxy.port}`)
+        this.proxy.port > 0 && this.proxy.port < 65536 && (proxyString += `:${this.proxy.port}`)
       }
       if (proxyString !== previousProxy) {
         previousProxy = proxyString

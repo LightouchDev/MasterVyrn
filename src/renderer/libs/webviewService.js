@@ -1,6 +1,5 @@
 'use strict'
 
-import { remote } from 'electron'
 import debug from 'debug'
 import { oneshotListener } from '../../common/utils'
 
@@ -37,9 +36,6 @@ const hostLog = debug('MasterVyrn:web')
 
 const webview = document.querySelector('webview')
 window.webview = webview
-webview.session = remote.session.fromPartition(webview.partition)
-
-webview.session.setProxy({proxyRules: window.proxyStorage.proxy}, () => {})
 
 oneshotListener(webview, 'dom-ready', () => {
   const currentWebContents = webview.getWebContents()
@@ -50,8 +46,8 @@ oneshotListener(webview, 'dom-ready', () => {
 
   /* eslint-disable standard/no-callback-literal */
   // Open submenu when purchase page show up.
-  webview.session.webRequest.onBeforeRequest({
-    urls: [(window.state.GameWeb.gameURL + '*/purchase_jssdk*')]
+  currentWebContents.session.webRequest.onBeforeRequest({
+    urls: [(window.state.Constants.site + '/*/purchase_jssdk*')]
   }, (details, callback) => {
     if (!window.state.GameView.subOpen) {
       webview.executeJavaScript('Game.submenu.mainView.switchCurrent(Game.submenu.mainView.state.current)')
