@@ -86,16 +86,15 @@ import urlParser from 'url-parser'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faListAlt, faTimesCircle } from '@fortawesome/fontawesome-free-regular'
 
-let mainConfigs = remote.getGlobal('Configs')
-let previousProxy = global.Configs.get().proxy
+let previousProxy = window.proxyStorage.proxy
 
 export default {
   data () {
     return {
       menuOpen: false,
-      config: Object.assign({}, global.Configs.get()),
+      config: window.proxyStorage,
       proxy: urlParser(previousProxy),
-      system: mainConfigs.get()
+      system: remote.getGlobal('jsonStorage')
     }
   },
   computed: {
@@ -127,33 +126,34 @@ export default {
       }
     },
     refrashConfig () {
-      this.system = mainConfigs.get()
-      this.config = global.Configs.get()
+      this.system = remote.getGlobal('jsonStorage')
+      this.config = window.proxyStorage
     },
     setDefault () {
       if (confirm(this.$t('option.alert.setDefault'))) {
-        mainConfigs.setDefaults()
-        global.Configs.setDefaults()
+        this.system.clear()
+        this.config.clear()
         this.refrashConfig()
         this.applyConfig()
       }
     },
     applyConfig () {
+      let proxyString = ''
       if (this.proxy.protocol === 'direct:') {
+        proxyString = 'direct://'
         this.config.proxy = 'direct://'
         this.proxy = urlParser('direct://')
       } else {
-        this.config.proxy = this.proxy.protocol + '//'
-        this.proxy.username && (this.config.proxy += this.proxy.username)
-        this.proxy.password && (this.config.proxy += `:${this.proxy.password}`)
-        this.proxy.username && (this.config.proxy += '@')
-        this.config.proxy += this.proxy.hostname
+        proxyString = this.proxy.protocol + '//'
+        this.proxy.username && (proxyString += this.proxy.username)
+        this.proxy.password && (proxyString += `:${this.proxy.password}`)
+        this.proxy.username && (proxyString += '@')
+        proxyString += this.proxy.hostname
         this.proxy.port > 0 && this.proxy.port < 65536 && (this.config.proxy += `:${this.proxy.port}`)
       }
-      mainConfigs.set(this.system)
-      global.Configs.set(this.config)
-      if (this.config.proxy !== previousProxy) {
-        previousProxy = this.config.proxy
+      if (proxyString !== previousProxy) {
+        previousProxy = proxyString
+        this.config.proxy = proxyString
         window.webview.reload()
       }
     }

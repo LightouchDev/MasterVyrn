@@ -35,7 +35,7 @@ const state = Object.assign({
   platformName: '',
   baseWidth: 320,
   subOpen: false,
-  subHide: global.Configs.subHide || false
+  subHide: window.proxyStorage.subHide || false
 }, defaults)
 
 const mutations = {
@@ -50,7 +50,7 @@ const mutations = {
   },
   HIDE_SUB (state) {
     state.subHide = !state.subHide
-    global.Configs.set({ subHide: state.subHide })
+    window.proxyStorage.setItem('subHide', state.subHide)
   }
 }
 

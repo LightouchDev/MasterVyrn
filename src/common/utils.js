@@ -18,8 +18,7 @@ function oneshotListener (element, event, callback, useCapture) {
 
 const DEV = process.env.NODE_ENV === 'development'
 const log = debug('MasterVyrn:log')
-const warn = debug('MasterVyrn:warn')
-const error = debug('MasterVyrn:error')
+const err = debug('MasterVyrn:err')
 
 export { DEV }
-export { oneshotListener, log, warn, error }
+export { oneshotListener, log, err }

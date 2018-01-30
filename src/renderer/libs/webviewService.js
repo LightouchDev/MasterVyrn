@@ -39,7 +39,7 @@ const webview = document.querySelector('webview')
 window.webview = webview
 webview.session = remote.session.fromPartition(webview.partition)
 
-webview.session.setProxy({proxyRules: global.Configs.proxy}, () => {})
+webview.session.setProxy({proxyRules: window.proxyStorage.proxy}, () => {})
 
 oneshotListener(webview, 'dom-ready', () => {
   const currentWebContents = webview.getWebContents()

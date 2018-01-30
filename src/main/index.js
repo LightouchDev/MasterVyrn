@@ -2,8 +2,10 @@
 
 import { app, BrowserWindow, ipcMain, webContents } from 'electron'
 import path from 'path'
-import mainConfig from './libs/MainConfig'
-import { DEV, error } from '../common/utils'
+import { DEV, err, log } from '../common/utils'
+import './libs/jsonStorage'
+
+log('App start!')
 
 /**
  * Set `__static` path to static files in production
@@ -14,13 +16,12 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 /**
- * Init service
+ * Init app
  */
-mainConfig().then(() => {
-  app.isReady()
-    ? createWindow()
-    : app.on('ready', createWindow)
-})
+app.isReady()
+  ? createWindow()
+  : app.on('ready', createWindow)
+app.once('ready', () => log('App ready!'))
 
 /**
  * Window section
@@ -125,8 +126,8 @@ ipcMain.on('webviewRefresh', (event, url) => {
 /**
  * Handle common error
  */
-process.on('unhandledRejection', error)
-process.on('uncaughtException', error)
+process.on('unhandledRejection', err)
+process.on('uncaughtException', err)
 
 /**
  * Auto Updater
