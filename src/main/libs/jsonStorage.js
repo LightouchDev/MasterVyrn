@@ -81,13 +81,21 @@ jsonStorage.clear = () => {
 Object.assign(jsonStorage,
   Object.assign(
     Object.assign({}, defaults),
-    Object.assign({}, jsonStorage)
+    Object.assign({}, storage)
   )
 )
 log('config applied!')
 
 global.jsonStorage = jsonStorage
 
+// auto save storage each 10 mins
+setInterval(() => {
+  fs.writeFile(jsonPath, JSON.stringify(storage), (error) => {
+    if (error) err(error)
+  })
+}, 600000)
+
+// save config when exit gracefully
 app.on('before-quit', event => {
   event.preventDefault()
   fs.writeFile(jsonPath, JSON.stringify(storage), (error) => {
