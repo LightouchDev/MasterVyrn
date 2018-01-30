@@ -65,17 +65,33 @@ function createWindow () {
 
   mainWindow = new BrowserWindow({
     width: 480,
-    height: 870,
+    height: global.jsonStorage.height || 870,
     useContentSize: true,
     fullscreenable: false,
     maximizable: false
   })
+
+  if (global.jsonStorage.x >= 0 && global.jsonStorage.y >= 0) {
+    mainWindow.setPosition(global.jsonStorage.x, global.jsonStorage.y)
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 
   mainWindow.loadURL(winURL)
+
+  /**
+   * Remember window position and height
+   */
+
+  mainWindow.on('move', () => {
+    const [x, y] = mainWindow.getPosition()
+    Object.assign(global.jsonStorage, { x, y })
+  })
+  mainWindow.on('resize', () => {
+    global.jsonStorage.height = mainWindow.getSize()[1]
+  })
 }
 
 /**
