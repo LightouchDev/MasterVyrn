@@ -3,21 +3,17 @@
 const whiteListFunction = ['key', 'getItem', 'setItem', 'removeItem', 'clear', 'length']
 const whiteListProperty = ['debug']
 
-let proxyMethods = {}
+let proxyMethods = {
+  getItem (key) {
+    return this[key]
+  },
+  setItem (key, value) {
+    this[key] = value
+  }
+}
 
 export default (storage, actions) => {
   if (typeof storage !== 'object') throw new Error('Parameter is object only.')
-  if (typeof window !== 'undefined') {
-    // workaround to prevent get raw json data
-    proxyMethods = {
-      getItem (key) {
-        return this[key]
-      },
-      setItem (key, value) {
-        this[key] = value
-      }
-    }
-  }
   return new Proxy(storage, {
     get (target, property, receiver) {
       if (proxyMethods[property] !== undefined) {

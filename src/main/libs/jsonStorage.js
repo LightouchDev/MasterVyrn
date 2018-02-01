@@ -45,8 +45,12 @@ const jsonPath = path.join(app.getPath('userData'), 'MasterVyrn.json')
 // import saved storage
 const fd = fs.openSync(jsonPath, 'r+')
 if (fd !== null) {
-  Object.assign(storage, JSON.parse(fs.readFileSync(fd, 'utf8')))
-  Object.assign(storageFuncLayer, storage)
+  try {
+    const content = JSON.parse(fs.readFileSync(fd, 'utf8'))
+    Object.keys(content).forEach(key => {
+      storage[key] = JSON.parse(content[key])
+    })
+  } catch (error) {}
   fs.closeSync(fd)
 }
 
