@@ -1,12 +1,13 @@
 'use strict'
 
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 
-const currentWindow = remote.getCurrentWindow()
+let currentWindow = remote.getCurrentWindow()
 
 // calc extra padding, and prevent window minimized when calc.
 currentWindow.isMinimized() && currentWindow.showInactive()
 const platformPadding = currentWindow.getSize()[0] - currentWindow.getContentSize()[0]
+currentWindow = null
 
 let previousSize
 let windowSize = {
@@ -15,22 +16,6 @@ let windowSize = {
   width: 480,
   autoResize: false
 }
-
-currentWindow.on('resize', event => {
-  const [winWidth, winHeight] = currentWindow.getSize()
-  if (windowSize.autoResize) {
-    // limit the minimum window width
-    if (winWidth < windowSize.min) {
-      currentWindow.setSize(windowSize.min, winHeight)
-    }
-    // limit the maximum window width
-    if (winWidth > windowSize.max) {
-      currentWindow.setSize(windowSize.max, winHeight)
-    }
-  } else {
-    currentWindow.setSize(windowSize.width, winHeight)
-  }
-})
 
 export default (size) => {
   windowSize = {
@@ -41,6 +26,8 @@ export default (size) => {
   }
 
   if (JSON.stringify(windowSize) !== JSON.stringify(previousSize)) {
+    ipcRenderer.send('ChangeWindowSize', windowSize)
+    currentWindow = remote.getCurrentWindow()
     // adjust window to fit monitor size
     const { availWidth, availHeight, availLeft, availTop } = window.screen
     let { x, y, height } = currentWindow.getBounds()

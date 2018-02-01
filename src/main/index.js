@@ -28,6 +28,12 @@ app.once('ready', () => log('App ready!'))
  * Window section
  */
 let mainWindow
+let windowSize = {
+  min: 320,
+  max: 640,
+  width: 480,
+  autoResize: false
+}
 
 const winURL = DEV
   ? `http://localhost:9080`
@@ -80,6 +86,34 @@ function createWindow () {
   })
 
   mainWindow.loadURL(winURL)
+
+  /**
+   * Resize depend on windowSize object
+   */
+  let delayResize = null
+  mainWindow.on('resize', event => {
+    clearInterval(delayResize)
+    delayResize = setInterval(() => {
+      const [winWidth, winHeight] = mainWindow.getSize()
+      if (windowSize.autoResize) {
+        // limit the minimum window width
+        if (winWidth < windowSize.min) {
+          mainWindow.setSize(windowSize.min, winHeight)
+        }
+        // limit the maximum window width
+        if (winWidth > windowSize.max) {
+          mainWindow.setSize(windowSize.max, winHeight)
+        }
+      } else {
+        mainWindow.setSize(windowSize.width, winHeight)
+      }
+      clearInterval(delayResize)
+    })
+  })
+
+  ipcMain.on('ChangeWindowSize', (event, obj) => {
+    windowSize = obj
+  })
 
   /**
    * Remember window position and height
