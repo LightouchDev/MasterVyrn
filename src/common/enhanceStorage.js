@@ -1,7 +1,6 @@
 'use strict'
 
 const whiteListFunction = ['key', 'getItem', 'setItem', 'removeItem', 'clear', 'length']
-const whiteListProperty = ['debug']
 
 let proxyMethods = {
   getItem (key) {
@@ -30,13 +29,10 @@ export default (storage, actions) => {
       if (typeof value === 'function') {
         if (whiteListFunction.some(func => property === func)) {
           proxyMethods[property] = value
-        } else {
-          target[property] = value
+          return true
         }
-        return true
       } else {
         try {
-          if (whiteListProperty.some(prop => property === prop)) return true
           target.setItem(property, JSON.stringify(value))
           if (actions && actions[property]) actions[property](value)
           return true
