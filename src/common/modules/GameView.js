@@ -35,7 +35,7 @@ const state = Object.assign({
   platformName: '',
   baseWidth: 320,
   subOpen: false,
-  subHide: window.proxyStorage.subHide || false
+  subHide: false
 }, defaults)
 
 const mutations = {
@@ -47,10 +47,6 @@ const mutations = {
   },
   VIEW_RESET (state, payload) {
     Object.assign(state, defaults)
-  },
-  HIDE_SUB (state) {
-    state.subHide = !state.subHide
-    window.proxyStorage.setItem('subHide', state.subHide)
   }
 }
 

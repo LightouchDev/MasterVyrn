@@ -21,9 +21,6 @@ import { oneshotListener } from '../../common/utils'
  * @param {object} msg     - Message body
  */
 function channelAction (channel, msg) {
-  if (channel === 'commit') {
-    window.commit(msg.mutation, msg.payload)
-  }
   if (channel === 'hostLog') {
     hostLog(...msg)
   }

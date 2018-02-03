@@ -3,6 +3,7 @@
 import { app, BrowserWindow, ipcMain, webContents, session } from 'electron'
 import path from 'path'
 import { DEV, err, log } from '../common/utils'
+import './libs/store'
 import './libs/deprecated'
 import './libs/jsonStorage'
 

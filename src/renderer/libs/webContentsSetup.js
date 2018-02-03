@@ -28,7 +28,13 @@ registerHotkey('Ctrl+Alt+I', () => {
 
 // H: hide submenu
 registerHotkey('H', () => {
-  window.commit('HIDE_SUB')
+  if (window.webview !== undefined) {
+    const { subHide, subOpen } = window.state.GameView
+    if (!subHide && subOpen) {
+      window.webview.executeJavaScript('Game.submenu.mainView.toggleSubmenu()')
+    }
+    window.proxyStorage.setItem('subHide', !subHide)
+  }
 })
 
 // hook to window.onkeyup

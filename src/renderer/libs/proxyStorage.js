@@ -1,6 +1,6 @@
 'use strict'
 
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import enhanceStorage from '../../common/enhanceStorage'
 
 const defaults = {
@@ -23,6 +23,15 @@ const actions = {
     if (window.vue && window.vue.$i18n) {
       window.vue.$i18n.locale = args
     }
+  },
+  subHide (args) {
+    // send ipc message directly to prevent the store of current window is not initialized.
+    ipcRenderer.send('vuex-mutation', {
+      type: 'VIEW_UPDATE',
+      payload: {
+        subHide: args
+      }
+    })
   }
 }
 
