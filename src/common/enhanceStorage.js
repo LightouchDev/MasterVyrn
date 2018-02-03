@@ -1,6 +1,7 @@
 'use strict'
 
 const whiteListFunction = ['key', 'getItem', 'setItem', 'removeItem', 'clear', 'length']
+const avoidAssignment = []
 
 let proxyMethods = {
   getItem (key) {
@@ -23,7 +24,9 @@ export default (storage, actions) => {
       }
       try {
         return JSON.parse(target.getItem(property))
-      } catch (error) {}
+      } catch (error) {
+        if (!avoidAssignment.some(a => a === property)) avoidAssignment.push(property)
+      }
     },
     set (target, property, value, receiver) {
       if (typeof value === 'function') {
@@ -32,6 +35,7 @@ export default (storage, actions) => {
           return true
         }
       } else {
+        if (avoidAssignment.some(a => property === a)) return true
         try {
           target.setItem(property, JSON.stringify(value))
           if (actions && actions[property]) actions[property](value)
