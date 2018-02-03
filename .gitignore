@@ -10,6 +10,5 @@ npm-debug.log
 npm-debug.log.*
 thumbs.db
 !.gitkeep
-tools/dump/collected
-tools/dump/yarn.lock
+tools/*/yarn.lock
 tools/dump/*.bat
