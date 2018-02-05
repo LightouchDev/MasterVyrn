@@ -37,10 +37,6 @@ window.webview = webview
 oneshotListener(webview, 'dom-ready', () => {
   const currentWebContents = webview.getWebContents()
 
-  // Set context-menu, require here instead of import to prevent vue wasn't initialized.
-  const contextMenuListener = require('./contextMenu').default(currentWebContents)
-  currentWebContents.on('context-menu', contextMenuListener)
-
   /* eslint-disable standard/no-callback-literal */
   // Open submenu when purchase page show up.
   currentWebContents.session.webRequest.onBeforeRequest({

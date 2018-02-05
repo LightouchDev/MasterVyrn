@@ -1,11 +1,13 @@
 'use strict'
 
+import './libs/deprecated'
+import './libs/jsonStorage'
+import './libs/store'
+import './libs/i18n'
+
 import { app, BrowserWindow, ipcMain, webContents, session } from 'electron'
 import path from 'path'
 import { DEV, err, log } from '../common/utils'
-import './libs/store'
-import './libs/deprecated'
-import './libs/jsonStorage'
 
 log('App start!')
 
@@ -127,7 +129,25 @@ function createWindow () {
   mainWindow.on('resize', () => {
     global.jsonStorage.height = mainWindow.getSize()[1]
   })
+
+  /**
+   * Register mainWindow to global
+   */
+  global.mainWindow = mainWindow
+
+  /**
+   * Emit 'windowCreated' event
+   */
+  app.emit('windowCreated')
 }
+
+/**
+ * Add context menu to each webContent
+ */
+
+app.on('web-contents-created', (event, content) => {
+  content.on('context-menu', require('./libs/contextMenu').default(content))
+})
 
 /**
  * Prevent outside browsing
@@ -135,7 +155,6 @@ function createWindow () {
 
 let preload
 const contentPair = {}
-const strictUrl = 'http://game.granbluefantasy.jp'
 
 app.on('web-contents-created', (event, contents) => {
   if (contents.getType() === 'window') {
@@ -145,7 +164,7 @@ app.on('web-contents-created', (event, contents) => {
   }
   if (contents.getType() === 'webview') {
     contents.on('will-navigate', (event, url) => {
-      if (url.indexOf(strictUrl) === -1) {
+      if (url.indexOf(global.state.Constants.site) === -1) {
         event.preventDefault()
         const win = new BrowserWindow({
           width: 1280,
@@ -160,7 +179,7 @@ app.on('web-contents-created', (event, contents) => {
         win.once('ready-to-show', () => win.show())
         win.webContents.on('new-window', (event, url) => {
           event.preventDefault()
-          if (url.indexOf(strictUrl) !== -1) {
+          if (url.indexOf(global.state.Constants.site) !== -1) {
             contents.loadURL(url)
             win.close()
           } else {

@@ -1,11 +1,12 @@
 'use strict'
-const { Menu } = require('electron').remote
+
+const { Menu } = require('electron')
 
 const itemText = {}
 ;['undo', 'redo', 'cut', 'copy', 'paste', 'selectAll'].forEach((item) => {
   Object.defineProperty(itemText, item, {
     get () {
-      return window.vue.$t(`contextMenu.${item}`)
+      return global.i18n.t(`contextMenu.${item}`)
     }
   })
 })
@@ -32,7 +33,7 @@ const inputMenu = Menu.buildFromTemplate([
  * @param {Object} webContents
  * @returns {Function} - listener
  */
-export default function (webContents) {
+export default (webContents) => {
   return function (event, params) {
     const { selectionText, isEditable } = params
     if (isEditable) {

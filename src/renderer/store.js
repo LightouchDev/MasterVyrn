@@ -18,7 +18,7 @@ const _commit = store.commit
 store.commit = function (type, payload) {
   // Stolen from vuejs/vuex
   if (typeof type === 'object' && type.type && arguments.length === 1) {
-    payload = [type.payload]
+    payload = type.payload
     type = type.type
   }
 

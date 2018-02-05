@@ -11,8 +11,8 @@
         <div id="option-language" class="option-group option-flex">
           <div class="option-groupTitle">{{ $t('option.language.title') }}</div>
           <select name="option-select-language" v-model="config.language">
-            <option value="en-US">{{ $t('language.en-US') }}</option>
-            <option value="zh-TW">{{ $t('language.zh-TW') }}</option>
+            <option value="en_US">{{ $t('language.en_US') }}</option>
+            <option value="zh_TW">{{ $t('language.zh_TW') }}</option>
           </select>
         </div>
         <div id="option-system" class="option-group">
@@ -21,12 +21,12 @@
           </div>
           <div class="option-item">
             <label for="option-item-noThrottling">
-              <input type="checkbox" id="option-item-noThrottling" v-model="system.noThrottling">{{ $t('option.system.item.noThrottling')}}
+              <input type="checkbox" id="option-item-noThrottling" v-model="config.noThrottling">{{ $t('option.system.item.noThrottling')}}
             </label>
           </div>
           <div class="option-item">
             <label for="option-item-noHardwareAccel">
-              <input type="checkbox" id="option-item-noHardwareAccel" v-model="system.noHardwareAccel">{{ $t('option.system.item.noHardwareAccel') }}
+              <input type="checkbox" id="option-item-noHardwareAccel" v-model="config.noHardwareAccel">{{ $t('option.system.item.noHardwareAccel') }}
             </label>
           </div>
         </div>
@@ -86,15 +86,12 @@ import urlParser from 'url-parser'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faListAlt, faTimesCircle } from '@fortawesome/fontawesome-free-regular'
 
-let previousProxy = window.proxyStorage.proxy
-
 export default {
   data () {
     return {
       menuOpen: false,
-      config: window.proxyStorage,
-      proxy: urlParser(previousProxy),
-      system: remote.getGlobal('jsonStorage')
+      config: Object.assign({}, window.jsonStorage),
+      proxy: urlParser(window.jsonStorage.proxy)
     }
   },
   computed: {
@@ -130,25 +127,25 @@ export default {
         }
       }
     },
-    refrashConfig () {
-      this.system = remote.getGlobal('jsonStorage')
-      this.config = window.proxyStorage
-    },
     setDefault () {
       if (confirm(this.$t('option.alert.setDefault'))) {
-        this.system.clear()
         this.config.clear()
-        this.refrashConfig()
+
+        // refresh config
+        this.config = Object.assign({}, window.jsonStorage)
+        this.proxy = urlParser(window.jsonStorage.proxy)
+
         this.applyConfig()
       }
     },
     applyConfig () {
+      // apply proxy
       let proxyString = ''
       if (this.proxy.protocol === 'direct:') {
         proxyString = 'direct://'
-        this.config.proxy = 'direct://'
         this.proxy = urlParser('direct://')
       } else {
+        // concat proxy string
         proxyString = this.proxy.protocol + '//'
         this.proxy.username && (proxyString += this.proxy.username)
         this.proxy.password && (proxyString += `:${this.proxy.password}`)
@@ -156,11 +153,13 @@ export default {
         proxyString += this.proxy.hostname
         this.proxy.port > 0 && this.proxy.port < 65536 && (proxyString += `:${this.proxy.port}`)
       }
-      if (proxyString !== previousProxy) {
-        previousProxy = proxyString
+      if (proxyString !== this.config.proxy) {
         this.config.proxy = proxyString
         window.webview.reload()
       }
+
+      this.$i18n.locale = this.config.language
+      Object.assign(window.jsonStorage, JSON.parse(JSON.stringify(this.config)))
     }
   },
   components: {

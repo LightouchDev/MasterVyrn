@@ -25,6 +25,7 @@ export default (storage, actions) => {
       try {
         return JSON.parse(target.getItem(property))
       } catch (error) {
+        if (typeof target[property] === 'undefined') return undefined
         if (!avoidAssignment.some(a => a === property)) avoidAssignment.push(property)
       }
     },

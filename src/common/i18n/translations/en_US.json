@@ -52,8 +52,8 @@
     }
   },
   "language": {
-    "en-US": "English (United States)",
-    "zh-TW": "Chinese Traditional"
+    "en_US": "English (United States)",
+    "zh_TW": "Chinese Traditional"
   },
   "common": {
     "close": "Close",

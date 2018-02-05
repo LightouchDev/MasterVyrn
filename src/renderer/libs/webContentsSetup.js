@@ -9,9 +9,6 @@ function webviewDevTools () {
   window.webview.openDevTools({mode: 'detach'})
 }
 
-// Set proxy
-remote.session.defaultSession.setProxy({proxyRules: window.proxyStorage.proxy, proxyBypassRules: '<local>'}, () => {})
-
 // Set hotkey
 if (process.platform === 'darwin') {
   // Command + Option + I: open game view DevTools on OSX
@@ -29,16 +26,16 @@ registerHotkey('Ctrl+Alt+I', () => {
 // H: hide submenu
 registerHotkey('H', () => {
   if (window.webview !== undefined) {
-    const { subHide, subOpen } = window.state.GameView
+    const { subOpen, subHide } = window.state.GameView
     if (!subHide && subOpen) {
       window.webview.executeJavaScript('Game.submenu.mainView.toggleSubmenu()')
     }
-    window.proxyStorage.setItem('subHide', !subHide)
+    window.jsonStorage.subHide = !subHide
+    window.commit('VIEW_UPDATE', {
+      subHide: !subHide
+    })
   }
 })
 
 // hook to window.onkeyup
 registerHotkey.startListen()
-
-// Set context-menu, require here instead of import to prevent vue wasn't initialized.
-currentWebContents.on('context-menu', require('./contextMenu').default(currentWebContents))

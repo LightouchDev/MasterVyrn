@@ -1,6 +1,5 @@
 const state = {
-  site: 'http://game.granbluefantasy.jp',
-  url: ''
+  site: 'http://game.granbluefantasy.jp'
 }
 
 state.preloadPath = process.mainModule.filename.indexOf('app.asar') !== -1

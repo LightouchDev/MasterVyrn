@@ -2,7 +2,8 @@
 
 import fs from 'fs'
 import path from 'path'
-import { app } from 'electron'
+import { app, session } from 'electron'
+import locale from 'os-locale'
 import { log, err } from '../../common/utils'
 import enhanceStorage from '../../common/enhanceStorage'
 
@@ -56,7 +57,14 @@ if (fd !== null) {
 
 const defaults = {
   noThrottling: true,
-  noHardwareAccel: false
+  noHardwareAccel: false,
+  // renderer defaults
+  language: locale.sync(),
+  alwaysOnTop: false,
+  proxy: 'direct://',
+  raids: [],
+  webviewConfig: {},
+  subHide: false
 }
 
 const actions = {
@@ -70,6 +78,11 @@ const actions = {
     if (args && !app.isReady()) {
       app.disableHardwareAcceleration()
       log('noHardwareAccel is enabled!')
+    }
+  },
+  language (args) {
+    if (global.i18n) {
+      global.i18n.locale = args
     }
   }
 }
@@ -89,6 +102,32 @@ Object.assign(jsonStorage,
   )
 )
 log('config applied!')
+
+const rendererActions = {
+  alwaysOnTop (args) {
+    global.mainWindow.setAlwaysOnTop(args)
+    log('alwaysOnTop is %s', global.mainWindow.isAlwaysOnTop())
+  },
+  proxy (args) {
+    session.defaultSession.setProxy({
+      proxyRules: args,
+      proxyBypassRules: '<local>'
+    }, () => {})
+    session.defaultSession.resolveProxy(global.state.Constants.site, (proxyString) => {
+      log('proxy resolve with: %s', proxyString)
+    })
+  }
+}
+
+// patch actions here to prevent unsupported action executed when renderer is not ready.
+Object.assign(actions, rendererActions)
+
+// initial config when renderer is ready
+app.once('windowCreated', () => setTimeout(() => {
+  Object.keys(rendererActions).forEach(key => {
+    rendererActions[key](jsonStorage[key])
+  })
+}))
 
 global.jsonStorage = jsonStorage
 

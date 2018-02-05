@@ -6,7 +6,7 @@ import translations from './translations'
 Vue.use(VueI18n)
 
 export default new VueI18n({
-  locale: window.proxyStorage.language, // set locale
-  fallbackLocale: 'en-US',
+  locale: global.jsonStorage.language, // set locale
+  fallbackLocale: 'en_US',
   messages: translations // set locale messages
 })
