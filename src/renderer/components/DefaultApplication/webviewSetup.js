@@ -1,7 +1,7 @@
 'use strict'
 
 import debug from 'debug'
-import { oneshotListener } from '../../common/utils'
+import { oneshotListener } from '../../../common/utils'
 
 /**
  * #### Event order between webview and host

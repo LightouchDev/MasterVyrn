@@ -1,7 +1,7 @@
 'use strict'
 
 import { remote } from 'electron'
-import registerHotkey from './registerHotkey'
+import registerHotkey from '../../libs/registerHotkey'
 
 const currentWebContents = remote.getCurrentWebContents()
 

@@ -14,8 +14,8 @@ document.addEventListener('dragover', event => event.preventDefault())
 document.addEventListener('drop', event => event.preventDefault())
 
 window.addEventListener('DOMContentLoaded', () => {
-  require('../libs/webviewService')
-  require('../libs/webContentsSetup')
+  require('./DefaultApplication/webviewSetup')
+  require('./DefaultApplication/webContentsSetup')
 })
 
 export default {
