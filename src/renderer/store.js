@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import debug from 'debug'
 import { ipcRenderer } from 'electron'
-import { log } from '../common/utils'
 
 import modules from '../common/modules'
+
+const vux = debug('MasterVyrn:vux')
 
 Vue.use(Vuex)
 
@@ -22,12 +24,12 @@ store.commit = function (type, payload) {
     type = type.type
   }
 
-  log('committing: %s\npayload: %O', type, payload)
+  vux('commit: %s\npayload: %O', type, payload)
   ipcRenderer.send('vuex-mutation', { type, payload })
 }
 
 ipcRenderer.on('vuex-apply-mutation', (event, {type, payload}) => {
-  log('vuex-apply-mutation: %s', type)
+  vux('mutation recv: %s', type)
   _commit(type, payload)
 })
 
