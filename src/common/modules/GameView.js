@@ -34,8 +34,7 @@ const state = Object.assign({
   isJssdkSideMenu: false,
   platformName: '',
   baseWidth: 320,
-  subOpen: false,
-  subHide: global.jsonStorage.subHide
+  subOpen: false
 }, defaults)
 
 const mutations = {

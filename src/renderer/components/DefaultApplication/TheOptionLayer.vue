@@ -90,8 +90,8 @@ export default {
   data () {
     return {
       menuOpen: false,
-      config: Object.assign({}, window.jsonStorage),
-      proxy: urlParser(window.jsonStorage.proxy)
+      config: Object.assign({}, window.state.Config),
+      proxy: urlParser(window.state.Config.proxy)
     }
   },
   computed: {
@@ -132,8 +132,8 @@ export default {
         this.config.clear()
 
         // refresh config
-        this.config = Object.assign({}, window.jsonStorage)
-        this.proxy = urlParser(window.jsonStorage.proxy)
+        this.config = Object.assign({}, window.state.Config)
+        this.proxy = urlParser(window.state.Config.proxy)
 
         this.applyConfig()
       }
@@ -159,7 +159,7 @@ export default {
       }
 
       this.$i18n.locale = this.config.language
-      Object.assign(window.jsonStorage, JSON.parse(JSON.stringify(this.config)))
+      window.commit('CONFIG_UPDATE', this.config)
     }
   },
   components: {

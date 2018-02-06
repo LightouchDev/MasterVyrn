@@ -35,3 +35,4 @@ ipcMain.on('vuex-mutation', (event, {type, payload}) => {
 })
 
 global.state = store.state
+global.commit = store.commit

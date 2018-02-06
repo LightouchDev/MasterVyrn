@@ -1,4 +1,3 @@
-import './jsonStorage'
 import Vue from 'vue'
 
 import App from './App'
@@ -16,6 +15,3 @@ window.vue = new Vue({
   store,
   template: '<App/>'
 }).$mount('#app')
-
-window.commit = window.vue.$store.commit
-window.state = window.vue.$store.state

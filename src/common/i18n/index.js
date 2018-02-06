@@ -5,8 +5,12 @@ import translations from './translations'
 
 Vue.use(VueI18n)
 
-export default new VueI18n({
-  locale: global.jsonStorage.language, // set locale
+const i18n = new VueI18n({
+  locale: global.state.Config.language, // set locale
   fallbackLocale: 'en_US',
   messages: translations // set locale messages
 })
+
+global.i18n = i18n
+
+export default i18n

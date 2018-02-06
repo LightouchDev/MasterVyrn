@@ -29,7 +29,6 @@ export default {
   methods: {
     // calculate proper zoom size
     calcZoom (zoom) {
-      const shouldReload = !zoom
       if (!zoom && this.view.autoResize) {
         zoom = window.innerWidth / this.windowBase
       }
@@ -38,9 +37,6 @@ export default {
       zoom < 1 && (zoom = 1)
 
       window.commit('VIEW_UPDATE', {zoom: zoom})
-
-      // only reload page when zoom is manually set.
-      shouldReload && window.webview.reload()
     },
     setupWindow () {
       if (window.onresize) {
@@ -82,7 +78,7 @@ export default {
       return windowWidth
     },
     windowBase () {
-      return ((this.view.subHide && !this.view.subOpen) ? 0 : this.view.subMenuWidth) +
+      return ((this.$store.state.Config.subHide && !this.view.subOpen) ? 0 : this.view.subMenuWidth) +
         this.view.baseWidth * (this.view.subOpen ? 2 : 1)
     },
     style () {

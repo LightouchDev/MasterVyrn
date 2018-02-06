@@ -9,8 +9,13 @@ const vux = debug('MasterVyrn:vux')
 
 Vue.use(Vuex)
 
+// import master state
+const remoteState = ipcRenderer.sendSync('vuex-connect')
+Object.keys(modules).forEach(store => {
+  Object.assign(modules[store].state, remoteState[store])
+})
+
 const store = new Vuex.Store({
-  state: ipcRenderer.sendSync('vuex-connect'),
   modules,
   strict: process.env.NODE_ENV !== 'production'
 })
@@ -32,5 +37,9 @@ ipcRenderer.on('vuex-apply-mutation', (event, {type, payload}) => {
   vux('mutation recv: %s', type)
   _commit(type, payload)
 })
+
+// export to global
+window.commit = store.commit
+window.state = store.state
 
 export default store

@@ -1,9 +1,9 @@
 'use strict'
 
 import './libs/deprecated'
-import './libs/jsonStorage'
+import './libs/configHelper'
 import './libs/store'
-import './libs/i18n'
+import '../common/i18n'
 
 import { app, BrowserWindow, ipcMain, webContents, session } from 'electron'
 import path from 'path'
@@ -74,14 +74,14 @@ function createWindow () {
 
   mainWindow = new BrowserWindow({
     width: 480,
-    height: global.jsonStorage.height || 870,
+    height: global.state.Config.height || 870,
     useContentSize: true,
     fullscreenable: false,
     maximizable: false
   })
 
-  if (global.jsonStorage.x >= 0 && global.jsonStorage.y >= 0) {
-    mainWindow.setPosition(global.jsonStorage.x, global.jsonStorage.y)
+  if (global.state.Config.x >= 0 && global.state.Config.y >= 0) {
+    mainWindow.setPosition(global.state.Config.x, global.state.Config.y)
   }
 
   mainWindow.on('closed', () => {
@@ -89,6 +89,8 @@ function createWindow () {
   })
 
   mainWindow.loadURL(winURL)
+
+  const delayLength = process.platform === 'darwin' ? 600 : 80
 
   /**
    * Resize depend on windowSize object
@@ -111,7 +113,7 @@ function createWindow () {
         mainWindow.setSize(windowSize.width, winHeight)
       }
       clearInterval(delayResize)
-    })
+    }, delayLength)
   })
 
   ipcMain.on('ChangeWindowSize', (event, obj) => {
@@ -121,13 +123,23 @@ function createWindow () {
   /**
    * Remember window position and height
    */
-
+  let delaySavePos = null
   mainWindow.on('move', () => {
-    const [x, y] = mainWindow.getPosition()
-    Object.assign(global.jsonStorage, { x, y })
+    clearTimeout(delaySavePos)
+    delaySavePos = setTimeout(() => {
+      const [x, y] = mainWindow.getPosition()
+      global.commit('CONFIG_UPDATE', { x, y })
+    }, delayLength)
   })
+  let delaySaveHeight = null
   mainWindow.on('resize', () => {
-    global.jsonStorage.height = mainWindow.getSize()[1]
+    clearTimeout(delaySaveHeight)
+    delaySaveHeight = setTimeout(() => {
+      const height = mainWindow.getSize()[1]
+      if (global.state.Config.height !== height) {
+        global.commit('CONFIG_UPDATE', { height })
+      }
+    }, delayLength)
   })
 
   /**

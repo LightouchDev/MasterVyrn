@@ -46,12 +46,12 @@ registerHotkey('Ctrl+Alt+I', () => {
 // H: hide submenu
 registerHotkey('H', () => {
   if (window.webview !== undefined) {
-    const { subOpen, subHide } = window.state.GameView
+    const { subOpen } = window.state.GameView
+    const { subHide } = window.state.Config
     if (!subHide && subOpen) {
       window.webview.executeJavaScript('Game.submenu.mainView.toggleSubmenu()')
     }
-    window.jsonStorage.subHide = !subHide
-    window.commit('VIEW_UPDATE', {
+    window.commit('CONFIG_UPDATE', {
       subHide: !subHide
     })
   }
