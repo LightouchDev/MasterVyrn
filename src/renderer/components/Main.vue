@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import TheGameLoader from './DefaultApplication/TheGameLoader'
+import TheGameLoader from './Main/TheGameLoader'
 
 // prevent unexpected drag and drop event
 document.addEventListener('dragover', event => event.preventDefault())
@@ -15,11 +15,11 @@ document.addEventListener('drop', event => event.preventDefault())
 function lazyLoading () {
   import(
     /* webpackChunkName: "webviewSetup" */
-    './DefaultApplication/webviewSetup'
+    './Main/webviewSetup'
   )
   import(
     /* webpackChunkName: "webContentsSetup" */
-    './DefaultApplication/webContentsSetup'
+    './Main/webContentsSetup'
   )
 }
 
@@ -41,7 +41,7 @@ export default {
     TheGameLoader,
     TheOptionLayer: () => import(
       /* webpackChunkName: "TheOptionLayer" */
-      './DefaultApplication/TheOptionLayer'
+      './Main/TheOptionLayer'
     )
   }
 }

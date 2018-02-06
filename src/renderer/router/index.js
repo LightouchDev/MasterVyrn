@@ -9,8 +9,8 @@ export default new Router({
       path: '/',
       name: 'default-application',
       component: () => import(
-        /* webpackChunkName: "DefaultApplication" */
-        '@/components/DefaultApplication'
+        /* webpackChunkName: "Main" */
+        '@/components/Main'
       )
     },
     {
