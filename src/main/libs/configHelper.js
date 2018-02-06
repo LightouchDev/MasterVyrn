@@ -37,11 +37,6 @@ const actions = {
       app.disableHardwareAcceleration()
       log('noHardwareAccel is enabled!')
     }
-  },
-  language (args) {
-    if (global.i18n) {
-      global.i18n.locale = args
-    }
   }
 }
 
