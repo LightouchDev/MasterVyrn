@@ -1,5 +1,4 @@
 {
-  "comments": false,
   "env": {
     "test": {
       "presets": [
@@ -35,5 +34,5 @@
       ]
     }
   },
-  "plugins": ["transform-runtime"]
+  "plugins": ["transform-runtime", "syntax-dynamic-import"]
 }

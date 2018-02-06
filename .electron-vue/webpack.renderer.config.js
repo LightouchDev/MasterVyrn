@@ -128,6 +128,7 @@ let rendererConfig = {
   ],
   output: {
     filename: '[name].js',
+    chunkFilename: '[name].chunk.js',
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, '../dist/electron')
   },

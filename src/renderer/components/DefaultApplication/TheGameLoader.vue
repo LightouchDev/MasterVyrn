@@ -7,7 +7,6 @@
 
 <script>
 import GameWeb from './TheGameLoader/GameWeb'
-import Overlay from './TheGameLoader/Overlay'
 import windowHandler from './TheGameLoader/windowHandler'
 
 let delayResize = null
@@ -17,7 +16,10 @@ export default {
   name: 'the-game-loader',
   components: {
     GameWeb,
-    Overlay
+    Overlay: () => import(
+      /* webpackChunkName: "Overlay" */
+      './TheGameLoader/Overlay'
+    )
   },
   data () {
     return {

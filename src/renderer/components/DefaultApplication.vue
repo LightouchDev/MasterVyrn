@@ -7,22 +7,42 @@
 
 <script>
 import TheGameLoader from './DefaultApplication/TheGameLoader'
-import TheOptionLayer from './DefaultApplication/TheOptionLayer'
 
 // prevent unexpected drag and drop event
 document.addEventListener('dragover', event => event.preventDefault())
 document.addEventListener('drop', event => event.preventDefault())
 
-window.addEventListener('DOMContentLoaded', () => {
-  require('./DefaultApplication/webviewSetup')
-  require('./DefaultApplication/webContentsSetup')
-})
+function lazyLoading () {
+  import(
+    /* webpackChunkName: "webviewSetup" */
+    './DefaultApplication/webviewSetup'
+  )
+  import(
+    /* webpackChunkName: "webContentsSetup" */
+    './DefaultApplication/webContentsSetup'
+  )
+}
+
+// lazyLoading would be too lazy to register before dom ready
+switch (document.readyState) {
+  case 'loading':
+    // if it's really slow that page is still loading
+    window.addEventListener('DOMContentLoaded', lazyLoading)
+    break
+  case 'interactive':
+  case 'complete':
+    lazyLoading()
+    break
+}
 
 export default {
   name: 'default-application',
   components: {
     TheGameLoader,
-    TheOptionLayer
+    TheOptionLayer: () => import(
+      /* webpackChunkName: "TheOptionLayer" */
+      './DefaultApplication/TheOptionLayer'
+    )
   }
 }
 </script>
