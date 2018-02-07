@@ -20,6 +20,7 @@ const configDefaults = {
   webviewConfig: {},
   subHide: false
 }
+global.configDefaults = configDefaults
 
 // check default translation exist
 if (isUndefined(require('../../common/i18n/translations').default[configDefaults.language])) {
