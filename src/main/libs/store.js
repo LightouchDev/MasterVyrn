@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { BrowserWindow, ipcMain } from 'electron'
-import { log } from '../../common/utils'
+import { log, err } from '../../common/utils'
 
 import modules from '../../common/store/modules'
 
@@ -30,8 +30,25 @@ ipcMain.on('vuex-connect', (event) => {
 })
 
 ipcMain.on('vuex-mutation', (event, args) => {
-  log('vuex-mutation: %s\npayload: %o', ...args)
-  store.commit(...args)
+  try {
+    const [ type, payload ] = args
+    log('vuex-mutation: %o\npayload: %o', type, payload)
+    store.commit(...args)
+  } catch (error) {
+    err(error)
+    event.sender.send('vuex-error', error)
+  }
+})
+
+ipcMain.on('vuex-action', (event, args) => {
+  try {
+    const [ content, payload ] = args
+    log('vuex-action: %o\npayload: %o', content, payload)
+    store.dispatch(...args)
+  } catch (error) {
+    err(error)
+    event.sender.send('vuex-error', error)
+  }
 })
 
 global.state = store.state

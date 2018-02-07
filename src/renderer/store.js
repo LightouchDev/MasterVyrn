@@ -23,17 +23,29 @@ try {
   err('import master state failed: %s', error)
 }
 
-const _commit = store.commit
+const { commit } = store
 
-store.commit = function (...args) {
-  vux('commit: %s\npayload: %O', ...args)
+store.commit = (...args) => {
+  const [ type, payload ] = args
+  vux('commit: %o\npayload: %O', type, payload)
   ipcRenderer.send('vuex-mutation', args)
+}
+
+store.dispatch = (...args) => {
+  const [ content, payload ] = args
+  // nextTick hack to simulate dispatch behavior
+  Vue.nextTick(() => {
+    vux('dispatch: %o\npayload: %O', content, payload)
+    ipcRenderer.send('vuex-action', args)
+  })
 }
 
 ipcRenderer.on('vuex-apply-mutation', (event, {type, payload}) => {
   vux('mutation recv: %s', type)
-  _commit(type, payload)
+  commit(type, payload)
 })
+
+ipcRenderer.on('vuex-error', (event, error) => console.error(error))
 
 // export to global
 window.commit = store.commit
