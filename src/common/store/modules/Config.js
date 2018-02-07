@@ -30,7 +30,14 @@ const mutations = {
   }
 }
 
+const actions = {
+  CONFIG_DEFAULTS ({ commit }) {
+    commit('CONFIG_UPDATE', global.configDefaults)
+  }
+}
+
 export default {
   state,
-  mutations
+  mutations,
+  actions
 }

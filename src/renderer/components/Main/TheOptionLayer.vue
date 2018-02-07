@@ -87,8 +87,6 @@ import urlParser from 'url-parser'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faListAlt, faTimesCircle } from '@fortawesome/fontawesome-free-regular'
 
-const configDefaults = remote.getGlobal('configDefaults')
-
 export default {
   data () {
     return {
@@ -110,6 +108,11 @@ export default {
   },
   methods: {
     menuToggle () {
+      if (!this.menuOpen) {
+        // refresh config
+        this.config = clone(this.$store.state.Config)
+        this.proxy = urlParser(this.$store.state.Config.proxy)
+      }
       this.menuOpen = !this.menuOpen
     },
     cleanStorage (type) {
@@ -132,11 +135,9 @@ export default {
     },
     setDefault () {
       if (confirm(this.$t('option.alert.setDefault'))) {
-        this.$store.commit('CONFIG_UPDATE', configDefaults)
-
-        // refresh config
-        this.config = clone(this.$store.state.Config)
-        this.proxy = urlParser(this.$store.state.Config.proxy)
+        this.$store.dispatch('CONFIG_DEFAULTS')
+        this.menuOpen = false
+        window.webview.reload()
       }
     },
     applyConfig () {
@@ -158,9 +159,8 @@ export default {
         this.config.proxy = proxyString
         window.webview.reload()
       }
-
-      this.$i18n.locale = this.config.language
       this.$store.commit('CONFIG_UPDATE', this.config)
+      this.menuOpen = false
     }
   },
   components: {
