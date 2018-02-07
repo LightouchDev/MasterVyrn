@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import debug from 'debug'
 import { ipcRenderer } from 'electron'
+import { log, err } from '../common/utils'
 
 import modules from '../common/modules'
 
@@ -9,16 +10,18 @@ const vux = debug('MasterVyrn:vux')
 
 Vue.use(Vuex)
 
-// import master state
-const remoteState = ipcRenderer.sendSync('vuex-connect')
-Object.keys(modules).forEach(store => {
-  Object.assign(modules[store].state, remoteState[store])
-})
-
 const store = new Vuex.Store({
   modules,
   strict: process.env.NODE_ENV !== 'production'
 })
+
+// import master state
+try {
+  store.replaceState(ipcRenderer.sendSync('vuex-connect'))
+  log('master state imported!')
+} catch (error) {
+  err('import master state failed: %s', error)
+}
 
 const _commit = store.commit
 
