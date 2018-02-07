@@ -4,7 +4,7 @@ import debug from 'debug'
 import { ipcRenderer } from 'electron'
 import { log, err } from '../common/utils'
 
-import modules from '../common/modules'
+import modules from '../common/store/modules'
 
 const vux = debug('MasterVyrn:vux')
 
