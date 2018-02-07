@@ -1,8 +1,8 @@
 <template>
   <webview
     id="game-web"
-    :src="site"
-    :preload="preloadPath"
+    :src="state.site"
+    :preload="state.preloadPath"
     allowpopups
   >
   </webview>
@@ -13,14 +13,6 @@ export default {
   data () {
     return {
       state: this.$store.state.Constants
-    }
-  },
-  computed: {
-    site () {
-      return this.state.site
-    },
-    preloadPath () {
-      return this.state.preloadPath
     }
   }
 }
