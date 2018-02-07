@@ -36,7 +36,7 @@ export default {
       zoom > 2 && (zoom = 2)
       zoom < 1 && (zoom = 1)
 
-      window.commit('VIEW_UPDATE', {zoom: zoom})
+      this.$store.dispatch('VIEW_UPDATE', { zoom: zoom })
     },
     setupWindow () {
       if (window.onresize) {

@@ -51,7 +51,15 @@ const mutations = {
   }
 }
 
+const actions = {
+  // async update for non-blocking mutation for component use
+  VIEW_UPDATE ({ commit }, payload) {
+    commit('VIEW_UPDATE', payload)
+  }
+}
+
 export default {
   state,
-  mutations
+  mutations,
+  actions
 }
