@@ -7,8 +7,8 @@ function log (...content) {
   ipcRenderer.sendToHost('hostLog', content)
 }
 
-function commit (type, payload) {
-  ipcRenderer.send('vuex-mutation', { type, payload })
+function commit (...args) {
+  ipcRenderer.send('vuex-mutation', args)
 }
 
 export { commit, log }

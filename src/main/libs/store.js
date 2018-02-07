@@ -29,9 +29,9 @@ ipcMain.on('vuex-connect', (event) => {
   event.returnValue = store.state
 })
 
-ipcMain.on('vuex-mutation', (event, {type, payload}) => {
-  log('vuex-mutation: %s\npayload: %o', type, payload)
-  store.commit(type, payload)
+ipcMain.on('vuex-mutation', (event, args) => {
+  log('vuex-mutation: %s\npayload: %o', ...args)
+  store.commit(...args)
 })
 
 global.state = store.state

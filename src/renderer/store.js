@@ -25,15 +25,9 @@ try {
 
 const _commit = store.commit
 
-store.commit = function (type, payload) {
-  // Stolen from vuejs/vuex
-  if (typeof type === 'object' && type.type && arguments.length === 1) {
-    payload = type.payload
-    type = type.type
-  }
-
-  vux('commit: %s\npayload: %O', type, payload)
-  ipcRenderer.send('vuex-mutation', { type, payload })
+store.commit = function (...args) {
+  vux('commit: %s\npayload: %O', ...args)
+  ipcRenderer.send('vuex-mutation', args)
 }
 
 ipcRenderer.on('vuex-apply-mutation', (event, {type, payload}) => {
