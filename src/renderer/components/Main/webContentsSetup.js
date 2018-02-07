@@ -1,6 +1,7 @@
 'use strict'
 
 import { remote } from 'electron'
+import { isUndefined } from 'lodash'
 import registerHotkey from '../../libs/registerHotkey'
 
 const currentWebContents = remote.getCurrentWebContents()
@@ -45,7 +46,7 @@ registerHotkey('Ctrl+Alt+I', () => {
 
 // H: hide submenu
 registerHotkey('H', () => {
-  if (window.webview !== undefined) {
+  if (!isUndefined(window.webview)) {
     const { subOpen } = window.state.GameView
     const { subHide } = window.state.Config
     if (!subHide && subOpen) {

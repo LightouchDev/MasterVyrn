@@ -1,11 +1,13 @@
 'use strict'
 
+import { assign, forEach, isUndefined } from 'lodash'
+
 const state = {}
 
 const isMain = typeof window === 'undefined'
 
 if (isMain) {
-  Object.assign(state, global.importConfig())
+  assign(state, global.importConfig())
 }
 
 const apply = {
@@ -16,10 +18,10 @@ const apply = {
 
 const mutations = {
   CONFIG_UPDATE (state, payload) {
-    Object.assign(state, payload)
-    Object.keys(apply).forEach(key => {
-      if (payload[key] !== undefined) {
-        apply[key](payload[key])
+    assign(state, payload)
+    forEach(apply, (value, key) => {
+      if (!isUndefined(payload[key])) {
+        value(payload[key])
       }
     })
     if (isMain) {

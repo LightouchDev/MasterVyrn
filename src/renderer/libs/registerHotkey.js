@@ -1,5 +1,6 @@
 'use strict'
 
+import { forEach } from 'lodash'
 import { log } from '../../common/utils'
 
 const keyTable = {
@@ -17,7 +18,7 @@ const registeredSet = {}
 
 function concatKeys (keyObject, lastKey) {
   let key = ''
-  ;['ctrlKey', 'metaKey', 'altKey', 'shiftKey'].forEach(modifier => {
+  forEach(['ctrlKey', 'metaKey', 'altKey', 'shiftKey'], modifier => {
     if (keyObject[modifier]) {
       if (key) key += '+'
       key += modifier
@@ -39,7 +40,7 @@ function concatKeys (keyObject, lastKey) {
 function registerHotkey (hotkeys, callback) {
   const modifierGroup = {}
   let lastKey = ''
-  hotkeys.split('+').forEach(key => {
+  forEach(hotkeys.split('+'), key => {
     if (key === 'CommandOrControl' || key === 'CmdOrCtrl') {
       process.platform === 'darwin'
         ? key = 'Command'

@@ -82,6 +82,7 @@
 
 <script>
 import { remote } from 'electron'
+import { clone } from 'lodash'
 import urlParser from 'url-parser'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faListAlt, faTimesCircle } from '@fortawesome/fontawesome-free-regular'
@@ -90,8 +91,8 @@ export default {
   data () {
     return {
       menuOpen: false,
-      config: Object.assign({}, window.state.Config),
-      proxy: urlParser(window.state.Config.proxy)
+      config: clone(this.$store.state.Config),
+      proxy: urlParser(this.$store.state.Config.proxy)
     }
   },
   computed: {
@@ -118,9 +119,9 @@ export default {
           remote.session.defaultSession.clearStorageData({ origin: 'https://www.dmm.com' })
           remote.session.defaultSession.clearStorageData({ origin: 'https://connect.mobage.jp' })
           remote.session.defaultSession.clearStorageData(
-            { origin: window.state.Constants.site },
+            { origin: this.$store.state.Constants.site },
             () => {
-              window.webview.loadURL(window.state.Constants.site)
+              window.webview.loadURL(this.$store.state.Constants.site)
               this.menuOpen = false
             }
           )
@@ -132,8 +133,8 @@ export default {
         this.config.clear()
 
         // refresh config
-        this.config = Object.assign({}, window.state.Config)
-        this.proxy = urlParser(window.state.Config.proxy)
+        this.config = clone(this.$store.state.Config)
+        this.proxy = urlParser(this.$store.state.Config.proxy)
 
         this.applyConfig()
       }

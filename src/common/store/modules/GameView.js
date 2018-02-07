@@ -1,3 +1,5 @@
+import { assign } from 'lodash'
+
 /**
  * Default parameters:
  *  zoom: the zoom of game that read from header or calculate from window size
@@ -30,7 +32,7 @@ const preset = {
 }
 
 // only set variables when initialize
-const state = Object.assign({
+const state = assign({
   isJssdkSideMenu: false,
   platformName: '',
   baseWidth: 320,
@@ -39,13 +41,13 @@ const state = Object.assign({
 
 const mutations = {
   VIEW_UPDATE (state, payload) {
-    Object.assign(state, payload)
+    assign(state, payload)
   },
-  VIEW_PRESET (state, payload) {
-    Object.assign(state, preset)
+  VIEW_PRESET (state) {
+    assign(state, preset)
   },
-  VIEW_RESET (state, payload) {
-    Object.assign(state, defaults)
+  VIEW_RESET (state) {
+    assign(state, defaults)
   }
 }
 

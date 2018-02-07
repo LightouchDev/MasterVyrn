@@ -3,10 +3,11 @@
 import fs from 'fs'
 import path from 'path'
 import { app } from 'electron'
+import { forEach } from 'lodash'
 
 function deleteFolderRecursive (path) {
   if (fs.existsSync(path)) {
-    fs.readdirSync(path).forEach((file, index) => {
+    forEach(fs.readdirSync(path), file => {
       const curPath = path + '/' + file
       if (fs.lstatSync(curPath).isDirectory()) {
         // recursive

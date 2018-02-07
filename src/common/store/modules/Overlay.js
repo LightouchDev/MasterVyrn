@@ -1,3 +1,5 @@
+import { assign } from 'lodash'
+
 /**
  * # message type and content
  *
@@ -26,7 +28,7 @@ const mutations = {
   CREATE_NODE (state, payload) {
     const {id, className, data, preset, style, clickable} = payload
     if (!state.data[preset]) { state.data[preset] = {} }
-    Object.assign(state.data[preset], {[id]: data})
+    assign(state.data[preset], {[id]: data})
     state.elements.push({id, className, preset, style, clickable})
   }
 }

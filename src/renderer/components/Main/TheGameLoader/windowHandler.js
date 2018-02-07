@@ -1,5 +1,6 @@
 'use strict'
 
+import { clone, isEqual } from 'lodash'
 import { remote, ipcRenderer } from 'electron'
 
 let currentWindow = remote.getCurrentWindow()
@@ -25,7 +26,7 @@ export default (size) => {
     autoResize: size.autoResize
   }
 
-  if (JSON.stringify(windowSize) !== JSON.stringify(previousSize)) {
+  if (!isEqual(windowSize, previousSize)) {
     ipcRenderer.send('ChangeWindowSize', windowSize)
     currentWindow = remote.getCurrentWindow()
     // adjust window to fit monitor size
@@ -46,6 +47,6 @@ export default (size) => {
       width: windowSize.width,
       height
     })
-    previousSize = Object.assign({}, windowSize)
+    previousSize = clone(windowSize)
   }
 }

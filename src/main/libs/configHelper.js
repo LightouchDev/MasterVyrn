@@ -3,6 +3,7 @@
 import fs from 'fs'
 import path from 'path'
 import locale from 'os-locale'
+import { assign, forEach, isUndefined } from 'lodash'
 import { app, session } from 'electron'
 import { log, err } from '../../common/utils'
 
@@ -21,7 +22,7 @@ const configDefaults = {
 }
 
 // check default translation exist
-if (require('../../common/i18n/translations').default[configDefaults.language] === undefined) {
+if (isUndefined(require('../../common/i18n/translations').default[configDefaults.language])) {
   configDefaults.language = 'en_US'
 }
 
@@ -59,16 +60,15 @@ const rendererActions = {
 // import saved storage
 global.importConfig = () => {
   const config = {}
-  Object.assign(config, configDefaults)
-  Object.assign(config, content)
+  assign(config, configDefaults, content)
   return config
 }
 
 // apply new config
 const applyConfig = (config) => {
-  Object.keys(actions).forEach(key => {
-    if (config[key] !== undefined) {
-      actions[key](config[key])
+  forEach(actions, (value, key) => {
+    if (!isUndefined(config[key])) {
+      value(config[key])
     }
   })
 }
@@ -91,14 +91,14 @@ try {
   }
 }
 
-Object.assign(actions, rendererActions)
+assign(actions, rendererActions)
 
 // initial config when renderer is ready
-if (content !== undefined) {
+if (!isUndefined(content)) {
   app.once('windowCreated', () => setTimeout(() => {
-    Object.keys(rendererActions).forEach(key => {
-      if (content[key] !== undefined) {
-        rendererActions[key](content[key])
+    forEach(rendererActions, (value, key) => {
+      if (!isUndefined(content[key])) {
+        value(content[key])
       }
     })
   }))

@@ -1,8 +1,10 @@
+import { assign } from 'lodash'
+
 const state = {}
 
 const mutations = {
   GAME_UPDATE (state, payload) {
-    Object.assign(state, payload)
+    assign(state, payload)
   }
 }
 
