@@ -7,7 +7,10 @@ let currentWindow = remote.getCurrentWindow()
 
 // calc extra padding, and prevent window minimized when calc.
 currentWindow.isMinimized() && currentWindow.showInactive()
-const platformPadding = currentWindow.getSize()[0] - currentWindow.getContentSize()[0]
+const [windowWidth, windowHeight] = currentWindow.getSize()
+const [contentWidth, contentHeight] = currentWindow.getContentSize()
+const extraWidth = windowWidth - contentWidth
+const extraHeight = windowHeight - contentHeight
 currentWindow = null
 
 let previousSize
@@ -20,9 +23,9 @@ let windowSize = {
 
 export default (size) => {
   windowSize = {
-    min: size.min + platformPadding,
-    max: size.min * 2 + platformPadding,
-    width: size.width + platformPadding,
+    min: size.min + extraWidth,
+    max: size.min * 2 + extraWidth,
+    width: size.width + extraWidth,
     autoResize: size.autoResize
   }
 
@@ -31,7 +34,8 @@ export default (size) => {
     currentWindow = remote.getCurrentWindow()
     // adjust window to fit monitor size
     const { availWidth, availHeight, availLeft, availTop } = window.screen
-    let { x, y, height } = currentWindow.getBounds()
+    let [x, y] = currentWindow.getPosition()
+    let height = currentWindow.getContentSize()[1]
     const remainX = availWidth - windowSize.width + availLeft
     if (x > remainX) {
       x = remainX > 0 ? remainX : 0
@@ -45,7 +49,7 @@ export default (size) => {
       x,
       y,
       width: windowSize.width,
-      height
+      height: height + extraHeight
     })
     previousSize = clone(windowSize)
   }
