@@ -110,7 +110,7 @@ proxy.on('getResponse', (response) => {
   let { pathname } = urlParser(response.url)
   pathname === '/' && (pathname += 'index.html')
   pathname = pathname.replace(/^\//, '')
-  if (pathname.indexOf('assets/') === 0 || pathname === 'index.html') {
+  if (response.body.length && (pathname.indexOf('assets/') === 0 || pathname === 'index.html')) {
     checkAssets(pathname).then(result => {
       fs.pathExists(result.outputPath, (error, exists) => {
         if (error) { err(error) }
