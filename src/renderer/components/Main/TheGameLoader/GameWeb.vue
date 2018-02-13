@@ -4,8 +4,7 @@
     :src="state.site"
     :preload="state.preloadPath"
     allowpopups
-  >
-  </webview>
+  />
 </template>
 
 <script>

@@ -1,79 +1,177 @@
 <template>
-  <div id="the-option-layer" :style="zoom" :class="menuOpen ? 'open' : ''">
+  <div
+    :style="zoom"
+    :class="menuOpen ? 'open' : ''"
+  >
     <div id="toolbar">
-      <div id="button-option" class="toolbar-button" @click="menuToggle">
-        <font-awesome-icon :icon="optionIcon" transform="grow-14 down-7" />
+      <div
+        id="button-option"
+        class="toolbar-button"
+        @click="menuToggle"
+      >
+        <font-awesome-icon
+          :icon="optionIcon"
+          transform="grow-14 down-7"
+        />
         <div class="toolbar-button-desc">{{ (menuOpen ? $t('common.close') : $t('common.option')).toUpperCase() }}</div>
       </div>
     </div>
     <div id="option-page">
       <div id="container">
-        <div id="option-language" class="option-group option-flex">
+        <div
+          id="option-language"
+          class="option-group option-flex"
+        >
           <div class="option-groupTitle">{{ $t('option.language.title') }}</div>
-          <select name="option-select-language" v-model="config.language">
+          <select
+            name="option-select-language"
+            v-model="config.language"
+          >
             <option value="en_US">{{ $t('language.en_US') }}</option>
             <option value="zh_TW">{{ $t('language.zh_TW') }}</option>
           </select>
         </div>
-        <div id="option-system" class="option-group">
+        <div
+          id="option-system"
+          class="option-group"
+        >
           <div class="option-groupTitle">{{ $t('option.system.title') }}
             <span class="warning">{{ $t('option.system.warning') }}</span>
           </div>
           <div class="option-item">
             <label for="option-item-noThrottling">
-              <input type="checkbox" id="option-item-noThrottling" v-model="config.noThrottling">{{ $t('option.system.item.noThrottling')}}
+              <input
+                type="checkbox"
+                id="option-item-noThrottling"
+                v-model="config.noThrottling"
+              >{{ $t('option.system.item.noThrottling') }}
             </label>
           </div>
           <div class="option-item">
             <label for="option-item-noHardwareAccel">
-              <input type="checkbox" id="option-item-noHardwareAccel" v-model="config.noHardwareAccel">{{ $t('option.system.item.noHardwareAccel') }}
+              <input
+                type="checkbox"
+                id="option-item-noHardwareAccel"
+                v-model="config.noHardwareAccel"
+              >{{ $t('option.system.item.noHardwareAccel') }}
             </label>
           </div>
         </div>
-        <div id="option-window" class="option-group">
+        <div
+          id="option-window"
+          class="option-group"
+        >
           <div class="option-groupTitle">{{ $t('option.window.title') }}</div>
           <div class="option-item">
             <label for="option-item-alwaysOnTop">
-              <input type="checkbox" id="option-item-alwaysOnTop" v-model="config.alwaysOnTop">{{ $t('option.window.item.alwaysOnTop') }}
+              <input
+                type="checkbox"
+                id="option-item-alwaysOnTop"
+                v-model="config.alwaysOnTop"
+              >{{ $t('option.window.item.alwaysOnTop') }}
             </label>
           </div>
         </div>
-        <div id="option-proxy" class="option-group">
+        <div
+          id="option-proxy"
+          class="option-group"
+        >
           <div class="option-groupTitle">{{ $t('option.proxy.title') }}</div>
           <div class="option-item">
             <div class="option-flex">
-              <select name="option-select-proxyType" v-model="proxy.protocol">
+              <select
+                name="option-select-proxyType"
+                v-model="proxy.protocol"
+              >
                 <option value="direct:">{{ $t('option.proxy.item.direct') }}</option>
                 <option value="http:">HTTP</option>
                 <option value="https:">HTTPS</option>
                 <option value="socks:">SOCKS4</option>
                 <option value="socks5:">SOCKS5</option>
               </select>
-              <input type="text" id="option-item-proxyServer" :disabled="disableProxyOptions" v-model="proxy.hostname" :placeholder="$t('option.proxy.item.hostname')">
+              <input
+                type="text"
+                id="option-item-proxyServer"
+                :disabled="disableProxyOptions"
+                v-model="proxy.hostname"
+                :placeholder="$t('option.proxy.item.hostname')"
+              >
               :
-              <input type="number" id="option-item-proxyPort" :disabled="disableProxyOptions" v-model="proxy.port" :placeholder="$t('option.proxy.item.port')">
+              <input
+                type="number"
+                id="option-item-proxyPort"
+                :disabled="disableProxyOptions"
+                v-model="proxy.port"
+                :placeholder="$t('option.proxy.item.port')"
+              >
             </div>
-            <div id="option-userinfo" class="option-flex">
-              <input type="text" :disabled="disableProxyOptions" v-model="proxy.username" :placeholder="$t('option.proxy.item.username')">
+            <div
+              id="option-userinfo"
+              class="option-flex"
+            >
+              <input
+                type="text"
+                :disabled="disableProxyOptions"
+                v-model="proxy.username"
+                :placeholder="$t('option.proxy.item.username')"
+              >
               :
-              <input type="password" :disabled="disableProxyOptions" v-model="proxy.password" :placeholder="$t('option.proxy.item.password')">
+              <input
+                type="password"
+                :disabled="disableProxyOptions"
+                v-model="proxy.password"
+                :placeholder="$t('option.proxy.item.password')"
+              >
             </div>
           </div>
         </div>
-        <div id="option-storage" class="option-group">
+        <div
+          id="option-storage"
+          class="option-group"
+        >
           <div class="option-groupTitle">{{ $t('option.storage.title') }}</div>
           <div class="option-item option-flex">
-            <button type="button" class="button default" @click="cleanStorage('login')">{{ $t('option.storage.item.clearLogin') }}</button>
-            <button type="button" class="button default" @click="cleanStorage('cache')">{{ $t('option.storage.item.clearCache') }}</button>
-            <div class="indent"></div>
-            <button type="button" class="button default" @click="cleanStorage('all')">{{ $t('option.storage.item.clearAll') }}</button>
+            <button
+              type="button"
+              class="button default"
+              @click="cleanStorage('login')"
+            >{{ $t('option.storage.item.clearLogin') }}</button>
+            <button
+              type="button"
+              class="button default"
+              @click="cleanStorage('cache')"
+            >{{ $t('option.storage.item.clearCache') }}</button>
+            <div class="indent"/>
+            <button
+              type="button"
+              class="button default"
+              @click="cleanStorage('all')"
+            >{{ $t('option.storage.item.clearAll') }}</button>
           </div>
         </div>
-        <div id="option-buttons" class="option-group option-flex">
-          <button type="button" id="option-button-default" class="button blue" @click="setDefault">{{ $t('option.button.default') }}</button>
-          <div class="indent"></div>
-          <button type="button" id="option-button-apply" class="button green" @click="applyConfig">{{ $t('option.button.apply') }}</button>
-          <button type="button" id="option-button-close" class="button red" @click="menuToggle">{{ $t('option.button.close') }}</button>
+        <div
+          id="option-buttons"
+          class="option-group option-flex"
+        >
+          <button
+            type="button"
+            id="option-button-default"
+            class="button blue"
+            @click="setDefault"
+          >{{ $t('option.button.default') }}</button>
+          <div class="indent"/>
+          <button
+            type="button"
+            id="option-button-apply"
+            class="button green"
+            @click="applyConfig"
+          >{{ $t('option.button.apply') }}</button>
+          <button
+            type="button"
+            id="option-button-close"
+            class="button red"
+            @click="menuToggle"
+          >{{ $t('option.button.close') }}</button>
         </div>
       </div>
     </div>
@@ -88,6 +186,10 @@ import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faListAlt, faTimesCircle } from '@fortawesome/fontawesome-free-regular'
 
 export default {
+  name: 'TheOptionLayer',
+  components: {
+    FontAwesomeIcon
+  },
   data () {
     return {
       menuOpen: false,
@@ -162,50 +264,46 @@ export default {
       this.$store.commit('CONFIG_UPDATE', this.config)
       this.menuOpen = false
     }
-  },
-  components: {
-    FontAwesomeIcon
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
-#the-option-layer {
-  #toolbar {
-    left: 320px;
-    bottom: 0px;
-    position: absolute;
-    text-align: center;
-    .toolbar-button {
-      color: #c5f7f9;
-      width: 64px;
-      height: 45px;
-      margin: 9px 0 9px;
-      position: relative;
-      @include gradient-text('linear-gradient(#c5f7f9, #94d4dd, #c5f7f9)', 'dark');
-    }
-    .toolbar-button-desc {
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 0.75px;
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      text-shadow:
-        -1px -1px 2px $standardBlack,
-        1px -1px 2px $standardBlack,
-        -1px 1px 2px $standardBlack,
-        1px 1px 2px $standardBlack;
-      @include gradient-text('linear-gradient(#c5f7f9, #94d4dd, #c5f7f9)', 'dark');
-    }
+#toolbar {
+  left: 320px;
+  bottom: 0px;
+  position: absolute;
+  text-align: center;
+  .toolbar-button {
+    color: #c5f7f9;
+    width: 64px;
+    height: 45px;
+    margin: 9px 0 9px;
+    position: relative;
+    @include gradient-text('linear-gradient(#c5f7f9, #94d4dd, #c5f7f9)', 'dark');
   }
-  #option-page {
-    display: none;
+  .toolbar-button-desc {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.75px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-shadow:
+      -1px -1px 2px $standardBlack,
+      1px -1px 2px $standardBlack,
+      -1px 1px 2px $standardBlack,
+      1px 1px 2px $standardBlack;
+    @include gradient-text('linear-gradient(#c5f7f9, #94d4dd, #c5f7f9)', 'dark');
   }
 }
-#the-option-layer.open {
+#option-page {
+  display: none;
+}
+
+.open {
   #option-page {
     top: 0;
     left: 0;
@@ -324,4 +422,3 @@ $gray:  #adb5bd;
 }
 
 </style>
-

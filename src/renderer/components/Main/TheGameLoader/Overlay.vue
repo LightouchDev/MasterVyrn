@@ -8,7 +8,7 @@
       :data-preset="element.preset ? element.preset : ''"
       :style="[element.style, zoom]"
       v-on="element.clickable ? { mouseup: eventMap } : ''"
-    ></div>
+    />
   </div>
 </template>
 
@@ -37,8 +37,6 @@ export default {
   }
 }
 </script>
-
-
 <style lang="scss">
 #overlay {
   width: 100%;

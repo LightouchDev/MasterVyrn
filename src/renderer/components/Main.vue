@@ -1,7 +1,8 @@
 <template>
   <div id="wrapper">
-    <the-option-layer/>
-    <the-game-loader/>
+    <the-side-bar id="the-side-bar"/>
+    <the-option-layer id="the-option-layer"/>
+    <the-game-loader id="the-game-loader"/>
   </div>
 </template>
 
@@ -36,19 +37,31 @@ switch (document.readyState) {
 }
 
 export default {
-  name: 'default-application',
+  name: 'Main',
   components: {
     TheGameLoader,
     TheOptionLayer: () => import(
       /* webpackChunkName: "TheOptionLayer" */
       './Main/TheOptionLayer'
+    ),
+    TheSideBar: () => import(
+      /* webpackChunkName: "TheSideBar" */
+      './Main/TheSideBar'
     )
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 body {
   overflow: hidden;
 }
+
+#the-side-bar {
+  background: $standardBlack;
+  width: 100%;
+  min-width: 150px;
+  max-width: 320px; // 1024 - 704
+}
+
 </style>
