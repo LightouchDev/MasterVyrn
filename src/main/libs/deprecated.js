@@ -5,21 +5,28 @@ import path from 'path'
 import { app } from 'electron'
 import { forEach } from 'lodash'
 
-function deleteFolderRecursive (path) {
+function deleteRecursive (path) {
   if (fs.existsSync(path)) {
-    forEach(fs.readdirSync(path), file => {
-      const curPath = path + '/' + file
-      if (fs.lstatSync(curPath).isDirectory()) {
-        // recursive
-        deleteFolderRecursive(curPath)
-      } else {
-        // delete file
-        fs.unlinkSync(curPath)
-      }
-    })
-    fs.rmdirSync(path)
+    if (fs.lstatSync(path).isDirectory()) {
+      forEach(fs.readdirSync(path), file => {
+        const curPath = path + '/' + file
+        if (fs.lstatSync(curPath).isDirectory()) {
+          // recursive
+          deleteRecursive(curPath)
+        } else {
+          // delete file
+          fs.unlinkSync(curPath)
+        }
+      })
+      fs.rmdirSync(path)
+    } else {
+      fs.unlinkSync(path)
+    }
   }
 }
 
 // Remove old useless folder may contain sensitive data
-deleteFolderRecursive(path.join(app.getPath('userData'), 'Partitions'))
+deleteRecursive(path.join(app.getPath('userData'), 'Partitions/main'))
+
+// Remove old config
+deleteRecursive(path.join(app.getPath('documents'), 'MasterVyrn.json'))
