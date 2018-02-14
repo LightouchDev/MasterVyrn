@@ -2,7 +2,7 @@
   <webview
     id="game-web"
     :src="state.site"
-    :preload="state.preloadPath"
+    :preload="'file://' + state.preload"
     allowpopups
   />
 </template>

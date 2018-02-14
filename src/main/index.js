@@ -5,7 +5,7 @@ import './libs/configHelper'
 import './libs/store'
 import '../common/i18n'
 
-import { app, BrowserWindow, ipcMain, webContents, session } from 'electron'
+import { app, BrowserWindow, ipcMain, session } from 'electron'
 import path from 'path'
 import { DEV, err, log } from '../common/utils'
 
@@ -15,7 +15,7 @@ log('App start!')
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (process.env.NODE_ENV !== 'development') {
+if (!DEV) {
   global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
@@ -84,9 +84,7 @@ function createWindow () {
     mainWindow.setPosition(global.state.Config.x, global.state.Config.y)
   }
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+  mainWindow.on('closed', () => app.quit())
 
   mainWindow.loadURL(winURL)
 
@@ -165,15 +163,9 @@ app.on('web-contents-created', (event, content) => {
  * Prevent outside browsing
  */
 
-let preload
-const contentPair = {}
+let webviewContent = null
 
 app.on('web-contents-created', (event, contents) => {
-  if (contents.getType() === 'window') {
-    contents.on('will-attach-webview', (event, webPreferences) => {
-      preload = webPreferences.preloadURL.replace(/file:\/\/\/?/, '')
-    })
-  }
   if (contents.getType() === 'webview') {
     contents.on('will-navigate', (event, url) => {
       if (url.indexOf(global.state.Constants.site) === -1) {
@@ -182,12 +174,11 @@ app.on('web-contents-created', (event, contents) => {
           width: 1280,
           height: 1024,
           webPreferences: {
-            parent: BrowserWindow.fromWebContents(contents),
-            preload,
+            preload: global.state.Constants.preload,
             nodeIntegration: false
           }
         })
-        contentPair[win.webContents.id] = contents.id
+        webviewContent = contents
         win.once('ready-to-show', () => win.show())
         win.webContents.on('new-window', (event, url) => {
           event.preventDefault()
@@ -207,9 +198,9 @@ app.on('web-contents-created', (event, contents) => {
 
 ipcMain.on('webviewRefresh', (event, url) => {
   url
-    ? webContents.fromId(contentPair[event.sender.id]).loadURL(url)
-    : webContents.fromId(contentPair[event.sender.id]).reload()
-  delete contentPair[event.sender.id]
+    ? webviewContent.loadURL(url)
+    : webviewContent.reload()
+  webviewContent = null
 })
 
 /**
