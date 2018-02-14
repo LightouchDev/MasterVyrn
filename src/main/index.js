@@ -135,7 +135,7 @@ function createWindow () {
   mainWindow.on('resize', () => {
     clearTimeout(delaySaveHeight)
     delaySaveHeight = setTimeout(() => {
-      const height = mainWindow.getSize()[1]
+      const height = mainWindow.getContentSize()[1]
       if (global.state.Config.height !== height) {
         global.commit('CONFIG_UPDATE', { height })
       }
@@ -215,7 +215,7 @@ ipcMain.on('webviewRefresh', (event, url) => {
 /**
  * Handle common error
  */
-if (DEV) {
+if (!DEV) {
   process.on('unhandledRejection', err)
   process.on('uncaughtException', err)
 }

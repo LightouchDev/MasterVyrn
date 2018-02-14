@@ -44,12 +44,16 @@ export default (size) => {
     if (y > remainY) {
       y = remainY > 0 ? remainY : 0
     }
-    if (height > availHeight) { height = availHeight }
+    if (height > availHeight) {
+      height = availHeight
+    } else {
+      height = height + extraHeight
+    }
     currentWindow.setBounds({
       x,
       y,
       width: windowSize.width,
-      height: height + extraHeight
+      height
     })
     previousSize = clone(windowSize)
   }
