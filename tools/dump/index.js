@@ -20,7 +20,7 @@ const versionFile = path.resolve(targetFolder, 'version.txt')
 const yarn = process.platform === 'win32' ? 'yarn.cmd' : 'yarn'
 const queue = {}
 const task = {}
-let assetVersion
+let assetVersion = 0
 let fsIsReady = true
 
 try {
@@ -60,7 +60,7 @@ function checkAssets (pathname) {
     if (extractFilename) {
       const outputPath = path.resolve(targetFolder, 'currentAssets', extractFilename[2])
       const currentVersion = Number(extractFilename[1])
-      if (assetVersion && assetVersion < currentVersion) {
+      if (assetVersion < currentVersion) {
         // close all new incoming task
         fsIsReady = false
         // if new version pending, then clean all current assets, but not include static assets.
@@ -121,7 +121,7 @@ proxy.on('getResponse', (response) => {
           fs.outputFile(result.outputPath, response.body, (error) => {
             if (error) { err(error) }
           })
-          if (applyPrettier && result.extractFilename) {
+          if (applyPrettier && result.extractFilename && /^js\/|^css\//.test(result.extractFilename[2])) {
             const extractPath = path.resolve(targetFolder, 'prettified', result.extractFilename[2])
             fs.outputFile(extractPath, response.body, (error) => {
               if (error) { err(error) }
