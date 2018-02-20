@@ -6,7 +6,7 @@ const state = {
 if (typeof window === 'undefined') {
   state.preload = process.mainModule.filename.indexOf('app.asar') !== -1
     ? require('path').resolve(__dirname, 'preload.js')
-    : require('path').resolve(__dirname, '../../../../dist/electron/preload.js')
+    : require('path').resolve(__dirname, '../../../dist/electron/preload.js')
 }
 
 export default {

@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import { BrowserWindow, ipcMain } from 'electron'
 import { log, err } from '../../common/utils'
 
-import modules from '../../common/store/modules'
+import modules from '../../store/modules'
 
 Vue.use(Vuex)
 
