@@ -73,7 +73,7 @@ function createWindow () {
   )
 
   mainWindow = new BrowserWindow({
-    width: 480,
+    width: global.state.Config.width || 480,
     height: global.state.Config.height || 870,
     useContentSize: true,
     fullscreenable: false,
@@ -133,10 +133,8 @@ function createWindow () {
   mainWindow.on('resize', () => {
     clearTimeout(delaySaveHeight)
     delaySaveHeight = setTimeout(() => {
-      const height = mainWindow.getContentSize()[1]
-      if (global.state.Config.height !== height) {
-        global.commit('CONFIG_UPDATE', { height })
-      }
+      const [ width, height ] = mainWindow.getContentSize()
+      global.commit('CONFIG_UPDATE', { width, height })
     }, delayLength)
   })
 
