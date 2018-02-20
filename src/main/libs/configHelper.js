@@ -23,7 +23,7 @@ const configDefaults = {
 global.configDefaults = configDefaults
 
 // check default translation exist
-if (isUndefined(require('../../common/i18n/translations').default[configDefaults.language])) {
+if (isUndefined(require('../../i18n/translations').default[configDefaults.language])) {
   configDefaults.language = 'en_US'
 }
 

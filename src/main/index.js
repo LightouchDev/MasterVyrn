@@ -3,7 +3,7 @@
 import './libs/deprecated'
 import './libs/configHelper'
 import './libs/store'
-import '../common/i18n'
+import '../i18n'
 
 import { app, BrowserWindow, ipcMain, session } from 'electron'
 import path from 'path'
