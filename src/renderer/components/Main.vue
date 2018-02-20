@@ -1,10 +1,23 @@
 <template>
   <div id="wrapper">
-    <the-side-bar id="the-side-bar"/>
+    <the-dashboard id="the-dashboard"/>
     <the-option-layer id="the-option-layer"/>
     <the-game-loader id="the-game-loader"/>
   </div>
 </template>
+
+<style lang="scss">
+body {
+  overflow: hidden;
+}
+
+#the-dashboard {
+  background: $standardBlack;
+  width: 100%;
+  min-width: 150px;
+  max-width: 320px; // 1024 - 704
+}
+</style>
 
 <script>
 import TheGameLoader from './Main/TheGameLoader'
@@ -44,24 +57,10 @@ export default {
       /* webpackChunkName: "TheOptionLayer" */
       './Main/TheOptionLayer'
     ),
-    TheSideBar: () => import(
-      /* webpackChunkName: "TheSideBar" */
-      './Main/TheSideBar'
+    TheDashboard: () => import(
+      /* webpackChunkName: "TheDashboard" */
+      './Main/TheDashboard'
     )
   }
 }
 </script>
-
-<style lang="scss">
-body {
-  overflow: hidden;
-}
-
-#the-side-bar {
-  background: $standardBlack;
-  width: 100%;
-  min-width: 150px;
-  max-width: 320px; // 1024 - 704
-}
-
-</style>
