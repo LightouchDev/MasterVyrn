@@ -1,8 +1,8 @@
 <template>
   <webview
     id="game-web"
-    :src="state.site"
-    :preload="'file://' + state.preload"
+    :src="Constants.site"
+    :preload="'file://' + Constants.preload"
     allowpopups
   />
 </template>
@@ -11,7 +11,7 @@
 import { mapState } from 'vuex'
 export default {
   computed: mapState({
-    state: 'Constants' // fetch state.Constants into this.state
+    Constants: 'Constants' // fetch state.Constants into this.state
   })
 }
 </script>

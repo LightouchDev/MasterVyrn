@@ -17,7 +17,7 @@ const apply = {
 }
 
 const mutations = {
-  CONFIG_UPDATE (state, payload) {
+  UPDATE (state, payload) {
     assign(state, payload)
     forEach(apply, (value, key) => {
       if (!isUndefined(payload[key])) {
@@ -31,12 +31,13 @@ const mutations = {
 }
 
 const actions = {
-  CONFIG_DEFAULTS ({ commit }) {
-    commit('CONFIG_UPDATE', global.configDefaults)
+  DEFAULTS ({ commit }) {
+    commit('UPDATE', global.configDefaults)
   }
 }
 
 export default {
+  namespaced: true,
   state,
   mutations,
   actions

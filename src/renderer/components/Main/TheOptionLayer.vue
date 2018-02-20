@@ -237,7 +237,7 @@ export default {
     },
     setDefault () {
       if (confirm(this.$t('option.alert.setDefault'))) {
-        this.$store.dispatch('CONFIG_DEFAULTS')
+        this.$store.dispatch('Config/DEFAULTS')
         this.menuOpen = false
         window.webview.reload()
       }
@@ -261,7 +261,7 @@ export default {
         this.config.proxy = proxyString
         window.webview.reload()
       }
-      this.$store.commit('CONFIG_UPDATE', this.config)
+      this.$store.commit('Config/UPDATE', this.config)
       this.menuOpen = false
     }
   }

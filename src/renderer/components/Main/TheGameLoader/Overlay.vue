@@ -18,20 +18,20 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      state: 'Overlay' // fetch state.Overlay into this.state
+      Overlay: 'Overlay' // fetch state.Overlay into this.Overlay
     }),
     elements () {
-      return this.state.elements
+      return this.Overlay.elements
     },
     zoom () {
-      return {zoom: this.$store.state.GameView.zoom}
+      return this.$store.state.GameView.zoom
     }
   },
   methods: {
     // map event according to data-preset
     eventMap: function (event) {
       let thisPreset = event.target.dataset.preset
-      const data = this.state.data[thisPreset]
+      const data = this.Overlay.data[thisPreset]
       return this[thisPreset](event, data)
     }
   }

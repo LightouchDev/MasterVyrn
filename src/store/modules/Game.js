@@ -3,12 +3,13 @@ import { assign } from 'lodash'
 const state = {}
 
 const mutations = {
-  GAME_UPDATE (state, payload) {
+  UPDATE (state, payload) {
     assign(state, payload)
   }
 }
 
 export default {
+  namespaced: true,
   state,
   mutations
 }

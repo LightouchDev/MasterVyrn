@@ -126,7 +126,7 @@ function createWindow () {
     clearTimeout(delaySavePos)
     delaySavePos = setTimeout(() => {
       const [x, y] = mainWindow.getPosition()
-      global.commit('CONFIG_UPDATE', { x, y })
+      global.commit('Config/UPDATE', { x, y })
     }, delayLength)
   })
   let delaySaveHeight = null
@@ -134,7 +134,7 @@ function createWindow () {
     clearTimeout(delaySaveHeight)
     delaySaveHeight = setTimeout(() => {
       const [ width, height ] = mainWindow.getContentSize()
-      global.commit('CONFIG_UPDATE', { width, height })
+      global.commit('Config/UPDATE', { width, height })
     }, delayLength)
   })
 

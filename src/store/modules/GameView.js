@@ -40,25 +40,26 @@ const state = assign({
 }, defaults)
 
 const mutations = {
-  VIEW_UPDATE (state, payload) {
+  UPDATE (state, payload) {
     assign(state, payload)
   },
-  VIEW_PRESET (state) {
+  PRESET (state) {
     assign(state, preset)
   },
-  VIEW_RESET (state) {
+  RESET (state) {
     assign(state, defaults)
   }
 }
 
 const actions = {
   // async update for non-blocking mutation for component use
-  VIEW_UPDATE ({ commit }, payload) {
-    commit('VIEW_UPDATE', payload)
+  UPDATE ({ commit }, payload) {
+    commit('UPDATE', payload)
   }
 }
 
 export default {
+  namespaced: true,
   state,
   mutations,
   actions

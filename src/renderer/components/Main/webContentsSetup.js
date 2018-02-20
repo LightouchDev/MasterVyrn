@@ -52,7 +52,7 @@ registerHotkey('H', () => {
     if (!subHide && subOpen) {
       window.webview.executeJavaScript('Game.submenu.mainView.toggleSubmenu()')
     }
-    window.commit('CONFIG_UPDATE', {
+    window.commit('Config/UPDATE', {
       subHide: !subHide
     })
   }
