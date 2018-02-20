@@ -13,13 +13,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-  data () {
-    return {
-      state: this.$store.state.Overlay
-    }
-  },
   computed: {
+    ...mapState({
+      state: 'Overlay' // fetch state.Overlay into this.state
+    }),
     elements () {
       return this.state.elements
     },

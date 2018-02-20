@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import GameWeb from './TheGameLoader/GameWeb'
 import windowHandler from './TheGameLoader/windowHandler'
 
@@ -21,12 +22,10 @@ export default {
       './TheGameLoader/Overlay'
     )
   },
-  data () {
-    return {
-      view: this.$store.state.GameView
-    }
-  },
   computed: {
+    ...mapState({
+      view: 'GameView' // fetch state.GameView into this.view
+    }),
     webviewWidth () {
       return (
         Math.trunc(this.view.baseSize * this.view.zoom) +

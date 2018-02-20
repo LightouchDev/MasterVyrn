@@ -8,12 +8,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
-  data () {
-    return {
-      state: this.$store.state.Constants
-    }
-  }
+  computed: mapState({
+    state: 'Constants' // fetch state.Constants into this.state
+  })
 }
 </script>
 
