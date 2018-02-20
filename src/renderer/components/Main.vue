@@ -1,8 +1,8 @@
 <template>
   <div id="wrapper">
-    <the-dashboard id="the-dashboard"/>
-    <the-sub-menu-bar id="the-sub-menu-bar"/>
-    <the-option-layer id="the-option-layer"/>
+    <the-dashboard id="the-dashboard" :style="commonStyle"/>
+    <the-sub-menu-bar id="the-sub-menu-bar" :style="commonStyle"/>
+    <the-option-layer id="the-option-layer" :style="commonStyle"/>
     <the-game-loader id="the-game-loader"/>
   </div>
 </template>
@@ -66,6 +66,13 @@ export default {
       /* webpackChunkName: "TheDashboard" */
       './Main/TheDashboard'
     )
+  },
+  computed: {
+    commonStyle () {
+      return {
+        zoom: this.$store.state.GameView.zoom
+      }
+    }
   }
 }
 </script>

@@ -1,8 +1,5 @@
 <template>
-  <div
-    :style="style"
-    :class="optionOpen ? 'open' : ''"
-  >
+  <div :class="optionOpen ? 'open' : ''">
     <div id="option-page">
       <div id="container">
         <div
@@ -185,11 +182,6 @@ export default {
     }
   },
   computed: {
-    style () {
-      return {
-        zoom: this.$store.state.GameView.zoom
-      }
-    },
     optionOpen () {
       if (this.$store.state.HostView.optionOpen) {
         // refresh config

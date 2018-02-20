@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :style="style">
+  <div class="container">
     <div
       id="button-option"
       class="button"
@@ -62,9 +62,6 @@ export default {
     ...mapState({
       HostView: 'HostView' // fetch state.HostView into this.HostView
     }),
-    style () {
-      return { zoom: this.$store.state.GameView.zoom }
-    },
     optionIcon () {
       return this.HostView.optionOpen ? faTimesCircle : faListAlt
     }
