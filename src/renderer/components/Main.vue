@@ -1,6 +1,7 @@
 <template>
   <div id="wrapper">
     <the-dashboard id="the-dashboard"/>
+    <the-sub-menu-bar id="the-sub-menu-bar"/>
     <the-option-layer id="the-option-layer"/>
     <the-game-loader id="the-game-loader"/>
   </div>
@@ -53,6 +54,10 @@ export default {
   name: 'Main',
   components: {
     TheGameLoader,
+    TheSubMenuBar: () => import(
+      /* webpackChunkName: "TheSubMenuBar" */
+      './Main/TheSubMenuBar'
+    ),
     TheOptionLayer: () => import(
       /* webpackChunkName: "TheOptionLayer" */
       './Main/TheOptionLayer'

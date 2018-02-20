@@ -1,21 +1,8 @@
 <template>
   <div
-    :style="zoom"
-    :class="menuOpen ? 'open' : ''"
+    :style="style"
+    :class="optionOpen ? 'open' : ''"
   >
-    <div id="toolbar">
-      <div
-        id="button-option"
-        class="toolbar-button"
-        @click="menuToggle"
-      >
-        <font-awesome-icon
-          :icon="optionIcon"
-          transform="grow-14 down-7"
-        />
-        <div class="toolbar-button-desc">{{ (menuOpen ? $t('common.close') : $t('common.option')).toUpperCase() }}</div>
-      </div>
-    </div>
     <div id="option-page">
       <div id="container">
         <div
@@ -27,6 +14,7 @@
             name="option-select-language"
             v-model="config.language"
           >
+            <!-- FIXME: use for loop to list language -->
             <option value="en_US">{{ $t('language.en_US') }}</option>
             <option value="zh_TW">{{ $t('language.zh_TW') }}</option>
           </select>
@@ -170,7 +158,7 @@
             type="button"
             id="option-button-close"
             class="button red"
-            @click="menuToggle"
+            @click="optionToggle"
           >{{ $t('option.button.close') }}</button>
         </div>
       </div>
@@ -192,30 +180,31 @@ export default {
   },
   data () {
     return {
-      menuOpen: false,
       config: clone(this.$store.state.Config),
       proxy: urlParser(this.$store.state.Config.proxy)
     }
   },
   computed: {
-    zoom () {
-      return {zoom: this.$store.state.GameView.zoom}
+    style () {
+      return {
+        zoom: this.$store.state.GameView.zoom
+      }
     },
-    optionIcon () {
-      return this.menuOpen ? faTimesCircle : faListAlt
+    optionOpen () {
+      if (this.$store.state.HostView.optionOpen) {
+        // refresh config
+        this.config = clone(this.$store.state.Config)
+        this.proxy = urlParser(this.$store.state.Config.proxy)
+      }
+      return this.$store.state.HostView.optionOpen
     },
     disableProxyOptions () {
       return this.proxy.protocol === 'direct:'
     }
   },
   methods: {
-    menuToggle () {
-      if (!this.menuOpen) {
-        // refresh config
-        this.config = clone(this.$store.state.Config)
-        this.proxy = urlParser(this.$store.state.Config.proxy)
-      }
-      this.menuOpen = !this.menuOpen
+    optionToggle () {
+      this.$store.dispatch('HostView/UPDATE', { optionOpen: !this.optionOpen })
     },
     cleanStorage (type) {
       if (confirm(this.$t(`option.alert.clearStorage.${type}`))) {
@@ -229,7 +218,7 @@ export default {
             { origin: this.$store.state.Constants.site },
             () => {
               window.webview.loadURL(this.$store.state.Constants.site)
-              this.menuOpen = false
+              this.$store.dispatch('HostView/UPDATE', { optionOpen: false })
             }
           )
         }
@@ -238,7 +227,7 @@ export default {
     setDefault () {
       if (confirm(this.$t('option.alert.setDefault'))) {
         this.$store.dispatch('Config/DEFAULTS')
-        this.menuOpen = false
+        this.$store.dispatch('HostView/UPDATE', { optionOpen: false })
         window.webview.reload()
       }
     },
@@ -262,7 +251,7 @@ export default {
         window.webview.reload()
       }
       this.$store.commit('Config/UPDATE', this.config)
-      this.menuOpen = false
+      this.$store.dispatch('HostView/UPDATE', { optionOpen: false })
     }
   }
 }
@@ -270,35 +259,6 @@ export default {
 
 <style lang="scss" scoped>
 
-#toolbar {
-  left: 320px;
-  bottom: 0px;
-  position: absolute;
-  text-align: center;
-  .toolbar-button {
-    color: #c5f7f9;
-    width: 64px;
-    height: 45px;
-    margin: 9px 0 9px;
-    position: relative;
-    @include gradient-text('linear-gradient(#c5f7f9, #94d4dd, #c5f7f9)', 'dark');
-  }
-  .toolbar-button-desc {
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 0.75px;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    text-shadow:
-      -1px -1px 2px $standardBlack,
-      1px -1px 2px $standardBlack,
-      -1px 1px 2px $standardBlack,
-      1px 1px 2px $standardBlack;
-    @include gradient-text('linear-gradient(#c5f7f9, #94d4dd, #c5f7f9)', 'dark');
-  }
-}
 #option-page {
   display: none;
 }
