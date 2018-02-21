@@ -18,7 +18,6 @@
 
 <style lang="scss" scoped>
 .container {
-  left: 320px;
   bottom: 0px;
   position: absolute;
   text-align: center;
@@ -34,6 +33,7 @@
     font-size: 11px;
     font-weight: bold;
     letter-spacing: 0.75px;
+    pointer-events: none;
     position: absolute;
     left: 0;
     right: 0;

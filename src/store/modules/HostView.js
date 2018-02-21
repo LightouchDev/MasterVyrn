@@ -1,7 +1,9 @@
 import { assign } from 'lodash'
 
 const state = {
-  optionOpen: false
+  optionOpen: false,
+  dashOpen: true,
+  dashWidth: 150
 }
 
 const mutations = {

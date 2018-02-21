@@ -42,7 +42,7 @@ export default {
     },
     windowBase () {
       return ((this.$store.state.Config.subHide && !this.GameView.subOpen) ? 0 : this.GameView.subMenuWidth) +
-        this.GameView.baseWidth * (this.GameView.subOpen ? 2 : 1)
+        this.GameView.baseWidth * (this.GameView.subOpen ? 2 : 1) + this.$store.state.HostView.dashWidth
     },
     style () {
       this.setupWindow() // setup window when dom changed every time.

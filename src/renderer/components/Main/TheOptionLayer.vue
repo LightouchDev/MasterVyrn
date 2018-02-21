@@ -257,8 +257,6 @@ export default {
 
 .open {
   #option-page {
-    top: 0;
-    left: 0;
     width: 320px;
     height: 100vh;
     color: $standardWhite;

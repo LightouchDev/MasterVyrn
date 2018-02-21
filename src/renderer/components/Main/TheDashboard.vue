@@ -7,7 +7,6 @@
 <style lang="scss">
 </style>
 <script>
-import { mapState } from 'vuex'
 import RaidFinder from './TheDashboard/RaidFinder'
 
 export default {

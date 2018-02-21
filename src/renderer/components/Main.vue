@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
-    <the-dashboard id="the-dashboard" :style="commonStyle"/>
-    <the-sub-menu-bar id="the-sub-menu-bar" :style="commonStyle"/>
+    <the-dashboard id="the-dashboard" :style="[commonStyle, dashStyle]"/>
+    <the-sub-menu-bar id="the-sub-menu-bar" :style="[commonStyle, subBarStyle]"/>
     <the-option-layer id="the-option-layer" :style="commonStyle"/>
     <the-game-loader id="the-game-loader"/>
   </div>
@@ -12,15 +12,20 @@ body {
   overflow: hidden;
 }
 
+#wrapper {
+  display: flex;
+  > div {
+    flex-shrink: 0;
+  }
+}
+
 #the-dashboard {
   background: $standardBlack;
-  width: 100%;
-  min-width: 150px;
-  max-width: 320px; // 1024 - 704
 }
 </style>
 
 <script>
+import { mapState } from 'vuex'
 import TheGameLoader from './Main/TheGameLoader'
 
 // prevent unexpected drag and drop event
@@ -68,9 +73,23 @@ export default {
     )
   },
   computed: {
+    ...mapState({
+      HostView: 'HostView', // fetch state.HostView into this.HostView
+      GameView: 'GameView'  // fetch state.GameView into this.GameView
+    }),
     commonStyle () {
       return {
-        zoom: this.$store.state.GameView.zoom
+        zoom: this.GameView.zoom
+      }
+    },
+    dashStyle () {
+      return {
+        width: this.HostView.dashWidth + 'px'
+      }
+    },
+    subBarStyle () {
+      return {
+        left: this.GameView.baseWidth + (this.HostView.dashOpen ? this.HostView.dashWidth : 0) + 'px'
       }
     }
   }
