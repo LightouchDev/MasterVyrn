@@ -2,6 +2,8 @@
 
 > Someday, Vyrn learned magic and became a very helpful companion.
 
+**PS: It's not recommended using this program due to [EULA](#disclaimer).**
+
 <!-- [![Travis Build Status](https://travis-ci.org/LightouchDev/MasterVyrn.svg?branch=master)](https://travis-ci.org/LightouchDev/MasterVyrn) -->
 [![CircleCI](https://circleci.com/gh/LightouchDev/MasterVyrn.svg?style=shield)](https://circleci.com/gh/LightouchDev/MasterVyrn) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/d77hk0cun4h5iw3n?svg=true)](https://ci.appveyor.com/project/MiauLightouch/mastervyrn) [![Bitrise Build Status](https://www.bitrise.io/app/7295fbc20a35511f/status.svg?token=gabvHK_3ltZM2xNoDVmGGg&branch=master)](https://www.bitrise.io/app/7295fbc20a35511f) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LightouchDev/MasterVyrn/blob/master/LICENSE)
 
@@ -9,7 +11,13 @@
 
 [Download here](https://github.com/LightouchDev/MasterVyrn/releases)
 
-MasterVyrn is a clean dedicated GBF loader build on top of electron.
+## Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+quote from official EULA:
+
+![Eng](rule_eng.PNG) ![JPN](rule_jp.PNG)
 
 ## Feature
 
