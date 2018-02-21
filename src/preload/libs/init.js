@@ -17,6 +17,13 @@ if (remote.getCurrentWebContents().getType() !== 'webview') {
 }
 
 oneshotListener(window, 'DOMContentLoaded', () => {
+  // remove scaler patch to keep image quality
+  const ChromeVersion = Number(/Chrome\/(\d+)\./.exec(navigator.userAgent)[1])
+  if (ChromeVersion < 61) {
+    log('Chrome(%s) is less than 61, remove scaler patch.', ChromeVersion)
+    const html = document.documentElement
+    html.setAttribute('style', html.getAttribute('style').replace(/zoom: \d;/, ''))
+  }
   log('DOM parsed')
 })
 
